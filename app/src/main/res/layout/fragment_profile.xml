@@ -1,16 +1,161 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/profile"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.ProfileFragment"
-    android:id="@+id/profile">
+    tools:context=".fragments.ProfileFragment">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="72dp"
         android:text="@string/profile"
-        android:textSize="24sp"/>
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</FrameLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/userInfoContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="24dp"
+        android:padding="16dp"
+        android:background="@drawable/bg_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title">
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:rating="1"
+            android:isIndicator="true"
+            android:scaleX="0.4"
+            android:scaleY="0.4"
+            app:layout_constraintBottom_toBottomOf="@id/email"
+            app:layout_constraintStart_toStartOf="@id/name" />
+
+        <TextView
+            android:id="@+id/email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="email"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@id/name"
+            app:layout_constraintTop_toBottomOf="@id/name"
+            android:layout_marginTop="8dp"/>
+
+        <TextView
+            android:id="@+id/reviews"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="13 reviews"
+            android:textSize="16sp"
+            android:layout_marginEnd="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/email" />
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginTop="4dp"
+            android:src="@drawable/ic_arrow_forward"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/reviews" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- My Orders sekcija -->
+    <TextView
+        android:id="@+id/myOrders"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="48dp"
+        android:text="My Orders"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/userInfoContainer"/>
+
+    <!-- Border line ispod My Orders -->
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginEnd="48dp"
+        android:src="@drawable/ic_arrow_forward"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/myOrders" />
+
+    <View
+        android:id="@+id/ordersBorder"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:background="#E0E0E0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/myOrders"/>
+
+    <!-- My Reviews sekcija -->
+    <TextView
+        android:id="@+id/myReviews"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="32dp"
+        android:text="My Reviews"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ordersBorder"/>
+
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginEnd="48dp"
+        android:src="@drawable/ic_arrow_forward"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/myReviews" />
+
+    <!-- Border line ispod My Reviews -->
+    <View
+        android:id="@+id/reviewsBorder"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:background="#E0E0E0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/myReviews"/>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
