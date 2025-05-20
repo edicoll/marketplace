@@ -5,6 +5,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.projectmarketplace.data.User
+import com.example.projectmarketplace.data.Message
 import com.example.projectmarketplace.fragments.AddFragment
 import com.example.projectmarketplace.fragments.HomeFragment
 import com.example.projectmarketplace.fragments.InboxFragment
@@ -23,6 +24,32 @@ class MainActivity : AppCompatActivity() {
         rating = 3.55F,
         password = "edi"
      )
+    val messages = listOf(
+        Message(
+            id = 1,
+            senderId = 2,
+            senderName = "Josip",
+            recieverId = 1,
+            text = "Hej, kako ide s aplikacijom?",
+            timestamp = System.currentTimeMillis() - 3600000
+        ),
+        Message(
+            id = 1,
+            senderId = 2,
+            senderName = "Branko",
+            recieverId = 1,
+            text = "Jesi li vidio moju poruku?",
+            timestamp = System.currentTimeMillis() - 86400000,
+            isRead = true
+        ),Message(
+            id = 1,
+            senderId = 2,
+            senderName = "Karlo",
+            recieverId = 1,
+            text = "Radi li ova aplikacija?",
+            timestamp = System.currentTimeMillis() - 86400000
+        )
+    )
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +63,11 @@ class MainActivity : AppCompatActivity() {
         val homeFragment = HomeFragment()
         val searchFragment = SearchFragment()
         val addFragment = AddFragment()
-        val inboxFragment = InboxFragment()
+        val inboxFragment = InboxFragment().apply {
+            arguments = Bundle().apply {
+                putParcelableArrayList("MESSAGES_KEY", ArrayList(messages))
+            }
+        }
         val profileFragment = ProfileFragment().apply {
             arguments = Bundle().apply {
                 putParcelable("USER_KEY", user1)
@@ -52,7 +83,6 @@ class MainActivity : AppCompatActivity() {
                 R.id.add -> setCurrentFragment(addFragment)
                 R.id.inbox -> setCurrentFragment(inboxFragment)
                 R.id.profile -> setCurrentFragment(profileFragment)
-
             }
             true
         }

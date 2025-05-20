@@ -5,6 +5,6 @@
     <color name="colorPrimary">#00a3aa</color>
     <color name="colorPrimaryDark">#aa1000</color>
     <color name="colorAccent">#FFFFFFFF</color>
-    <color name="bg_container">#A2A2A2</color>
+    <color name="bg_container">#CECECE</color>
 
 </resources>

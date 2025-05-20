@@ -37,10 +37,6 @@ class ProfileFragment : Fragment() {
         ratingBar.rating = currentUser.rating
 
 
-
-
-
-
         return view
     }
 }
