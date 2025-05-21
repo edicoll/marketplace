@@ -5,8 +5,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.projectmarketplace.data.Conversation
+import com.example.projectmarketplace.data.Item
 import com.example.projectmarketplace.data.User
-import com.example.projectmarketplace.data.Message
 import com.example.projectmarketplace.fragments.AddFragment
 import com.example.projectmarketplace.fragments.HomeFragment
 import com.example.projectmarketplace.fragments.InboxFragment
@@ -45,6 +45,105 @@ class MainActivity : AppCompatActivity() {
             timestamp = System.currentTimeMillis() - 86400000
         )
     )
+    val items = listOf(
+        Item(
+            id = 1,
+            sellerId = 2,
+            sellerName = "Josip",
+            sellerRating = 2.5F,
+            title = "Auto",
+            description = "Brand new car fiat panda.",
+            brand = "Fiat",
+            condition = "new",
+            color = "white",
+            price = 5000.00f,
+            timestamp = System.currentTimeMillis() - 486400000
+        ),Item(
+            id = 2,
+            sellerId = 2,
+            sellerName = "Josip",
+            sellerRating = 2.5F,
+            title = "Monitor",
+            description = "Used wide monitor for gaming.",
+            brand = "Dell",
+            condition = "used",
+            color = "black",
+            price = 40.00f,
+            timestamp = System.currentTimeMillis() - 96400000
+        ),Item(
+            id = 3,
+            sellerId = 2,
+            sellerName = "Josip",
+            sellerRating = 2.5F,
+            title = "Laptop",
+            description = "Used office laptop.",
+            brand = "Acer",
+            condition = "used",
+            color = "silver",
+            price = 300.00f,
+            timestamp = System.currentTimeMillis() - 66400000
+        ),Item(
+            id = 4,
+            sellerId = 2,
+            sellerName = "Josip",
+            sellerRating = 2.5F,
+            title = "Sunglasses",
+            description = "New ray ban stylish sunglasses",
+            brand = "Ray Ban",
+            condition = "new",
+            color = "black",
+            price = 100.00f,
+            timestamp = System.currentTimeMillis() - 6400000
+        ),Item(
+            id = 5,
+            sellerId = 2,
+            sellerName = "Josip",
+            sellerRating = 2.5F,
+            title = "Auto",
+            description = "Brand new car fiat panda.",
+            brand = "Fiat",
+            condition = "new",
+            color = "white",
+            price = 5000.00f,
+            timestamp = System.currentTimeMillis() - 486400000
+        ),Item(
+            id = 6,
+            sellerId = 2,
+            sellerName = "Josip",
+            sellerRating = 2.5F,
+            title = "Monitor",
+            description = "Used wide monitor for gaming.",
+            brand = "Dell",
+            condition = "used",
+            color = "black",
+            price = 40.00f,
+            timestamp = System.currentTimeMillis() - 96400000
+        ),Item(
+            id = 7,
+            sellerId = 2,
+            sellerName = "Josip",
+            sellerRating = 2.5F,
+            title = "Laptop",
+            description = "Used office laptop.",
+            brand = "Acer",
+            condition = "used",
+            color = "silver",
+            price = 300.00f,
+            timestamp = System.currentTimeMillis() - 66400000
+        ),Item(
+            id = 8,
+            sellerId = 2,
+            sellerName = "Josip",
+            sellerRating = 2.5F,
+            title = "Sunglasses",
+            description = "New ray ban stylish sunglasses",
+            brand = "Ray Ban",
+            condition = "new",
+            color = "black",
+            price = 100.00f,
+            timestamp = System.currentTimeMillis() - 6400000
+        )
+    )
 
 
 
@@ -56,7 +155,11 @@ class MainActivity : AppCompatActivity() {
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
 
 
-        val homeFragment = HomeFragment()
+        val homeFragment = HomeFragment().apply {
+            arguments = Bundle().apply{
+                putParcelableArrayList("ITEM_KEY", ArrayList(items))
+            }
+        }
         val searchFragment = SearchFragment()
         val addFragment = AddFragment()
         val inboxFragment = InboxFragment().apply {

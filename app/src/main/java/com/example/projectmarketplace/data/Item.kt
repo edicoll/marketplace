@@ -6,12 +6,15 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Item(
     val id: Int,
-    val selerId: Int,
+    val sellerId: Int,
+    val sellerName: String,
+    val sellerRating: Float,
     val title: String,
     val description: String,
     val brand: String,
     val condition: String,
     val color: String,
     val price: Float,
+    val timestamp: Long,
 
 ): Parcelable
