@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.example.projectmarketplace.data.Conversation
 import com.example.projectmarketplace.data.User
 import com.example.projectmarketplace.data.Message
 import com.example.projectmarketplace.fragments.AddFragment
@@ -24,32 +25,27 @@ class MainActivity : AppCompatActivity() {
         rating = 3.55F,
         password = "edi"
      )
-    val messages = listOf(
-        Message(
+    val conversations = listOf(
+        Conversation(
             id = 1,
-            senderId = 2,
-            senderName = "Josip",
-            recieverId = 1,
-            text = "Hej, kako ide s aplikacijom?",
-            timestamp = System.currentTimeMillis() - 3600000
+            participant1Id = 1,
+            participant2Id = 2,
+            participant1Name = "Edi",
+            participant2Name = "Josip",
+            lastMessage = "Radi li ova aplikacija?",
+            timestamp = System.currentTimeMillis() - 86400000
         ),
-        Message(
-            id = 1,
-            senderId = 2,
-            senderName = "Branko",
-            recieverId = 1,
-            text = "Jesi li vidio moju poruku?",
-            timestamp = System.currentTimeMillis() - 86400000,
-            isRead = true
-        ),Message(
-            id = 1,
-            senderId = 2,
-            senderName = "Karlo",
-            recieverId = 1,
-            text = "Radi li ova aplikacija?",
+        Conversation(
+            id = 2,
+            participant1Id = 1,
+            participant2Id = 3,
+            participant1Name = "Edi",
+            participant2Name = "Branko",
+            lastMessage = "Jesi li vidio moju poruku?",
             timestamp = System.currentTimeMillis() - 86400000
         )
     )
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,7 +61,7 @@ class MainActivity : AppCompatActivity() {
         val addFragment = AddFragment()
         val inboxFragment = InboxFragment().apply {
             arguments = Bundle().apply {
-                putParcelableArrayList("MESSAGES_KEY", ArrayList(messages))
+                putParcelableArrayList("CONVERSATION_KEY", ArrayList(conversations))
             }
         }
         val profileFragment = ProfileFragment().apply {

@@ -10,16 +10,15 @@ import com.example.projectmarketplace.R
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.projectmarketplace.adapters.MessageAdapter
-import com.example.projectmarketplace.data.Message
-
+import com.example.projectmarketplace.adapters.ConversationAdapter
+import com.example.projectmarketplace.data.Conversation
 
 
 class InboxFragment : Fragment() {
 
-    private var messages: List<Message> = emptyList()
+    private var conversations: List<Conversation> = emptyList()
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: MessageAdapter
+    private lateinit var adapter: ConversationAdapter
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreateView(
@@ -28,14 +27,22 @@ class InboxFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+        //dohvaća se view
         val view = inflater.inflate(R.layout.fragment_inbox, container, false)
 
-        messages = arguments?.getParcelableArrayList<Message>("MESSAGES_KEY", Message::class.java) ?: emptyList()
+        //dohvaćaju se podatci o razgovorima
+        conversations = arguments?.getParcelableArrayList<Conversation>("CONVERSATION_KEY", Conversation::class.java) ?: emptyList()
 
-        recyclerView = view.findViewById(R.id.messagesRecyclerView)
+        //definira se recycleview i spaja s layoutom
+        recyclerView = view.findViewById(R.id.inboxRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        adapter = MessageAdapter(messages)
+        //u adapter se šalju razgovori
+        adapter = ConversationAdapter(
+            conversations,
+            requireActivity()
+        )
+        //rec se spaja s adapterom
         recyclerView.adapter = adapter
 
         return view
