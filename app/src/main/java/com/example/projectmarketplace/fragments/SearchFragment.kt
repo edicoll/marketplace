@@ -2,7 +2,6 @@ package com.example.projectmarketplace.fragments
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +10,6 @@ import android.view.inputmethod.EditorInfo
 import androidx.annotation.RequiresApi
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.projectmarketplace.R
 import com.example.projectmarketplace.adapters.SearchAdapter
 import com.example.projectmarketplace.data.Item
 import com.example.projectmarketplace.databinding.FragmentSearchBinding
