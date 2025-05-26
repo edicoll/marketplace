@@ -88,7 +88,7 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- My Orders sekcija -->
+    <!-- My Orders -->
     <TextView
         android:id="@+id/myOrders"
         android:layout_width="wrap_content"
@@ -123,14 +123,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/myOrders"/>
 
-    <!-- My Reviews sekcija -->
+    <!-- Favorite items -->
     <TextView
         android:id="@+id/myReviews"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="48dp"
         android:layout_marginTop="32dp"
-        android:text="My Reviews"
+        android:text="Favorite items"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
