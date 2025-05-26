@@ -160,7 +160,11 @@ class MainActivity : AppCompatActivity() {
                 putParcelableArrayList("ITEM_KEY", ArrayList(items))
             }
         }
-        val searchFragment = SearchFragment()
+        val searchFragment = SearchFragment().apply {
+            arguments = Bundle().apply{
+                putParcelableArrayList("ITEM_KEY", ArrayList(items))
+            }
+        }
         val addFragment = AddFragment()
         val inboxFragment = InboxFragment().apply {
             arguments = Bundle().apply {

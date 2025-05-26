@@ -1,6 +1,5 @@
 package com.example.projectmarketplace.adapters
 
-import android.graphics.Color
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
@@ -10,10 +9,7 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projectmarketplace.R
-import com.example.projectmarketplace.adapters.ConversationAdapter.ViewHolder
-import com.example.projectmarketplace.data.Conversation
 import com.example.projectmarketplace.data.Item
-import com.example.projectmarketplace.fragments.InboxIndividualFragment
 import com.example.projectmarketplace.fragments.ItemFragment
 import java.time.Instant
 import java.time.ZoneId
@@ -31,14 +27,14 @@ class ItemAdapter (private val items: List<Item>,
 
     }
 
-    //kreira se novi UI element, to jest razgovor
+    //kreira se novi UI element, to jest item
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemAdapter.ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_item, parent, false)
         return ViewHolder(view)
     }
 
-    //postavlja se nakon što se kreira razgovor
+    //postavlja se nakon što se kreira item
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ItemAdapter.ViewHolder, position: Int) {
         val item = items[position]
