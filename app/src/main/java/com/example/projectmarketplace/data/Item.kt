@@ -11,6 +11,7 @@ data class Item(
     val sellerRating: Float,
     val title: String,
     val description: String,
+    val category: String,
     val brand: String,
     val condition: String,
     val color: String,
