@@ -6,8 +6,13 @@
     <string name="inbox">Inbox</string>
     <string name="profile">Profile</string>
     <string name="title">ARKETPLACE</string>
-    <string name="slogan">Find your product...</string>
+    <string name="slogan">Find your product…</string>
     <string name="items_list_description">List of products</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="filter_options">
+        <item>Default</item>
+        <item>Newest first</item>
+        <item>Price: low to high</item>
+        <item>Price: high to low</item>
+    </string-array>
 </resources>

@@ -20,6 +20,7 @@ class SearchAdapter(
     private var items: List<Item>
 ) : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
 
+
     // funkcija koja se poziva iz searchFragmenta za ažuriranje liste item-a
     @SuppressLint("NotifyDataSetChanged")
     fun updateItems(newItems: List<Item>) {
