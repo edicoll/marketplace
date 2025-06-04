@@ -16,7 +16,6 @@ import com.example.projectmarketplace.fragments.SearchFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
-
 class MainActivity : AppCompatActivity() {
 
      val user1 = User(

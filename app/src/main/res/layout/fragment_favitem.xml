@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/myorders">
+    android:id="@+id/favitems">
 
 
     <androidx.appcompat.widget.Toolbar
@@ -28,12 +28,12 @@
             android:src="@drawable/ic_arrow_back"/>
 
         <TextView
-            android:id="@+id/name"
+            android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginEnd="64dp"
             android:layout_marginTop= "64dp"
-            android:text="My orders"
+            android:text="Favorite items"
             android:textSize="24sp"
             android:textStyle="bold"
             android:textAlignment="center"
@@ -41,7 +41,7 @@
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/myordersRecyclerView"
+        android:id="@+id/favitemsRecyclerView"
         android:contentDescription="@string/inbox"
         android:layout_width="match_parent"
         android:layout_height="0dp"

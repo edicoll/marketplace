@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import com.example.projectmarketplace.R
+import com.example.projectmarketplace.data.FavItem
 import com.example.projectmarketplace.data.Item
 import com.example.projectmarketplace.data.Order
 import com.example.projectmarketplace.data.Review
@@ -77,6 +78,63 @@ val orders = listOf(
             orderDate = System.currentTimeMillis() - 259200000 // prije 3 dana
         )
     )
+
+
+val favitems = listOf(
+        FavItem(
+            id = 1,
+            item = Item(
+                id = 1001,
+                sellerId = 201,
+                sellerName = "TechShop",
+                sellerRating = 4.7f,
+                title = "Samsung Galaxy S23",
+                description = "Novi smartphone s najboljim performansama",
+                category = "Mobiteli",
+                brand = "Samsung",
+                condition = "Novo",
+                color = "Crni",
+                price = 899.99f,
+                timestamp = System.currentTimeMillis()
+            )
+        ),
+        FavItem(
+            id = 2,
+            item = Item(
+                id = 1002,
+                sellerId = 202,
+                sellerName = "AudioExpert",
+                sellerRating = 4.9f,
+                title = "Sony WH-1000XM5",
+                description = "Bežične slušalice s NC tehnologijom",
+                category = "Slušalice",
+                brand = "Sony",
+                condition = "Novo",
+                color = "Srebrni",
+                price = 399.99f,
+                timestamp = System.currentTimeMillis()
+            )
+        ),
+        FavItem(
+            id = 3,
+            item = Item(
+                id = 1003,
+                sellerId = 203,
+                sellerName = "SportVision",
+                sellerRating = 4.5f,
+                title = "Nike Air Max 270",
+                description = "Udobne sportske tenisice za svaki dan",
+                category = "Obuća",
+                brand = "Nike",
+                condition = "Kao novo",
+                color = "Crvene",
+                price = 129.99f,
+                timestamp = System.currentTimeMillis()
+            )
+        )
+    )
+
+
 class ProfileFragment : Fragment() {
 
     private lateinit var currentUser: User
@@ -112,7 +170,7 @@ class ProfileFragment : Fragment() {
 
         setupMyReviews(binding.userInfoContainer)
         setupMyOrders(binding.myOrdersContainer)
-        //setupActionClickListener(binding.favItemsContainer)
+        setupFavItems(binding.favItemsContainer)
 
     }
 
@@ -145,6 +203,23 @@ class ProfileFragment : Fragment() {
 
             parentFragmentManager.beginTransaction()
                 .replace(R.id.flFragment, orderFragment)
+                .addToBackStack(null)
+                .commit()
+        }
+    }
+
+    private fun setupFavItems(view: View) {
+        view.setOnClickListener {
+            val favItemFragment = FavItemFragment()
+
+            val bundle = Bundle().apply {
+                putParcelable("USER_KEY", currentUser)
+                putParcelableArrayList("FAVITEM_KEY", ArrayList(favitems))
+            }
+            favItemFragment.arguments = bundle
+
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.flFragment, favItemFragment)
                 .addToBackStack(null)
                 .commit()
         }

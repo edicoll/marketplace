@@ -1,20 +1,15 @@
 package com.example.projectmarketplace.fragments
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import com.example.projectmarketplace.R
 import com.example.projectmarketplace.data.Item
 import com.example.projectmarketplace.databinding.FragmentAddBinding
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 class AddFragment : Fragment() {
     private var _binding: FragmentAddBinding? = null

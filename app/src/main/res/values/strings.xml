@@ -16,4 +16,5 @@
         <item>Price: low to high</item>
         <item>Price: high to low</item>
     </string-array>
+    <string name="price_format">%1$.2f $</string>
 </resources>

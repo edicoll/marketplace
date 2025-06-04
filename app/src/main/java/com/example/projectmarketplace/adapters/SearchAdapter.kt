@@ -53,7 +53,7 @@ class SearchAdapter(
 
                 // postavlja podatke na view-ove
                 title.text = item.title
-                price.text = item.price.toString() + " $"
+                price.text = itemView.context.getString(R.string.price_format, item.price)
                 date.text = Instant.ofEpochMilli(item.timestamp)
                     .atZone(ZoneId.systemDefault())
                     .format(DateTimeFormatter.ofPattern("dd.MM.yyyy."))

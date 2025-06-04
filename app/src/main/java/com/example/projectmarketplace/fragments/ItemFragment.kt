@@ -1,9 +1,7 @@
 package com.example.projectmarketplace.fragments
 
-import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,11 +9,8 @@ import android.widget.ImageButton
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.projectmarketplace.R
-import com.example.projectmarketplace.adapters.MessageAdapter
 import com.example.projectmarketplace.data.Item
 
 class ItemFragment : Fragment() {
@@ -51,7 +46,7 @@ class ItemFragment : Fragment() {
         view.findViewById<TextView>(R.id.title).text = item.title
         view.findViewById<TextView>(R.id.sellerName).text = item.sellerName
         view.findViewById<RatingBar>(R.id.sellerRating).rating = item.sellerRating
-        view.findViewById<TextView>(R.id.priceValue).text = item.price.toString() + " $"
+        view.findViewById<TextView>(R.id.priceValue).text = view.context.getString(R.string.price_format, item.price)
 
         view.findViewById<TextView>(R.id.brandInput).text = item.brand
         view.findViewById<TextView>(R.id.descriptionInput).text = item.description
