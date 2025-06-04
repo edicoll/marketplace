@@ -8,10 +8,75 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import com.example.projectmarketplace.R
+import com.example.projectmarketplace.data.Item
+import com.example.projectmarketplace.data.Order
 import com.example.projectmarketplace.data.Review
 import com.example.projectmarketplace.data.User
 import com.example.projectmarketplace.databinding.FragmentProfileBinding
 
+
+val orders = listOf(
+        Order(
+            id = 1,
+            buyerId = 1,
+            buyerName = "Edi",
+            item = Item(
+                id = 1001,
+                sellerId = 201,
+                sellerName = "Marko Marković",
+                sellerRating = 4.5f,
+                title = "Samsung Galaxy S23",
+                description = "Novi, neotpakiran, garancija 2 godine",
+                category = "Mobiteli",
+                brand = "Samsung",
+                condition = "Novo",
+                color = "Crni",
+                price = 899.99f,
+                timestamp = System.currentTimeMillis()
+            ),
+            orderDate = System.currentTimeMillis() - 86400000 // jučer
+        ),
+        Order(
+            id = 2,
+            buyerId = 1,
+            buyerName = "Edi",
+            item = Item(
+                id = 1002,
+                sellerId = 202,
+                sellerName = "Petra Petrić",
+                sellerRating = 4.8f,
+                title = "Apple Watch Series 8",
+                description = "Kupljen prošli mjesec, savršeno stanje",
+                category = "Pametni satovi",
+                brand = "Apple",
+                condition = "Kao novo",
+                color = "Srebrni",
+                price = 499.99f,
+                timestamp = System.currentTimeMillis()
+            ),
+            orderDate = System.currentTimeMillis() - 3600000 // prije sat vremena
+        ),
+        Order(
+            id = 3,
+            buyerId = 1,
+            buyerName = "Edi",
+            item = Item(
+                id = 1003,
+                sellerId = 203,
+                sellerName = "Ivana Ivić",
+                sellerRating = 4.2f,
+                title = "Sony WH-1000XM5",
+                description = "Najbolji bezžični slušalice na tržištu",
+                category = "Slušalice",
+                brand = "Sony",
+                condition = "Novo",
+                color = "Plavi",
+                price = 399.99f,
+                timestamp = System.currentTimeMillis()
+            ),
+            orderDate = System.currentTimeMillis() - 259200000 // prije 3 dana
+        )
+    )
 class ProfileFragment : Fragment() {
 
     private lateinit var currentUser: User
@@ -45,11 +110,13 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupActionClickListener(binding.userInfoContainer)
+        setupMyReviews(binding.userInfoContainer)
+        setupMyOrders(binding.myOrdersContainer)
+        //setupActionClickListener(binding.favItemsContainer)
 
     }
 
-    private fun setupActionClickListener(view: View) {
+    private fun setupMyReviews(view: View) {
         view.setOnClickListener {
             val reviewFragment = ReviewFragment()
 
@@ -61,6 +128,23 @@ class ProfileFragment : Fragment() {
 
             parentFragmentManager.beginTransaction()
                 .replace(R.id.flFragment, reviewFragment)
+                .addToBackStack(null)
+                .commit()
+        }
+    }
+
+    private fun setupMyOrders(view: View) {
+        view.setOnClickListener {
+            val orderFragment = OrderFragment()
+
+            val bundle = Bundle().apply {
+                putParcelable("USER_KEY", currentUser)
+                putParcelableArrayList("ORDER_KEY", ArrayList(orders))
+            }
+            orderFragment.arguments = bundle
+
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.flFragment, orderFragment)
                 .addToBackStack(null)
                 .commit()
         }

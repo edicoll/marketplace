@@ -26,7 +26,7 @@ class ReviewAdapter (private val reviews: List<Review>
     }
 
     //kreira se novi UI element, to jest review
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewAdapter.ReviewViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_review, parent, false)
         return ReviewViewHolder(view)
