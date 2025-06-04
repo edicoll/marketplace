@@ -11,7 +11,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="108dp"
-        android:background="@drawable/bg_container"
+        android:background="@drawable/bg_container3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,12 +31,13 @@
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="108dp"
-            android:paddingTop="64dp"
+            android:layout_marginEnd="64dp"
+            android:layout_marginTop= "64dp"
             android:text="Title"
             android:textSize="24sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/back"/>
+            android:textAlignment="center"
+            />
     </androidx.appcompat.widget.Toolbar>
 
     <ImageView

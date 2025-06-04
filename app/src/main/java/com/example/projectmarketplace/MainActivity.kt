@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.projectmarketplace.data.Conversation
 import com.example.projectmarketplace.data.Item
+import com.example.projectmarketplace.data.Review
 import com.example.projectmarketplace.data.User
 import com.example.projectmarketplace.fragments.AddFragment
 import com.example.projectmarketplace.fragments.HomeFragment
@@ -152,6 +153,36 @@ class MainActivity : AppCompatActivity() {
             timestamp = System.currentTimeMillis() - 6400000
         )
     )
+    val reviews = listOf(
+        Review(
+            id = 1,
+            userIdTo = 1,
+            userIdFrom = 201,
+            rating = 5,
+            comment = "Excellent service! The product was exactly as described and arrived quickly."
+        ),
+        Review(
+            id = 2,
+            userIdTo = 1,
+            userIdFrom = 202,
+            rating = 4,
+            comment = "Good quality product, but shipping took longer than expected."
+        ),
+        Review(
+            id = 3,
+            userIdTo = 1,
+            userIdFrom = 203,
+            rating = 3,
+            comment = "Average experience. The item works but shows signs of wear."
+        ),
+        Review(
+            id = 4,
+            userIdTo = 1,
+            userIdFrom = 204,
+            rating = 1,
+            comment = "Very disappointed. Product didn't match the description at all."
+        )
+    )
 
 
 
@@ -182,6 +213,7 @@ class MainActivity : AppCompatActivity() {
         val profileFragment = ProfileFragment().apply {
             arguments = Bundle().apply {
                 putParcelable("USER_KEY", user1)
+                putParcelableArrayList("REVIEW_KEY", ArrayList(reviews))
             }
         }
 
