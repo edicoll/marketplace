@@ -1,4 +1,5 @@
 <resources>
+    <!--  HOME  -->
     <string name="app_name">projectMarketplace</string>
     <string name="home">Home</string>
     <string name="search">Search</string>
@@ -6,15 +7,67 @@
     <string name="sell">Sell your item</string>
     <string name="inbox">Inbox</string>
     <string name="profile">Profile</string>
-    <string name="title">ARKETPLACE</string>
+    <string name="apptitle">ARKETPLACE</string>
+
+    <string name="title">Title</string>
     <string name="slogan">Find your product…</string>
     <string name="items_list_description">List of products</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--  FILTERING -->
     <string-array name="filter_options">
         <item>Default</item>
         <item>Newest first</item>
         <item>Price: low to high</item>
         <item>Price: high to low</item>
     </string-array>
+
+    <!--  ITEM INPUTS -->
     <string name="price_format">%1$.2f $</string>
+    <string name="description">Description</string>
+    <string name="category">Category</string>
+    <string name="condition">Condition</string>
+    <string name="brand">Brand</string>
+    <string name="color">Color</string>
+    <string name="price">Price</string>
+    <string name="add_item">Add item</string>
+    <string name="back">back</string>
+    <string name="logo">logo</string>
+
+    <!-- INDIVIDUAL ITEMS -->
+    <string name="image">image</string>
+    <string name="seller">Seller:</string>
+    <string name="name">Name</string>
+    <string name="price_input">Price:</string>
+    <string name="value">Value</string>
+    <string name="contact_seller">Contact seller</string>
+    <string name="buy_now">Buy now</string>
+    <string name="brand_input">Brand:</string>
+    <string name="some_brand">Some brand</string>
+    <string name="description_input">Description:</string>
+    <string name="about_this_item">About this item.</string>
+    <string name="condition_input">Condition:</string>
+    <string name="new_used">New/used</string>
+    <string name="color_input">Color:</string>
+
+    <!-- PROFILE  -->
+    <string name="my_orders">My orders</string>
+    <string name="email">email</string>
+    <string name="reviews">Reviews</string>
+    <string name="delete_account">Delete account</string>
+    <string name="favorite_items">Favorite items</string>
+
+    <!-- SEARCH  -->
+    <string name="search_hint">Search...</string>
+    <string name="recycle">recycle</string>
+    <string name="electronics">Electronics</string>
+    <string name="accessories">Accessories</string>
+    <string name="vehicles">Vehicles</string>
+    <string name="no_search_results">No search results.</string>
+    <string name="text">Text</string>
+    <string name="time">time</string>
+    <string name="date">date</string>
+
+    <!-- MY ORDERS  -->
+    <string name="purchased">Purchased:</string>
 </resources>

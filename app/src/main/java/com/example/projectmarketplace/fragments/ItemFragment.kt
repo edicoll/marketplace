@@ -16,6 +16,8 @@ import com.example.projectmarketplace.data.Item
 class ItemFragment : Fragment() {
 
     private lateinit var item: Item
+    private val itemKey = "ITEM_KEY"
+    private val itemNotFound = "Item not found"
 
 
     //kreira view
@@ -29,7 +31,7 @@ class ItemFragment : Fragment() {
 
         //dohvaćanje proslijeđenih podataka, getParceable je isto kao pojedinačno
         //dohvaća za cijeli objekt Item
-        item = arguments?.getParcelable("item", Item::class.java) ?: throw IllegalStateException("Item not found")
+        item = arguments?.getParcelable(itemKey, Item::class.java) ?: throw IllegalStateException(itemNotFound)
 
 
         //back tipka
@@ -60,7 +62,7 @@ class ItemFragment : Fragment() {
         fun newInstance(item: Item): ItemFragment {
             return ItemFragment().apply {
                 arguments = Bundle().apply {
-                    putParcelable("item", item)
+                    putParcelable(itemKey, item)
                 }
             }
         }

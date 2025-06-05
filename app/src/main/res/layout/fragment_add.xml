@@ -37,7 +37,7 @@
             android:id="@+id/titleInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Title"
+            android:hint="@string/title"
             android:inputType="textCapSentences"/>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -57,7 +57,7 @@
             android:id="@+id/descriptionInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Description"
+            android:hint="@string/description"
             android:inputType="textMultiLine|textCapSentences"
             android:minLines="3"/>
     </com.google.android.material.textfield.TextInputLayout>
@@ -74,7 +74,7 @@
         app:layout_constraintTop_toBottomOf="@id/descriptionInputLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:hint="Category"
+        android:hint="@string/category"
         android:labelFor="@+id/categoryInput">
 
         <AutoCompleteTextView
@@ -83,7 +83,7 @@
             android:layout_height="wrap_content"
             android:inputType="none"
             android:importantForAccessibility="yes"
-            android:focusable="false"
+            android:focusable="true"
             android:clickable="true"
             tools:text="Select category" />
 
@@ -100,7 +100,7 @@
         app:layout_constraintTop_toBottomOf="@id/categoryInputLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:hint="Condition"
+        android:hint="@string/condition"
         android:labelFor="@+id/conditionInput">
 
         <AutoCompleteTextView
@@ -109,7 +109,7 @@
             android:layout_height="wrap_content"
             android:inputType="none"
             android:importantForAccessibility="yes"
-            android:focusable="false"
+            android:focusable="true"
             android:clickable="true"
             tools:text="Select condition" />
 
@@ -131,7 +131,7 @@
             android:id="@+id/brandInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Brand"
+            android:hint="@string/brand"
             android:inputType="textCapSentences"/>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -151,7 +151,7 @@
             android:id="@+id/colorInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Color"
+            android:hint="@string/color"
             android:inputType="textCapSentences"/>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -171,16 +171,17 @@
             android:id="@+id/priceInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Price"
+            android:hint="@string/price"
             android:inputType="numberDecimal"/>
     </com.google.android.material.textfield.TextInputLayout>
+
     <!-- GUMB -->
     <Button
         android:id="@+id/saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Add item"
+        android:text="@string/add_item"
         app:layout_constraintTop_toBottomOf="@id/priceInputLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

@@ -28,6 +28,10 @@ class SearchFragment : Fragment() {
     private var items: List<Item> = emptyList()
     private var selectedFilter: String = "Default"
     private var currentDisplayedItems: List<Item> = emptyList()
+    private val itemKey = "ITEM_KEY"
+    private val electronics = "Electronics"
+    private val accessories = "Accessories"
+    private val vehicles = "Vehicles"
 
 
 
@@ -46,7 +50,7 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        items = arguments?.getParcelableArrayList<Item>("ITEM_KEY", Item::class.java) ?: emptyList()
+        items = arguments?.getParcelableArrayList<Item>(itemKey, Item::class.java) ?: emptyList()
 
         binding.searchRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         adapter = SearchAdapter(
@@ -76,9 +80,9 @@ class SearchFragment : Fragment() {
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
-        setupCategoryClickListener(binding.electronics, "electronics")
-        setupCategoryClickListener(binding.accessories, "accessories")
-        setupCategoryClickListener(binding.vehicles, "vehicles")
+        setupCategoryClickListener(binding.electronics, electronics)
+        setupCategoryClickListener(binding.accessories, accessories)
+        setupCategoryClickListener(binding.vehicles, vehicles)
 
     }
 
@@ -133,10 +137,12 @@ class SearchFragment : Fragment() {
                 categories.visibility = View.GONE //sakrivanje kategorija
                 noResult.visibility = if (filteredList.isEmpty()) View.VISIBLE else View.GONE //sakrivanje i prikazivanje nema rezultata
                 applyFilter(filteredList) }
+
         } else {
             spinner.visibility = View.GONE
             categories.visibility = View.VISIBLE  //prikazivanje kategorija
             noResult.visibility = View.GONE
+            binding.filtering.setSelection(0)
             emptyList()
         }
 
@@ -146,6 +152,7 @@ class SearchFragment : Fragment() {
 
     private fun applyFilter(list: List<Item>): List<Item> {
         return when (selectedFilter) {
+            "Default" -> list.sortedByDescending { it.timestamp }
             "Newest first" -> list.sortedByDescending { it.timestamp }
             "Price: low to high" -> list.sortedBy { it.price }
             "Price: high to low" -> list.sortedByDescending { it.price }
@@ -154,15 +161,33 @@ class SearchFragment : Fragment() {
     }
 
     private fun setupCategoryClickListener(view: View, categoryName: String) {
-        view.setOnClickListener {
-            val filteredItems = items.filter { item ->
+
+        var filteredItems = items.filter { item ->
                 item.category.equals(categoryName, ignoreCase = true)
-            }
+        }
+
+        view.setOnClickListener {  //listener kada se klikne na pojedinu kategoriju
             binding.categories.visibility = View.GONE
+            binding.toolbar.visibility = View.VISIBLE
+            binding.title.text = categoryName
             binding.filtering.visibility = View.VISIBLE
+            binding.searchBar.visibility = View.GONE
+
             currentDisplayedItems = filteredItems
             adapter.updateItems(applyFilter(filteredItems))
         }
+
+        binding.back.setOnClickListener {  // listener za back tipku kada se prikazuju kategorije
+            binding.searchBar.visibility = View.VISIBLE
+            binding.toolbar.visibility = View.GONE  //miče se search i prikazuje back
+            binding.filtering.visibility = View.GONE
+            binding.categories.visibility = View.VISIBLE
+
+            binding.filtering.setSelection(0)  // u spinneru se vraća defaut
+
+            adapter.clear()  // briše se lista
+        }
+
     }
 
 

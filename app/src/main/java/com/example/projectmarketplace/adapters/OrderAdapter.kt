@@ -16,6 +16,8 @@ import java.time.format.DateTimeFormatter
 class OrderAdapter (private val orders: List<Order>
 ) : RecyclerView.Adapter<OrderAdapter.OrderViewHolder>() {
 
+    val dateFormat = "dd.MM.yyyy."
+
     //čuva podatke za svaki red liste
     class OrderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val title: TextView = itemView.findViewById(R.id.title)
@@ -41,7 +43,7 @@ class OrderAdapter (private val orders: List<Order>
 
         holder.date.text = Instant.ofEpochMilli(order.orderDate)
             .atZone(ZoneId.systemDefault())
-            .format(DateTimeFormatter.ofPattern("dd.MM.yyyy."))
+            .format(DateTimeFormatter.ofPattern(dateFormat))
 
     }
 

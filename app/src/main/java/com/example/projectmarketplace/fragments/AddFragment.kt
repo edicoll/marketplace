@@ -14,6 +14,12 @@ import com.example.projectmarketplace.databinding.FragmentAddBinding
 class AddFragment : Fragment() {
     private var _binding: FragmentAddBinding? = null
     private val binding get() = _binding!!
+    private val fillInAllFields = "Please fill in all fields."
+    private val inputCorrectPrice = "Input correct price."
+    private val itemSuccessfullyAdded = "Item successfully added!"
+    val categories = listOf("Electronics", "Accessories", "Vehicles")
+    val conditions = listOf("New", "Like new", "Used")
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,20 +45,16 @@ class AddFragment : Fragment() {
             val condition = binding.conditionInput.text.toString()
             val brand = binding.brandInput.text.toString()
             val color = binding.colorInput.text.toString()
-            /*
-            Log.d("AddFragment", "Uneseni naslov: $title")
-            Log.d("AddFragment", "Uneseni opis: $description")
-            Log.d("AddFragment", "Unesena cijena: $price")
-            */
+
             if(title.isBlank() || description.isBlank() || priceText.isBlank() || category.isBlank() || condition.isBlank()
                 || brand.isBlank() || color.isBlank()){
-                Toast.makeText(requireContext(), "Please fill in all fields.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), fillInAllFields, Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             val price = try {
                 priceText.toFloat()
             } catch (e: NumberFormatException) {
-                Toast.makeText(requireContext(), "Input correct price", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), inputCorrectPrice, Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -77,38 +79,18 @@ class AddFragment : Fragment() {
     }
     private fun saveItem(item: Item) {
 
-        Toast.makeText(requireContext(), "Item successfully added!", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), itemSuccessfullyAdded, Toast.LENGTH_SHORT).show()
         clearInputFields()
-    /*
-        Log.d("AddFragment", "╔═══════════════════════════════════════════════")
-        Log.d("AddFragment", "║ NEW ITEM CREATED")
-        Log.d("AddFragment", "╠═══════════════════════════════════════════════")
-        Log.d("AddFragment", "║ ID: ${item.id}")
-        Log.d("AddFragment", "║ Seller: ${item.sellerName} (ID: ${item.sellerId})")
-        Log.d("AddFragment", "║ Seller Rating: ${item.sellerRating} ★")
-        Log.d("AddFragment", "╠═══════════════════════════════════════════════")
-        Log.d("AddFragment", "║ Title: '${item.title}'")
-        Log.d("AddFragment", "║ Description: '${item.description}'")
-        Log.d("AddFragment", "║ Category: ${item.category}")
-        Log.d("AddFragment", "║ Brand: ${item.brand}")
-        Log.d("AddFragment", "║ Condition: ${item.condition}")
-        Log.d("AddFragment", "║ Color: ${item.color}")
-        Log.d("AddFragment", "╠═══════════════════════════════════════════════")
-        Log.d("AddFragment", "║ Price: ${String.format(Locale.getDefault(), "%.2f", item.price)}")
-        Log.d("AddFragment", "║ Timestamp: ${SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date(item.timestamp))}")
-        Log.d("AddFragment", "╚═══════════════════════════════════════════════")*/
 
     }
 
     private fun setupCategoryDropdown() {
-        val categories = listOf("Electronics", "Accessories", "Vehicles")
         val adapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, categories)
         binding.categoryInput.setAdapter(adapter)
     }
 
     private fun setupConditionDropdown() {
-        val categories = listOf("New", "Like new", "Used")
-        val adapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, categories)
+        val adapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, conditions)
         binding.conditionInput.setAdapter(adapter)
     }
 

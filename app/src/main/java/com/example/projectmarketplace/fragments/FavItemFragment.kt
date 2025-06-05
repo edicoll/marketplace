@@ -23,6 +23,8 @@ class FavItemFragment : Fragment(){
     private var favitems: List<FavItem> = emptyList()
     private lateinit var adapter: FavitemAdapter
     private lateinit var recyclerView: RecyclerView
+    private val userKey = "USER_KEY"
+    private val favItemKey = "FAVITEM_KEY"
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreateView(
@@ -33,8 +35,8 @@ class FavItemFragment : Fragment(){
         _binding = FragmentFavitemBinding.inflate(inflater, container, false)
 
         // dohvaćanje podataka
-        currentUser = arguments?.getParcelable("USER_KEY", User::class.java) ?: User(2, "ffh", "ww0,", 3F, "hh")
-        favitems = arguments?.getParcelableArrayList<FavItem>("FAVITEM_KEY", FavItem::class.java) ?: emptyList()
+        currentUser = arguments?.getParcelable(userKey, User::class.java) ?: User(2, "", ",", 3F, "")
+        favitems = arguments?.getParcelableArrayList<FavItem>(favItemKey, FavItem::class.java) ?: emptyList()
 
 
         binding.back.setOnClickListener {

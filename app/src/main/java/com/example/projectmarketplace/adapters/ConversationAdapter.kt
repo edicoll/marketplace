@@ -20,6 +20,8 @@ class ConversationAdapter(private val conversations: List<Conversation>,
                           private val fragmentActivity: FragmentActivity
 ) : RecyclerView.Adapter<ConversationAdapter.ViewHolder>() {
 
+     val timeFormat = "HH:mm"
+
     //čuva podatke za svaki red liste
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val name: TextView = itemView.findViewById(R.id.name)
@@ -44,7 +46,7 @@ class ConversationAdapter(private val conversations: List<Conversation>,
         holder.lastMessage.text = conversation.lastMessage
         holder.time.text = Instant.ofEpochMilli(conversation.timestamp)
             .atZone(ZoneId.systemDefault())
-            .format(DateTimeFormatter.ofPattern("HH:mm"))
+            .format(DateTimeFormatter.ofPattern(timeFormat))
 
         val textColor = if (conversation.unreadCount > 0) Color.GRAY else Color.GRAY
         holder.name.setTextColor(textColor)

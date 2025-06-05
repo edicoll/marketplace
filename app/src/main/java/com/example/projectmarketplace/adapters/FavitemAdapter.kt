@@ -16,6 +16,7 @@ import java.time.format.DateTimeFormatter
 class FavitemAdapter (private val favitems: List<FavItem>
 ) : RecyclerView.Adapter<FavitemAdapter.FavitemViewHolder>() {
 
+    val dateFormat = "dd.MM.yyyy."
 
     //čuva podatke za svaki red liste
     class FavitemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -38,10 +39,10 @@ class FavitemAdapter (private val favitems: List<FavItem>
         val favitem = favitems[position]
 
         holder.title.text = favitem.item.title
-        holder.price.text = favitem.item.price.toString() + "$"
+        holder.price.text = holder.itemView.context.getString(R.string.price_format, favitem.item.price)
         holder.date.text = Instant.ofEpochMilli(favitem.item.timestamp)
             .atZone(ZoneId.systemDefault())
-            .format(DateTimeFormatter.ofPattern("dd.MM.yyyy."))
+            .format(DateTimeFormatter.ofPattern(dateFormat))
 
     }
 

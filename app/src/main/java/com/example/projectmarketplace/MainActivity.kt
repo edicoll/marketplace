@@ -18,6 +18,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
+
+    private val userKey = "USER_KEY"
+    private val reviewKey = "REVIEW_KEY"
+    private val itemKey = "ITEM_KEY"
+    private val conversationKey = "CONVERSATION_KEY"
+
      val user1 = User(
         id = 1,
         name = "Edi",
@@ -195,24 +201,24 @@ class MainActivity : AppCompatActivity() {
 
         val homeFragment = HomeFragment().apply {
             arguments = Bundle().apply{
-                putParcelableArrayList("ITEM_KEY", ArrayList(items))
+                putParcelableArrayList(itemKey, ArrayList(items))
             }
         }
         val searchFragment = SearchFragment().apply {
             arguments = Bundle().apply{
-                putParcelableArrayList("ITEM_KEY", ArrayList(items))
+                putParcelableArrayList(itemKey, ArrayList(items))
             }
         }
         val addFragment = AddFragment()
         val inboxFragment = InboxFragment().apply {
             arguments = Bundle().apply {
-                putParcelableArrayList("CONVERSATION_KEY", ArrayList(conversations))
+                putParcelableArrayList(conversationKey, ArrayList(conversations))
             }
         }
         val profileFragment = ProfileFragment().apply {
             arguments = Bundle().apply {
-                putParcelable("USER_KEY", user1)
-                putParcelableArrayList("REVIEW_KEY", ArrayList(reviews))
+                putParcelable(userKey, user1)
+                putParcelableArrayList(reviewKey, ArrayList(reviews))
             }
         }
 

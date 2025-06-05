@@ -19,6 +19,9 @@ class ItemAdapter (private val items: List<Item>,
                    private val fragmentActivity: FragmentActivity
 ) : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 
+    val dateFormat = "dd.MM.yyyy."
+
+
     //čuva podatke za svaki red liste
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val title: TextView = itemView.findViewById(R.id.title)
@@ -43,7 +46,7 @@ class ItemAdapter (private val items: List<Item>,
         holder.price.text = holder.itemView.context.getString(R.string.price_format, item.price)
         holder.date.text = Instant.ofEpochMilli(item.timestamp)
             .atZone(ZoneId.systemDefault())
-            .format(DateTimeFormatter.ofPattern("dd.MM.yyyy."))
+            .format(DateTimeFormatter.ofPattern(dateFormat))
 
 
         holder.itemView.setOnClickListener {

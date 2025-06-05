@@ -141,6 +141,10 @@ class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
     private var reviews: List<Review> = emptyList()
+    private val userKey = "USER_KEY"
+    private val reviewKey = "REVIEW_KEY"
+    private val orderKey = "ORDER_KEY"
+    private val favItemKey = "FAVITEM_KEY"
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreateView(
@@ -151,8 +155,8 @@ class ProfileFragment : Fragment() {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
 
         // dohvaćanje podataka
-        currentUser = arguments?.getParcelable("USER_KEY", User::class.java) ?: User(2, "ffh", "ww0,", 3F, "hh")
-        reviews = arguments?.getParcelableArrayList<Review>("REVIEW_KEY", Review::class.java) ?: emptyList()
+        currentUser = arguments?.getParcelable(userKey, User::class.java) ?: User(2, "ffh", "ww0,", 3F, "hh")
+        reviews = arguments?.getParcelableArrayList<Review>(reviewKey, Review::class.java) ?: emptyList()
 
         val name = binding.name
         val email = binding.email
@@ -179,8 +183,8 @@ class ProfileFragment : Fragment() {
             val reviewFragment = ReviewFragment()
 
             val bundle = Bundle().apply {
-                putParcelable("USER_KEY", currentUser)
-                putParcelableArrayList("REVIEW_KEY", ArrayList(reviews))
+                putParcelable(userKey, currentUser)
+                putParcelableArrayList(reviewKey, ArrayList(reviews))
             }
             reviewFragment.arguments = bundle
 
@@ -196,8 +200,8 @@ class ProfileFragment : Fragment() {
             val orderFragment = OrderFragment()
 
             val bundle = Bundle().apply {
-                putParcelable("USER_KEY", currentUser)
-                putParcelableArrayList("ORDER_KEY", ArrayList(orders))
+                putParcelable(userKey, currentUser)
+                putParcelableArrayList(orderKey, ArrayList(orders))
             }
             orderFragment.arguments = bundle
 
@@ -213,8 +217,8 @@ class ProfileFragment : Fragment() {
             val favItemFragment = FavItemFragment()
 
             val bundle = Bundle().apply {
-                putParcelable("USER_KEY", currentUser)
-                putParcelableArrayList("FAVITEM_KEY", ArrayList(favitems))
+                putParcelable(userKey, currentUser)
+                putParcelableArrayList(favItemKey, ArrayList(favitems))
             }
             favItemFragment.arguments = bundle
 

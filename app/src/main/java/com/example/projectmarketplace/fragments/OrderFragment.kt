@@ -23,6 +23,8 @@ class OrderFragment : Fragment() {
     private var orders: List<Order> = emptyList()
     private lateinit var adapter: OrderAdapter
     private lateinit var recyclerView: RecyclerView
+    private val userKey = "USER_KEY"
+    private val orderKey = "ORDER_KEY"
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreateView(
@@ -33,8 +35,8 @@ class OrderFragment : Fragment() {
         _binding = FragmentMyordersBinding.inflate(inflater, container, false)
 
         // dohvaćanje podataka
-        currentUser = arguments?.getParcelable("USER_KEY", User::class.java) ?: User(2, "ffh", "ww0,", 3F, "hh")
-        orders = arguments?.getParcelableArrayList<Order>("ORDER_KEY", Order::class.java) ?: emptyList()
+        currentUser = arguments?.getParcelable(userKey, User::class.java) ?: User(2, "", ",", 3F, "")
+        orders = arguments?.getParcelableArrayList<Order>(orderKey, Order::class.java) ?: emptyList()
 
         binding.back.setOnClickListener {
             parentFragmentManager.popBackStack()
