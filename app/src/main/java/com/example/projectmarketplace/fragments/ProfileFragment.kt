@@ -2,7 +2,6 @@ package com.example.projectmarketplace.fragments
 
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +13,7 @@ import com.example.projectmarketplace.data.Order
 import com.example.projectmarketplace.data.Review
 import com.example.projectmarketplace.data.User
 import com.example.projectmarketplace.databinding.FragmentProfileBinding
+import com.example.projectmarketplace.fragments.base.BaseFragment
 
 
 val orders = listOf(
@@ -135,42 +135,28 @@ val favitems = listOf(
     )
 
 
-class ProfileFragment : Fragment() {
+class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
 
-    private lateinit var currentUser: User
-    private var _binding: FragmentProfileBinding? = null
-    private val binding get() = _binding!!
     private var reviews: List<Review> = emptyList()
-    private val userKey = "USER_KEY"
-    private val reviewKey = "REVIEW_KEY"
-    private val orderKey = "ORDER_KEY"
-    private val favItemKey = "FAVITEM_KEY"
+
+    override fun inflateBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentProfileBinding {
+        return FragmentProfileBinding.inflate(inflater, container, false)
+    }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentProfileBinding.inflate(inflater, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         // dohvaćanje podataka
         currentUser = arguments?.getParcelable(userKey, User::class.java) ?: User(2, "ffh", "ww0,", 3F, "hh")
         reviews = arguments?.getParcelableArrayList<Review>(reviewKey, Review::class.java) ?: emptyList()
 
-        val name = binding.name
-        val email = binding.email
-        val ratingBar = binding.ratingBar
-
-        name.text = currentUser.name
-        email.text = currentUser.email
-        ratingBar.rating = currentUser.rating
-
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        binding.name.text = currentUser?.name
+        binding.email.text = currentUser?.email
+        binding.ratingBar.rating = currentUser?.rating!!
 
         setupMyReviews(binding.userInfoContainer)
         setupMyOrders(binding.myOrdersContainer)
@@ -230,8 +216,5 @@ class ProfileFragment : Fragment() {
     }
 
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+
 }

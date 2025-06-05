@@ -14,44 +14,31 @@ import com.example.projectmarketplace.adapters.ReviewAdapter
 import com.example.projectmarketplace.data.Review
 import com.example.projectmarketplace.data.User
 import com.example.projectmarketplace.databinding.FragmentReviewBinding
+import com.example.projectmarketplace.fragments.base.BaseFragment
 
-class ReviewFragment : Fragment() {
+class ReviewFragment : BaseFragment<FragmentReviewBinding>() {
 
-    private lateinit var currentUser: User
-    private var _binding: FragmentReviewBinding? = null
-    private val binding get() = _binding!!
     private var reviews: List<Review> = emptyList()
     private lateinit var adapter: ReviewAdapter
     private lateinit var recyclerView: RecyclerView
-    private val userKey = "USER_KEY"
-    private val reviewKey = "REVIEW_KEY"
+
+    override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentReviewBinding {
+        return FragmentReviewBinding.inflate(inflater, container, false)
+    }
 
 
-    //kreira view
+    //konfiguracija kreiranog viewa
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentReviewBinding.inflate(inflater, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         // dohvaćanje podataka
         currentUser = arguments?.getParcelable(userKey, User::class.java) ?: User(2, "", ",", 3F, "")
         reviews = arguments?.getParcelableArrayList<Review>(reviewKey, Review::class.java) ?: emptyList()
 
-        binding.name.text = currentUser.name
+        binding.name.text = currentUser?.name
 
-        binding.back.setOnClickListener {
-            parentFragmentManager.popBackStack()
-        }
-
-        return binding.root
-    }
-
-    //konfiguracija kreiranog viewa
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        setupBackButton(binding.back)
 
         //definira se recycleview i spaja s layoutom
         recyclerView = view.findViewById(R.id.reviewRecyclerView)

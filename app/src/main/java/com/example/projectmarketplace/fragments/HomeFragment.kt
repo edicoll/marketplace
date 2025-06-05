@@ -2,7 +2,6 @@ package com.example.projectmarketplace.fragments
 
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,21 +11,24 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.projectmarketplace.R
 import com.example.projectmarketplace.adapters.ItemAdapter
 import com.example.projectmarketplace.data.Item
+import com.example.projectmarketplace.databinding.FragmentHomeBinding
+import com.example.projectmarketplace.fragments.base.BaseFragment
 
-class HomeFragment : Fragment() {
-
+class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     private var items: List<Item> = emptyList()
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ItemAdapter
-    private val itemKey = "ITEM_KEY"
+
+    override fun inflateBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentHomeBinding {
+        return FragmentHomeBinding.inflate(inflater, container, false)
+    }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         items = arguments?.getParcelableArrayList<Item>(itemKey, Item::class.java) ?: emptyList()
 
@@ -40,7 +42,6 @@ class HomeFragment : Fragment() {
 
         recyclerView.adapter = adapter
 
-        return view
     }
 }
 

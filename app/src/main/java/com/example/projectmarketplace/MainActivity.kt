@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity() {
         ),Item(
             id = 4,
             sellerId = 2,
-            sellerName = "Josip",
+            sellerName = "karol g.",
             sellerRating = 2.5F,
             title = "Sunglasses",
             description = "New ray ban stylish sunglasses",

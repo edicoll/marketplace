@@ -2,7 +2,6 @@ package com.example.projectmarketplace.fragments
 
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,33 +15,27 @@ import com.example.projectmarketplace.R
 import com.example.projectmarketplace.adapters.SearchAdapter
 import com.example.projectmarketplace.data.Item
 import com.example.projectmarketplace.databinding.FragmentSearchBinding
+import com.example.projectmarketplace.fragments.base.BaseFragment
 
 
-class SearchFragment : Fragment() {
+class SearchFragment : BaseFragment<FragmentSearchBinding>() {
 
     //view binding je mehanizam koji generira klasu koja omogućuje pristup elementima iz XML layouta
     // generira klasu iz layouta npr.FragmentSearchBinding iz fragment_search.xml, ta klsa sadrži refernce na vieowe
-    private var _binding: FragmentSearchBinding? = null
-    private val binding get() = _binding!!
+
     private lateinit var adapter: SearchAdapter
     private var items: List<Item> = emptyList()
     private var selectedFilter: String = "Default"
     private var currentDisplayedItems: List<Item> = emptyList()
-    private val itemKey = "ITEM_KEY"
     private val electronics = "Electronics"
     private val accessories = "Accessories"
     private val vehicles = "Vehicles"
 
-
-
-    //kreiranje binding objekta
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentSearchBinding.inflate(inflater, container, false)
-
-        return binding.root //ovo zapravo vraća glavni view, to je u mom slučaju constrainedlayou
+    override fun inflateBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentSearchBinding {
+        return FragmentSearchBinding.inflate(inflater, container, false)
     }
 
 
@@ -190,11 +183,6 @@ class SearchFragment : Fragment() {
 
     }
 
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 
 }
 
