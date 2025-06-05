@@ -24,6 +24,7 @@ abstract class BaseFragment<VBinding : ViewBinding> : Fragment() {
     protected val conversationKey = "CONVERSATION_KEY"
     protected val orderKey = "ORDER_KEY"
     protected val reviewKey = "REVIEW_KEY"
+    protected val categoryKey = "CATEGORY_KEY"
 
     override fun onCreateView(
         inflater: LayoutInflater,
