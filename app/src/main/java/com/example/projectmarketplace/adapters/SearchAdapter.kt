@@ -20,11 +20,19 @@ class SearchAdapter(
     private var items: List<Item>
 ) : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
 
+    val dateFormat = "dd.MM.yyyy."
 
     // funkcija koja se poziva iz searchFragmenta za ažuriranje liste item-a
     @SuppressLint("NotifyDataSetChanged")
     fun updateItems(newItems: List<Item>) {
         items = newItems   // items se nekako prosljeđuje ovdje
+        notifyDataSetChanged() // obavještava adapter
+    }
+
+    // funkcija za čišćenje
+    @SuppressLint("NotifyDataSetChanged")
+    fun clear() {
+        items = emptyList()   // prazna lista
         notifyDataSetChanged() // obavještava adapter
     }
 
@@ -53,10 +61,10 @@ class SearchAdapter(
 
                 // postavlja podatke na view-ove
                 title.text = item.title
-                price.text = item.price.toString() + " $"
+                price.text = itemView.context.getString(R.string.price_format, item.price)
                 date.text = Instant.ofEpochMilli(item.timestamp)
                     .atZone(ZoneId.systemDefault())
-                    .format(DateTimeFormatter.ofPattern("dd.MM.yyyy."))
+                    .format(DateTimeFormatter.ofPattern(dateFormat))
 
                 itemView.setOnClickListener { // klikom na pojedini item se prikazuje novi fragment
 

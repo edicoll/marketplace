@@ -18,6 +18,7 @@ class HomeFragment : Fragment() {
     private var items: List<Item> = emptyList()
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ItemAdapter
+    private val itemKey = "ITEM_KEY"
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreateView(
@@ -27,7 +28,7 @@ class HomeFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
-        items = arguments?.getParcelableArrayList<Item>("ITEM_KEY", Item::class.java) ?: emptyList()
+        items = arguments?.getParcelableArrayList<Item>(itemKey, Item::class.java) ?: emptyList()
 
         recyclerView = view.findViewById(R.id.itemRecyclerView)
         recyclerView.layoutManager = GridLayoutManager(context, 2)

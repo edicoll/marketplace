@@ -23,6 +23,8 @@ class ReviewFragment : Fragment() {
     private var reviews: List<Review> = emptyList()
     private lateinit var adapter: ReviewAdapter
     private lateinit var recyclerView: RecyclerView
+    private val userKey = "USER_KEY"
+    private val reviewKey = "REVIEW_KEY"
 
 
     //kreira view
@@ -35,8 +37,8 @@ class ReviewFragment : Fragment() {
         _binding = FragmentReviewBinding.inflate(inflater, container, false)
 
         // dohvaćanje podataka
-        currentUser = arguments?.getParcelable("USER_KEY", User::class.java) ?: User(2, "ffh", "ww0,", 3F, "hh")
-        reviews = arguments?.getParcelableArrayList<Review>("REVIEW_KEY", Review::class.java) ?: emptyList()
+        currentUser = arguments?.getParcelable(userKey, User::class.java) ?: User(2, "", ",", 3F, "")
+        reviews = arguments?.getParcelableArrayList<Review>(reviewKey, Review::class.java) ?: emptyList()
 
         binding.name.text = currentUser.name
 

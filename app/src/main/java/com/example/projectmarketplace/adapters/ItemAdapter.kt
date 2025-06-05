@@ -19,6 +19,9 @@ class ItemAdapter (private val items: List<Item>,
                    private val fragmentActivity: FragmentActivity
 ) : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 
+    val dateFormat = "dd.MM.yyyy."
+
+
     //čuva podatke za svaki red liste
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val title: TextView = itemView.findViewById(R.id.title)
@@ -28,7 +31,7 @@ class ItemAdapter (private val items: List<Item>,
     }
 
     //kreira se novi UI element, to jest item
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_item, parent, false)
         return ViewHolder(view)
@@ -36,14 +39,14 @@ class ItemAdapter (private val items: List<Item>,
 
     //postavlja se nakon što se kreira item
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun onBindViewHolder(holder: ItemAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
 
         holder.title.text = item.title
-        holder.price.text = item.price.toString() + " $"
+        holder.price.text = holder.itemView.context.getString(R.string.price_format, item.price)
         holder.date.text = Instant.ofEpochMilli(item.timestamp)
             .atZone(ZoneId.systemDefault())
-            .format(DateTimeFormatter.ofPattern("dd.MM.yyyy."))
+            .format(DateTimeFormatter.ofPattern(dateFormat))
 
 
         holder.itemView.setOnClickListener {

@@ -19,6 +19,7 @@ class InboxFragment : Fragment() {
     private var conversations: List<Conversation> = emptyList()
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ConversationAdapter
+    private val conversationKey = "CONVERSATION_KEY"
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreateView(
@@ -31,7 +32,7 @@ class InboxFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_inbox, container, false)
 
         //dohvaćaju se podatci o razgovorima
-        conversations = arguments?.getParcelableArrayList<Conversation>("CONVERSATION_KEY", Conversation::class.java) ?: emptyList()
+        conversations = arguments?.getParcelableArrayList<Conversation>(conversationKey, Conversation::class.java) ?: emptyList()
 
         //definira se recycleview i spaja s layoutom
         recyclerView = view.findViewById(R.id.inboxRecyclerView)

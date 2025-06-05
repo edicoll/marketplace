@@ -13,6 +13,8 @@ import java.util.*
 class MessageAdapter(private val messages: List<Message>, private val currentUserId: Int?) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    val timeFormat = "HH:mm"
+
         //2 tipa poslani i primljeni
     companion object {
         private const val VIEW_TYPE_SENT = 1
@@ -51,7 +53,7 @@ class MessageAdapter(private val messages: List<Message>, private val currentUse
        //redni broj poruke
         val message = messages[position]
         //formatiranje vrmena
-        val dateFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+        val dateFormat = SimpleDateFormat(timeFormat, Locale.getDefault())
         val timeString = dateFormat.format(Date(message.timestamp))
 
         when (holder) {
