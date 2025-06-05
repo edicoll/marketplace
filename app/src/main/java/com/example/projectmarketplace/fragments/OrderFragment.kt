@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projectmarketplace.R
@@ -14,40 +13,32 @@ import com.example.projectmarketplace.adapters.OrderAdapter
 import com.example.projectmarketplace.data.Order
 import com.example.projectmarketplace.data.User
 import com.example.projectmarketplace.databinding.FragmentMyordersBinding
+import com.example.projectmarketplace.fragments.base.BaseFragment
 
-class OrderFragment : Fragment() {
+class OrderFragment : BaseFragment<FragmentMyordersBinding>() {
 
-    private lateinit var currentUser: User
-    private var _binding: FragmentMyordersBinding? = null
-    private val binding get() = _binding!!
+
     private var orders: List<Order> = emptyList()
     private lateinit var adapter: OrderAdapter
     private lateinit var recyclerView: RecyclerView
-    private val userKey = "USER_KEY"
-    private val orderKey = "ORDER_KEY"
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    override fun onCreateView(
+    override fun inflateBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentMyordersBinding.inflate(inflater, container, false)
+        container: ViewGroup?
+    ): FragmentMyordersBinding {
+        return FragmentMyordersBinding.inflate(inflater, container, false)
+    }
 
-        // dohvaćanje podataka
+
+    //konfiguracija kreiranog viewa
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         currentUser = arguments?.getParcelable(userKey, User::class.java) ?: User(2, "", ",", 3F, "")
         orders = arguments?.getParcelableArrayList<Order>(orderKey, Order::class.java) ?: emptyList()
 
-        binding.back.setOnClickListener {
-            parentFragmentManager.popBackStack()
-        }
-
-        return binding.root
-    }
-
-    //konfiguracija kreiranog viewa
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        setupBackButton(binding.back)
 
         //definira se recycleview i spaja s layoutom
         recyclerView = view.findViewById(R.id.myordersRecyclerView)

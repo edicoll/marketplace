@@ -5,15 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.projectmarketplace.R
 import com.example.projectmarketplace.adapters.MessageAdapter
 import com.example.projectmarketplace.data.Message
+import com.example.projectmarketplace.databinding.FragmentInboxIndividualBinding
+import com.example.projectmarketplace.fragments.base.BaseFragment
 
 //hardkodirane poruke samo za prikaz
 val messages = listOf(
@@ -54,7 +52,8 @@ val messages = listOf(
     )
 )
 
-class InboxIndividualFragment : Fragment() {
+class InboxIndividualFragment : BaseFragment<FragmentInboxIndividualBinding>() {
+
 
     private var conversationId: Int? = 0
     private var participant1Id: Int? = 0
@@ -62,13 +61,17 @@ class InboxIndividualFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MessageAdapter
 
-    //kreira view
-    override fun onCreateView(
+    override fun inflateBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_inbox_individual, container, false)
+        container: ViewGroup?
+    ): FragmentInboxIndividualBinding {
+        return FragmentInboxIndividualBinding.inflate(inflater, container, false)
+    }
+
+    //konfiguracija kreiranog viewa
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         //dohvaćanje proslijeđenih podataka
         arguments?.let {
@@ -78,25 +81,16 @@ class InboxIndividualFragment : Fragment() {
         }
 
         //back tipka
-        view.findViewById<ImageButton>(R.id.back).setOnClickListener {
-            parentFragmentManager.popBackStack()
-        }
-        return view
-    }
+        setupBackButton(binding.back)
 
-    //konfiguracija kreiranog viewa
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        binding.name.text = participant2Name
 
-        view.findViewById<TextView>(R.id.name).text = participant2Name
-
-        val filteredMessages = messages.filter {conversationId == it.conversationId}
+        val filteredMessages = messages
+            .filter {conversationId == it.conversationId}
             .sortedBy { it.timestamp }
 
 
-        recyclerView = view.findViewById(R.id.messagesRecyclerView)
-
+        recyclerView = binding.messagesRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(context)
 
         adapter = MessageAdapter(
@@ -110,13 +104,13 @@ class InboxIndividualFragment : Fragment() {
     //kreacija
     companion object {
         fun newInstance(conversationId: Int, participant2Name: String, participant1Id: Int): InboxIndividualFragment {
-            val fragment = InboxIndividualFragment()
-            val args = Bundle()
-            args.putInt("conversationId", conversationId)
-            args.putString("participant2Name", participant2Name)
-            args.putInt("participant1Id", participant1Id)
-            fragment.arguments = args
-            return fragment
+            return InboxIndividualFragment().apply {
+                arguments = Bundle().apply {
+                    putInt("conversationId", conversationId)
+                    putString("participant2Name", participant2Name)
+                    putInt("participant1Id", participant1Id)
+                }
+            }
         }
     }
 }

@@ -27,41 +27,6 @@
         app:layout_anchor="@id/search_bar"
         tools:ignore="MissingConstraints" />
 
-    <!-- BACK TOOLBAR -->
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="108dp"
-        android:background="@drawable/bg_container3"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageButton
-            android:id="@+id/back"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/back"
-            android:src="@drawable/ic_arrow_back"/>
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="64dp"
-            android:layout_marginTop= "64dp"
-            android:text="@string/category"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textAlignment="center"
-            />
-
-    </androidx.appcompat.widget.Toolbar>
 
     <!-- FILTRIRANJE -->
     <Spinner

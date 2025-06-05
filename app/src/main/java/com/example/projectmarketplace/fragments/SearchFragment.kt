@@ -2,47 +2,35 @@ package com.example.projectmarketplace.fragments
 
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import androidx.annotation.RequiresApi
-import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.projectmarketplace.R
 import com.example.projectmarketplace.adapters.SearchAdapter
 import com.example.projectmarketplace.data.Item
 import com.example.projectmarketplace.databinding.FragmentSearchBinding
+import com.example.projectmarketplace.fragments.base.BaseFragment
+import com.example.projectmarketplace.views.SearchView
 
 
-class SearchFragment : Fragment() {
+class SearchFragment : BaseFragment<FragmentSearchBinding>() {
 
     //view binding je mehanizam koji generira klasu koja omogućuje pristup elementima iz XML layouta
     // generira klasu iz layouta npr.FragmentSearchBinding iz fragment_search.xml, ta klsa sadrži refernce na vieowe
-    private var _binding: FragmentSearchBinding? = null
-    private val binding get() = _binding!!
+
     private lateinit var adapter: SearchAdapter
     private var items: List<Item> = emptyList()
-    private var selectedFilter: String = "Default"
-    private var currentDisplayedItems: List<Item> = emptyList()
-    private val itemKey = "ITEM_KEY"
     private val electronics = "Electronics"
     private val accessories = "Accessories"
     private val vehicles = "Vehicles"
+    private lateinit var searchView: SearchView
 
-
-
-    //kreiranje binding objekta
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentSearchBinding.inflate(inflater, container, false)
-
-        return binding.root //ovo zapravo vraća glavni view, to je u mom slučaju constrainedlayou
+    override fun inflateBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentSearchBinding {
+        return FragmentSearchBinding.inflate(inflater, container, false)
     }
 
 
@@ -57,144 +45,24 @@ class SearchFragment : Fragment() {
             requireActivity(),
             emptyList()
         )
+
+        searchView = SearchView(binding, requireActivity(), items, adapter)
+
         binding.searchRecyclerView.adapter = adapter  //na recycleView se postavlja kreirano u adapteru
-        setupRecyclerView()
 
-        val spinner = binding.filtering // dohvaća referencu na spinner
-        ArrayAdapter.createFromResource( // kreira se adapter koji postavlja filtere i dizajn
-            requireContext(),
-            R.array.filter_options,
-            R.layout.spinner_item
-        ).also { adapter ->
-            adapter.setDropDownViewResource(R.layout.spinner_dropdown_item) //layout za prikaz padajućeg izbornika
-            spinner.adapter = adapter //postavlja kreirani adapter na spinner
-        }
+        searchView.setupSearchBar()
 
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                selectedFilter = parent.getItemAtPosition(position).toString()
-                val sortedItems = applyFilter(currentDisplayedItems)
-                adapter.updateItems(sortedItems)
-            }
+        searchView.setupDropdown()
 
-            override fun onNothingSelected(parent: AdapterView<*>) {}
-        }
-
-        setupCategoryClickListener(binding.electronics, electronics)
-        setupCategoryClickListener(binding.accessories, accessories)
-        setupCategoryClickListener(binding.vehicles, vehicles)
+        searchView.setupCategoryClickListener(binding.electronics, electronics)
+        searchView.setupCategoryClickListener(binding.accessories, accessories)
+        searchView.setupCategoryClickListener(binding.vehicles, vehicles)
 
     }
 
 
-    private fun setupRecyclerView() {
-
-        // postavljanje SearchBara
-        binding.searchBar.apply {
-
-            setOnClickListener {
-                binding.searchView.show()  //prikazuje se searchView kada se klikne na searchBar
-                //binding.searchView.editText.requestFocus()
-                binding.searchView.requestFocusAndShowKeyboard()  //prikazivanje tastature
-            }
-        }
 
 
-        // postavljanje SearchView-a
-        binding.searchView.apply {
-
-            editText.setOnEditorActionListener { _, actionId, _ ->  //postavljanje listenera za akciju pretrage na tastaturi
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    performSearch(text.toString())     //pretraga kada se pritisne search
-                    hide()                 //sakrivanje searchViewa nakon pretrage
-                    true
-                } else {
-                    false
-                }
-            }
-                //postavljanje listenera za live search
-            editText.doOnTextChanged { text, _, _, _ ->
-                text?.let { performSearch(it.toString()) } //pretraga se izvršava pri svakoj promjeni teksta
-                binding.searchBar.setText(text) //prikaz slova u search baru
-            }
-        }
-    }
-
-
-    private fun performSearch(query: String) {
-        val spinner = binding.filtering
-        val categories = binding.categories
-        val noResult = binding.noResult
-
-
-        val filteredItems = if (query.length >= 3) {
-            items.filter { item ->
-                item.title.contains(query, ignoreCase = true) ||
-                        item.description.contains(query, ignoreCase = true)
-            }.let { filteredList ->
-
-                spinner.visibility = if (filteredList.isNotEmpty()) View.VISIBLE else View.GONE //sakrivanje i prikazivanje spinnera
-                categories.visibility = View.GONE //sakrivanje kategorija
-                noResult.visibility = if (filteredList.isEmpty()) View.VISIBLE else View.GONE //sakrivanje i prikazivanje nema rezultata
-                applyFilter(filteredList) }
-
-        } else {
-            spinner.visibility = View.GONE
-            categories.visibility = View.VISIBLE  //prikazivanje kategorija
-            noResult.visibility = View.GONE
-            binding.filtering.setSelection(0)
-            emptyList()
-        }
-
-        currentDisplayedItems = filteredItems
-        adapter.updateItems(filteredItems) // adapter se ažurira s odabranim rezultatima
-    }
-
-    private fun applyFilter(list: List<Item>): List<Item> {
-        return when (selectedFilter) {
-            "Default" -> list.sortedByDescending { it.timestamp }
-            "Newest first" -> list.sortedByDescending { it.timestamp }
-            "Price: low to high" -> list.sortedBy { it.price }
-            "Price: high to low" -> list.sortedByDescending { it.price }
-            else -> list
-        }
-    }
-
-    private fun setupCategoryClickListener(view: View, categoryName: String) {
-
-        var filteredItems = items.filter { item ->
-                item.category.equals(categoryName, ignoreCase = true)
-        }
-
-        view.setOnClickListener {  //listener kada se klikne na pojedinu kategoriju
-            binding.categories.visibility = View.GONE
-            binding.toolbar.visibility = View.VISIBLE
-            binding.title.text = categoryName
-            binding.filtering.visibility = View.VISIBLE
-            binding.searchBar.visibility = View.GONE
-
-            currentDisplayedItems = filteredItems
-            adapter.updateItems(applyFilter(filteredItems))
-        }
-
-        binding.back.setOnClickListener {  // listener za back tipku kada se prikazuju kategorije
-            binding.searchBar.visibility = View.VISIBLE
-            binding.toolbar.visibility = View.GONE  //miče se search i prikazuje back
-            binding.filtering.visibility = View.GONE
-            binding.categories.visibility = View.VISIBLE
-
-            binding.filtering.setSelection(0)  // u spinneru se vraća defaut
-
-            adapter.clear()  // briše se lista
-        }
-
-    }
-
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 
 }
 
