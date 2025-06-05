@@ -40,10 +40,8 @@ class InboxFragment : BaseFragment<FragmentInboxBinding>() {
         recyclerView.layoutManager = LinearLayoutManager(context)
 
         //u adapter se šalju razgovori
-        adapter = ConversationAdapter(
-            conversations,
-            requireActivity()
-        )
+        adapter = ConversationAdapter(conversations, requireActivity())
+
         //rec se spaja s adapterom
         recyclerView.adapter = adapter
     }

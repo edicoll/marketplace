@@ -45,9 +45,8 @@ class FavItemFragment : BaseFragment<FragmentFavitemBinding>() {
         recyclerView = view.findViewById(R.id.favitemsRecyclerView)
         recyclerView.layoutManager = GridLayoutManager(context, 2)
 
-        adapter = FavitemAdapter(
-            favitems
-        )
+        adapter = FavitemAdapter(favitems)
+
         //rec se spaja s adapterom
         recyclerView.adapter = adapter
 

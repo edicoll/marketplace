@@ -5,17 +5,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.projectmarketplace.R
 import androidx.annotation.RequiresApi
 import com.example.projectmarketplace.data.Item
 import com.example.projectmarketplace.databinding.FragmentHomeIndividualBinding
 import com.example.projectmarketplace.fragments.base.BaseFragment
+import com.example.projectmarketplace.views.ItemView
 
 
 class ItemFragment : BaseFragment<FragmentHomeIndividualBinding>() {
 
     private lateinit var item: Item
     private val itemNotFound = "Item not found"
+    private lateinit var itemView: ItemView
 
     override fun inflateBinding(
         inflater: LayoutInflater,
@@ -33,22 +34,12 @@ class ItemFragment : BaseFragment<FragmentHomeIndividualBinding>() {
         //dohvaća za cijeli objekt Item
         item = arguments?.getParcelable(itemKey, Item::class.java) ?: throw IllegalStateException(itemNotFound)
 
+        itemView = ItemView(binding, requireContext(), item)
 
         //back tipka
         setupBackButton(binding.back)
 
-        with(binding) {
-            title.text = item.title
-            sellerName.text = item.sellerName
-            sellerRating.rating = item.sellerRating
-            priceValue.text = getString(R.string.price_format, item.price)
-
-            brandInput.text = item.brand
-            descriptionInput.text = item.description
-            conditionInput.text = item.condition
-            colorInput.text = item.color
-        }
-
+        itemView.bind()
 
     }
 

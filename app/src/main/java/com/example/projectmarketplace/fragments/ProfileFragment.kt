@@ -14,6 +14,7 @@ import com.example.projectmarketplace.data.Review
 import com.example.projectmarketplace.data.User
 import com.example.projectmarketplace.databinding.FragmentProfileBinding
 import com.example.projectmarketplace.fragments.base.BaseFragment
+import com.example.projectmarketplace.views.ProfileView
 
 
 val orders = listOf(
@@ -138,6 +139,7 @@ val favitems = listOf(
 class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
 
     private var reviews: List<Review> = emptyList()
+    private lateinit var profileView: ProfileView
 
     override fun inflateBinding(
         inflater: LayoutInflater,
@@ -154,9 +156,9 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
         currentUser = arguments?.getParcelable(userKey, User::class.java) ?: User(2, "ffh", "ww0,", 3F, "hh")
         reviews = arguments?.getParcelableArrayList<Review>(reviewKey, Review::class.java) ?: emptyList()
 
-        binding.name.text = currentUser?.name
-        binding.email.text = currentUser?.email
-        binding.ratingBar.rating = currentUser?.rating!!
+        profileView = ProfileView(binding, requireContext(), currentUser)
+
+        profileView.setData()
 
         setupMyReviews(binding.userInfoContainer)
         setupMyOrders(binding.myOrdersContainer)

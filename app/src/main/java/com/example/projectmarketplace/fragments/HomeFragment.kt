@@ -35,10 +35,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         recyclerView = view.findViewById(R.id.itemRecyclerView)
         recyclerView.layoutManager = GridLayoutManager(context, 2)
 
-        adapter = ItemAdapter(
-            items,
-            requireActivity()
-        )
+        adapter = ItemAdapter(items, requireActivity())
 
         recyclerView.adapter = adapter
 
