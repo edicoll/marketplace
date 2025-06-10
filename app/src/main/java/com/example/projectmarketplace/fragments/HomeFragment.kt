@@ -14,9 +14,11 @@ import com.example.projectmarketplace.repositories.ItemRepository
 import com.example.projectmarketplace.viewModels.HomeViewModel
 import com.example.projectmarketplace.views.HomeView
 
+
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     private lateinit var viewModel: HomeViewModel
     private lateinit var homeView: HomeView
+
 
     override fun inflateBinding(
         inflater: LayoutInflater,

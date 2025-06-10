@@ -23,7 +23,22 @@ class ItemRepository {
 
         return try {
             val querySnapshot = database.collection("items")
-                .whereNotEqualTo("sellerId", currentUserId) // Filtriranje po sellerId
+                .whereNotEqualTo("sellerId", currentUserId) // filtriranje po sellerId
+                .get()
+                .await()
+
+            querySnapshot.documents.mapNotNull { doc ->
+                doc.toObject(Item::class.java)
+            }
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    suspend fun getItems(): List<Item> {
+
+        return try {
+            val querySnapshot = database.collection("items")
                 .get()
                 .await()
 

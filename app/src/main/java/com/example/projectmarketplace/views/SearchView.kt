@@ -1,5 +1,6 @@
 package com.example.projectmarketplace.views
 
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
@@ -11,18 +12,25 @@ import com.example.projectmarketplace.adapters.SearchAdapter
 import com.example.projectmarketplace.data.Item
 import com.example.projectmarketplace.databinding.FragmentSearchBinding
 import com.example.projectmarketplace.fragments.CategoriesFragment
+import com.example.projectmarketplace.viewModels.SearchViewModel
 import kotlin.text.equals
 
 
 class SearchView(private val binding: FragmentSearchBinding,
                  private val activity: FragmentActivity,
-                 private var items: List<Item> = emptyList(),
-                 private val adapter: SearchAdapter
+                 private val adapter: SearchAdapter,
+                 private var viewModel: SearchViewModel
                 ) {
 
     private var selectedFilter: String = "Default"
     private var currentDisplayedItems: List<Item> = emptyList()
+    private var items: List<Item> = emptyList()
 
+    //možda bi trebalo za kategorije nabravit fetchItemsCategory
+    suspend fun fetchItems(){
+        items = viewModel.getItems()
+        //Log.d("Items", "Successfully fetched ${items.size} items")
+    }
     // funkcija za postavljanje spinnera
     fun setupDropdown(){
         val spinner = binding.filtering // dohvaća referencu na spinner
@@ -133,5 +141,31 @@ class SearchView(private val binding: FragmentSearchBinding,
                 .addToBackStack(null)
                 .commit()
         }
+    }
+    fun setupCategoryClickListener(categories: List<String>){
+
+
+        categories.forEach { category ->
+
+            val view = when (category.lowercase()) {
+                "electronics" -> binding.electronics
+                "accessories" -> binding.accessories
+                "vehicles" -> binding.vehicles
+                else -> null
+            }
+
+            view?.setOnClickListener {
+                val filteredItems = items.filter { item ->
+                    item.category.equals(category, ignoreCase = true)
+                }
+
+                val fragment = CategoriesFragment.newInstance(category, filteredItems)
+                activity.supportFragmentManager.beginTransaction()
+                    .replace(R.id.flFragment, fragment)
+                    .addToBackStack(null)
+                    .commit()
+            }
+        }
+
     }
 }
