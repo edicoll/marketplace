@@ -62,9 +62,10 @@ class SearchAdapter(
                 // postavlja podatke na view-ove
                 title.text = item.title
                 price.text = itemView.context.getString(R.string.price_format, item.price)
-                date.text = Instant.ofEpochMilli(item.timestamp)
+                date.text = item.createdAt.toString()
+                /*date.text = Instant.ofEpochMilli(item.timestamp)
                     .atZone(ZoneId.systemDefault())
-                    .format(DateTimeFormatter.ofPattern(dateFormat))
+                    .format(DateTimeFormatter.ofPattern(dateFormat))*/
 
                 itemView.setOnClickListener { // klikom na pojedini item se prikazuje novi fragment
 

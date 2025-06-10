@@ -1,21 +1,20 @@
 package com.example.projectmarketplace.data
-import android.graphics.Color
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import java.util.Date
 
 @Parcelize
 data class Item(
-    val id: Int,
-    val sellerId: Int,
-    val sellerName: String,
-    val sellerRating: Float,
     val title: String,
     val description: String,
-    val category: String,
+    val price: Double,
     val brand: String,
     val condition: String,
+    val sellerId: String,
     val color: String,
-    val price: Float,
-    val timestamp: Long,
+    val createdAt: Date,
+    val category: String,
 
-): Parcelable
+    ): Parcelable{
+    constructor() : this("", "", 0.0, "", "", "", "", Date(), "")
+}

@@ -2,6 +2,9 @@ package com.example.projectmarketplace.views
 
 import android.content.Context
 
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
+
 import com.example.projectmarketplace.R
 import com.example.projectmarketplace.data.Item
 import com.example.projectmarketplace.databinding.FragmentHomeIndividualBinding
@@ -13,8 +16,8 @@ class ItemView(private val binding: FragmentHomeIndividualBinding,
     fun bind(){
         with(binding) {
             title.text = item.title
-            sellerName.text = item.sellerName
-            sellerRating.rating = item.sellerRating
+            //sellerName.text = item.sellerName
+            //sellerRating.rating = item.sellerRating
             priceValue.text = context.getString(R.string.price_format, item.price)
 
             brandInput.text = item.brand
@@ -23,6 +26,8 @@ class ItemView(private val binding: FragmentHomeIndividualBinding,
             colorInput.text = item.color
         }
     }
+
+
 
 
 

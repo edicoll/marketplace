@@ -11,9 +11,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.projectmarketplace.R
 import com.example.projectmarketplace.data.Item
 import com.example.projectmarketplace.fragments.ItemFragment
+import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 class ItemAdapter (private val items: List<Item>,
                    private val fragmentActivity: FragmentActivity
@@ -44,9 +46,8 @@ class ItemAdapter (private val items: List<Item>,
 
         holder.title.text = item.title
         holder.price.text = holder.itemView.context.getString(R.string.price_format, item.price)
-        holder.date.text = Instant.ofEpochMilli(item.timestamp)
-            .atZone(ZoneId.systemDefault())
-            .format(DateTimeFormatter.ofPattern(dateFormat))
+        holder.date.text = SimpleDateFormat(dateFormat, Locale.getDefault()).format(item.createdAt)
+
 
 
         holder.itemView.setOnClickListener {

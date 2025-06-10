@@ -40,9 +40,8 @@ class FavitemAdapter (private val favitems: List<FavItem>
 
         holder.title.text = favitem.item.title
         holder.price.text = holder.itemView.context.getString(R.string.price_format, favitem.item.price)
-        holder.date.text = Instant.ofEpochMilli(favitem.item.timestamp)
-            .atZone(ZoneId.systemDefault())
-            .format(DateTimeFormatter.ofPattern(dateFormat))
+        holder.date.text = favitem.item.createdAt.toString()
+
 
     }
 
