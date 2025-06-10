@@ -35,7 +35,7 @@ class OrderFragment : BaseFragment<FragmentMyordersBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        currentUser = arguments?.getParcelable(userKey, User::class.java) ?: User(2, "", ",", 3F, "")
+        currentUser = arguments?.getParcelable(userKey, User::class.java) ?: User("", "", ",", 3F)
         orders = arguments?.getParcelableArrayList<Order>(orderKey, Order::class.java) ?: emptyList()
 
         setupBackButton(binding.back)

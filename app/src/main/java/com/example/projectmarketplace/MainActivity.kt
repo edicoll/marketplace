@@ -19,18 +19,24 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 class MainActivity : AppCompatActivity() {
 
 
+
     private val userKey = "USER_KEY"
     private val reviewKey = "REVIEW_KEY"
     private val itemKey = "ITEM_KEY"
     private val conversationKey = "CONVERSATION_KEY"
 
      val user1 = User(
-        id = 1,
+        id = "u",
         name = "Edi",
         email = "edicolliva@gmail.com",
-        rating = 3.55F,
-        password = "edi"
+        rating = 3.55F
      )
+    val user2 = User(
+        id = "",
+        name = "Edi",
+        email = "branko@gmail.com",
+        rating = 3.55F
+    )
     val conversations = listOf(
         Conversation(
             id = 1,

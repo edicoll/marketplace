@@ -36,7 +36,7 @@ class FavItemFragment : BaseFragment<FragmentFavitemBinding>() {
         super.onViewCreated(view, savedInstanceState)
 
         // dohvaćanje podataka
-        currentUser = parseUserFromArguments() ?: User(2, "", "", 3F, "")
+        currentUser = parseUserFromArguments() ?: User("", "", "", 3F)
         favitems = arguments?.getParcelableArrayList<FavItem>(favItemKey, FavItem::class.java) ?: emptyList()
 
         setupBackButton(binding.back)

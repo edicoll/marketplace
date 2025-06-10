@@ -153,12 +153,13 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
         super.onViewCreated(view, savedInstanceState)
 
         // dohvaćanje podataka
-        currentUser = arguments?.getParcelable(userKey, User::class.java) ?: User(2, "ffh", "ww0,", 3F, "hh")
+        currentUser = arguments?.getParcelable(userKey, User::class.java) ?: User("", "ffh", "ww0,", 3F)
         reviews = arguments?.getParcelableArrayList<Review>(reviewKey, Review::class.java) ?: emptyList()
 
         profileView = ProfileView(binding, requireContext(), currentUser)
 
-        profileView.setData()
+        profileView.setupUserInfo()
+        profileView.setupLogout()
 
         setupMyReviews(binding.userInfoContainer)
         setupMyOrders(binding.myOrdersContainer)

@@ -34,17 +34,20 @@ class AddView(private val binding: FragmentAddBinding, private val context: Cont
         val brand = binding.brandInput.text.toString()
         val color = binding.colorInput.text.toString()
 
-        if(title.isBlank() || description.isBlank() || priceText.isBlank() || category.isBlank() || condition.isBlank()
-            || brand.isBlank() || color.isBlank()){
-
-            showToast(fillInAllFields)
-            return
-        }
         val price = try {
             priceText.toFloat()
         } catch (e: NumberFormatException) {
             showToast(inputCorrectPrice)
             return
+        }
+
+        if(title.isBlank() || description.isBlank() || priceText.isBlank() || category.isBlank() || condition.isBlank() || brand.isBlank() || color.isBlank()){
+
+            showToast(fillInAllFields)
+            return
+
+        }else{
+                //dodavanje
         }
 
         val newItem = Item(

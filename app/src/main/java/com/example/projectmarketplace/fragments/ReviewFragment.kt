@@ -34,7 +34,7 @@ class ReviewFragment : BaseFragment<FragmentReviewBinding>() {
         super.onViewCreated(view, savedInstanceState)
 
         // dohvaćanje podataka
-        currentUser = arguments?.getParcelable(userKey, User::class.java) ?: User(2, "", "", 3F, "")
+        currentUser = arguments?.getParcelable(userKey, User::class.java) ?: User("", "", "", 3F)
         reviews = arguments?.getParcelableArrayList<Review>(reviewKey, Review::class.java) ?: emptyList()
 
         binding.name.text = currentUser?.name

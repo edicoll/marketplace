@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.example.projectmarketplace.data.User
@@ -44,10 +43,6 @@ abstract class BaseFragment<VBinding : ViewBinding> : Fragment() {
         backButton.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
-    }
-
-    protected fun showToast(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
     // Common method to parse user from arguments
