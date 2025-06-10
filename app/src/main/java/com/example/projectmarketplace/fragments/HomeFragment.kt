@@ -6,18 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.projectmarketplace.R
-import com.example.projectmarketplace.adapters.ItemAdapter
-import com.example.projectmarketplace.data.Item
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.projectmarketplace.databinding.FragmentHomeBinding
 import com.example.projectmarketplace.fragments.base.BaseFragment
+import com.example.projectmarketplace.repositories.ItemRepository
+import com.example.projectmarketplace.viewModels.HomeViewModel
+import com.example.projectmarketplace.views.HomeView
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {
-    private var items: List<Item> = emptyList()
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: ItemAdapter
+    private lateinit var viewModel: HomeViewModel
+    private lateinit var homeView: HomeView
 
     override fun inflateBinding(
         inflater: LayoutInflater,
@@ -30,15 +29,22 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        items = arguments?.getParcelableArrayList<Item>(itemKey, Item::class.java) ?: emptyList()
+        viewModelInit()
 
-        recyclerView = view.findViewById(R.id.itemRecyclerView)
-        recyclerView.layoutManager = GridLayoutManager(context, 2)
+        homeView = HomeView(binding, requireContext(), requireActivity(), viewModel)
 
-        adapter = ItemAdapter(items, requireActivity())
+        homeView.setupRecyclerView()
+        homeView.loadItems()
+    }
 
-        recyclerView.adapter = adapter
 
+
+    private fun viewModelInit(){
+        viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return HomeViewModel(ItemRepository()) as T
+            }
+        }).get(HomeViewModel::class.java)
     }
 }
 

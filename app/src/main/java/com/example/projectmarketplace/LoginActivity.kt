@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.example.projectmarketplace.data.User
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
@@ -17,7 +18,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 class LoginActivity : AppCompatActivity() {
@@ -25,6 +26,8 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var oneTapClient: SignInClient
     private lateinit var signInRequest: BeginSignInRequest
     private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
+
 
 
     private val oneTapSignInLauncher = registerForActivityResult(
@@ -45,6 +48,7 @@ class LoginActivity : AppCompatActivity() {
 
         FirebaseApp.initializeApp(this)
         firebaseAuth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
 
         oneTapClient = Identity.getSignInClient(this)
 
@@ -94,15 +98,27 @@ class LoginActivity : AppCompatActivity() {
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         // uspješna prijava, prelazak na mainActivity
-                        val user = firebaseAuth.currentUser
-                        user?.let {
+                        val firebaseUser = firebaseAuth.currentUser
+                        firebaseUser?.let { user ->
 
-                            val intent = Intent(this, MainActivity::class.java)
-                            startActivity(intent)
-                            finish()
+                            firestore.collection("users").document(user.uid)
+                                .get()
+                                .addOnSuccessListener { document ->
+                                    if (document.exists()) {
+                                        // User exists, proceed to MainActivity
+                                        proceedToMainActivity()
+                                    } else {
+                                        // User doesn't exist, create new document
+                                        createNewUserInFirestore(user, credential)
+                                    }
+                                }
+
+                                .addOnFailureListener { e ->
+                                    Log.e("Firestore", "Error checking user", e)
+                                    Toast.makeText(this, "Error checking user data", Toast.LENGTH_SHORT).show()
+                                }
                         }
                     } else {
-                        // neuspjela prijava
                         Toast.makeText(this, "Firebase authentication failed", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -116,5 +132,30 @@ class LoginActivity : AppCompatActivity() {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
+    }
+    private fun proceedToMainActivity() {
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
+    }
+
+    private fun createNewUserInFirestore(firebaseUser: com.google.firebase.auth.FirebaseUser,
+                                         credential: SignInCredential) {
+        val user = User(
+            id = firebaseUser.uid,
+            name = credential.givenName ?: "Unknown",
+            email = firebaseUser.email ?: "",
+            rating = 0.0f // Default rating
+        )
+
+        firestore.collection("users").document(firebaseUser.uid)
+            .set(user)
+            .addOnSuccessListener {
+                Log.d("Firestore", "User document created successfully")
+                proceedToMainActivity()
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firestore", "Error creating user document", e)
+                Toast.makeText(this, "Error saving user data", Toast.LENGTH_SHORT).show()
+            }
     }
 }

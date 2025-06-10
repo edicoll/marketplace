@@ -14,6 +14,7 @@ class AddFragment : BaseFragment<FragmentAddBinding>() {
     val conditions = listOf("New", "Like new", "Used")
     private lateinit var addView: AddView
 
+
     override fun inflateBinding(
         inflater: LayoutInflater,
         container: ViewGroup?

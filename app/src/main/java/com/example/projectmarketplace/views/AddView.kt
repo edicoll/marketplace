@@ -42,10 +42,9 @@ class AddView(private val binding: FragmentAddBinding, private val context: Cont
         val brand = binding.brandInput.text.toString()
         val color = binding.colorInput.text.toString()
 
-        val price = try {
-            priceText.toFloat()
-        } catch (e: NumberFormatException) {
-            showToast(inputCorrectPrice)
+        val currentUser = auth.currentUser
+        if (currentUser == null) {
+            showToast(notLoggedIn)
             return
         }
 
@@ -56,9 +55,10 @@ class AddView(private val binding: FragmentAddBinding, private val context: Cont
 
         }
 
-        val currentUser = auth.currentUser
-        if (currentUser == null) {
-            showToast(notLoggedIn)
+        val price = try {
+            priceText.toFloat()
+        } catch (e: NumberFormatException) {
+            showToast(inputCorrectPrice)
             return
         }
 
@@ -87,8 +87,9 @@ class AddView(private val binding: FragmentAddBinding, private val context: Cont
             .addOnFailureListener { e ->
                 showToast("$itemAddFailed ${e.localizedMessage}")
             }
-
     }
+
+
 
     fun clearFields() {
         with(binding) {

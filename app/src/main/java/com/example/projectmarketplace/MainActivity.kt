@@ -30,13 +30,13 @@ class MainActivity : AppCompatActivity() {
         id = "u",
         name = "Edi",
         email = "edicolliva@gmail.com",
-        rating = 3.55F
+        rating = 3.55f
      )
     val user2 = User(
         id = "",
         name = "Edi",
         email = "branko@gmail.com",
-        rating = 3.55F
+        rating = 3.55f
     )
     val conversations = listOf(
         Conversation(

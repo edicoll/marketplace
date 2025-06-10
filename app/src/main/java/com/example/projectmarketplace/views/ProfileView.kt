@@ -23,7 +23,7 @@ class ProfileView(private val binding: FragmentProfileBinding,
 
         binding.name.text = firebaseAuth.currentUser?.displayName
         binding.email.text = firebaseAuth.currentUser?.email
-        binding.ratingBar.rating = currentUser?.rating!! //zamijeniti
+        //binding.ratingBar.rating = currentUser?.rating!! //zamijeniti
     }
 
 
