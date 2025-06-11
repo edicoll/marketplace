@@ -8,11 +8,13 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.projectmarketplace.databinding.FragmentHomeBinding
 import com.example.projectmarketplace.fragments.base.BaseFragment
 import com.example.projectmarketplace.repositories.ItemRepository
 import com.example.projectmarketplace.viewModels.HomeViewModel
 import com.example.projectmarketplace.views.HomeView
+import kotlinx.coroutines.launch
 
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {
@@ -36,9 +38,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         homeView = HomeView(binding, requireContext(), requireActivity(), viewModel)
 
         homeView.setupRecyclerView()
-        homeView.loadItems()
-    }
 
+        lifecycleScope.launch {
+            homeView.fetchItems()
+        }
+    }
 
 
     private fun viewModelInit(){

@@ -1,6 +1,5 @@
 package com.example.projectmarketplace.views
 
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
@@ -20,16 +19,15 @@ class SearchView(private val binding: FragmentSearchBinding,
                  private val activity: FragmentActivity,
                  private val adapter: SearchAdapter,
                  private var viewModel: SearchViewModel
-                ) {
+) {
 
     private var selectedFilter: String = "Default"
     private var currentDisplayedItems: List<Item> = emptyList()
-    private var items: List<Item> = emptyList()
 
     //možda bi trebalo za kategorije nabravit fetchItemsCategory
-    suspend fun fetchItems(){
-        items = viewModel.getItems()
-        //Log.d("Items", "Successfully fetched ${items.size} items")
+    suspend fun fetchItems() {
+        viewModel.getItems() // ovo automatski sprema originalne iteme
+        performSearch(binding.searchBar.text.toString()) //potrebno kada se navigira između tabova da ostane search
     }
     // funkcija za postavljanje spinnera
     fun setupDropdown(){
@@ -61,6 +59,7 @@ class SearchView(private val binding: FragmentSearchBinding,
             setOnClickListener {
                 binding.searchView.show()  //prikazuje se searchView kada se klikne na searchBar
                 //binding.searchView.editText.requestFocus()
+                //binding.searchView.visibility = View.VISIBLE
                 binding.searchView.requestFocusAndShowKeyboard()  //prikazivanje tastature
             }
         }
@@ -79,11 +78,13 @@ class SearchView(private val binding: FragmentSearchBinding,
             }
             //postavljanje listenera za live search
             editText.doOnTextChanged { text, _, _, _ ->
+                //Log.d("Promjena", "Tekst:  ${text} ")
                 text?.let { performSearch(it.toString()) } //pretraga se izvršava pri svakoj promjeni teksta
                 binding.searchBar.setText(text) //prikaz slova u search baru
             }
         }
     }
+
 
     // funkcija za pretraživanje
     fun performSearch(query: String){
@@ -92,7 +93,7 @@ class SearchView(private val binding: FragmentSearchBinding,
         val noResult = binding.noResult
 
         val filteredItems = if (query.length >= 3) {
-            val filteredList = items.filter { item ->
+            val filteredList = viewModel.originalItems.filter { item ->
                 item.title.contains(query, ignoreCase = true) ||
                         item.description.contains(query, ignoreCase = true)
             }
@@ -128,25 +129,8 @@ class SearchView(private val binding: FragmentSearchBinding,
     }
 
     // funkcija za upravljanje kategorijama
-    fun setupCategoryClickListener(view: View, categoryName: String){
-        var filteredItems = items.filter { item ->
-            item.category.equals(categoryName, ignoreCase = true)
-        }
-
-        view.setOnClickListener {  //listener kada se klikne na pojedinu kategoriju
-
-            val fragment = CategoriesFragment.newInstance(categoryName, filteredItems)
-            activity.supportFragmentManager.beginTransaction()
-                .replace(R.id.flFragment, fragment)
-                .addToBackStack(null)
-                .commit()
-        }
-    }
     fun setupCategoryClickListener(categories: List<String>){
-
-
         categories.forEach { category ->
-
             val view = when (category.lowercase()) {
                 "electronics" -> binding.electronics
                 "accessories" -> binding.accessories
@@ -155,7 +139,7 @@ class SearchView(private val binding: FragmentSearchBinding,
             }
 
             view?.setOnClickListener {
-                val filteredItems = items.filter { item ->
+                val filteredItems = viewModel.originalItems.filter { item ->
                     item.category.equals(category, ignoreCase = true)
                 }
 
@@ -166,6 +150,5 @@ class SearchView(private val binding: FragmentSearchBinding,
                     .commit()
             }
         }
-
     }
 }

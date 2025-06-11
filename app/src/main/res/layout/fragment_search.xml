@@ -22,7 +22,7 @@
         android:id="@+id/search_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:visibility="invisible"
         android:inputType="text"
         app:layout_anchor="@id/search_bar"
         tools:ignore="MissingConstraints" />
@@ -220,3 +220,5 @@
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+

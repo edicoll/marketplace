@@ -16,7 +16,6 @@ class HomeView(private val binding: FragmentHomeBinding,
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ItemAdapter
-    private val itemsFetchFailed = "Failed to fetch items"
 
 
     fun setupRecyclerView() {
@@ -25,21 +24,14 @@ class HomeView(private val binding: FragmentHomeBinding,
         recyclerView.layoutManager = GridLayoutManager(context, 2)
 
 
-        binding.itemRecyclerView.layoutManager = GridLayoutManager(context, 2)
-        adapter = ItemAdapter(emptyList(), activity)
-        binding.itemRecyclerView.adapter = adapter
+        adapter = ItemAdapter(viewModel.items, activity)
+        recyclerView.adapter = adapter
     }
 
-    fun loadItems() {
-        viewModel.getItemsExcludingCurrentUser(
-            onSuccess = { items ->
+    suspend fun fetchItems() {
+        viewModel.getItemsExcludingCurrentUser()
 
-                adapter = ItemAdapter(items, activity)
-                recyclerView.adapter = adapter
-            },
-            onError = { e ->
-                Toast.makeText(context, "$itemsFetchFailed: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
-        )
+        adapter = ItemAdapter(viewModel.items, activity)
+        recyclerView.adapter = adapter
     }
 }

@@ -15,7 +15,6 @@ import com.example.projectmarketplace.data.Item
 import com.example.projectmarketplace.databinding.FragmentSearchBinding
 import com.example.projectmarketplace.fragments.base.BaseFragment
 import com.example.projectmarketplace.repositories.ItemRepository
-import com.example.projectmarketplace.viewModels.HomeViewModel
 import com.example.projectmarketplace.viewModels.SearchViewModel
 import com.example.projectmarketplace.views.SearchView
 import kotlinx.coroutines.launch
@@ -27,7 +26,6 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
     // generira klasu iz layouta npr.FragmentSearchBinding iz fragment_search.xml, ta klsa sadrži refernce na vieowe
 
     private lateinit var adapter: SearchAdapter
-    private var items: List<Item> = emptyList()
     private lateinit var searchView: SearchView
     private lateinit var viewModel: SearchViewModel
     val categories = listOf(
