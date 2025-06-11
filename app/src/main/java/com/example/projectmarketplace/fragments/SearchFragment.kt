@@ -6,12 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.projectmarketplace.adapters.SearchAdapter
 import com.example.projectmarketplace.data.Item
 import com.example.projectmarketplace.databinding.FragmentSearchBinding
 import com.example.projectmarketplace.fragments.base.BaseFragment
+import com.example.projectmarketplace.repositories.ItemRepository
+import com.example.projectmarketplace.viewModels.SearchViewModel
 import com.example.projectmarketplace.views.SearchView
+import kotlinx.coroutines.launch
 
 
 class SearchFragment : BaseFragment<FragmentSearchBinding>() {
@@ -20,11 +26,13 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
     // generira klasu iz layouta npr.FragmentSearchBinding iz fragment_search.xml, ta klsa sadrži refernce na vieowe
 
     private lateinit var adapter: SearchAdapter
-    private var items: List<Item> = emptyList()
-    private val electronics = "Electronics"
-    private val accessories = "Accessories"
-    private val vehicles = "Vehicles"
     private lateinit var searchView: SearchView
+    private lateinit var viewModel: SearchViewModel
+    val categories = listOf(
+        "Electronics",
+        "Accessories",
+        "Vehicles"
+    )
 
     override fun inflateBinding(
         inflater: LayoutInflater,
@@ -38,7 +46,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        items = arguments?.getParcelableArrayList<Item>(itemKey, Item::class.java) ?: emptyList()
+        viewModelInit()
 
         binding.searchRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         adapter = SearchAdapter(
@@ -46,7 +54,11 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
             emptyList()
         )
 
-        searchView = SearchView(binding, requireActivity(), items, adapter)
+        searchView = SearchView(binding, requireActivity(), adapter, viewModel)
+
+        lifecycleScope.launch {
+            searchView.fetchItems()
+        }
 
         binding.searchRecyclerView.adapter = adapter  //na recycleView se postavlja kreirano u adapteru
 
@@ -54,13 +66,17 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
 
         searchView.setupDropdown()
 
-        searchView.setupCategoryClickListener(binding.electronics, electronics)
-        searchView.setupCategoryClickListener(binding.accessories, accessories)
-        searchView.setupCategoryClickListener(binding.vehicles, vehicles)
+        searchView.setupCategoryClickListener(categories)
 
     }
 
-
+    private fun viewModelInit(){
+        viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return SearchViewModel(ItemRepository()) as T
+            }
+        }).get(SearchViewModel::class.java)
+    }
 
 
 

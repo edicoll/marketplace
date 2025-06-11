@@ -6,13 +6,21 @@ import android.widget.Toast
 import com.example.projectmarketplace.R
 import com.example.projectmarketplace.data.Item
 import com.example.projectmarketplace.databinding.FragmentAddBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import java.util.Date
 
 class AddView(private val binding: FragmentAddBinding, private val context: Context) {
 
-    //dohvaćanje unesenih vrijednosti
+    private val database = FirebaseFirestore.getInstance()
+    private val auth = FirebaseAuth.getInstance()
+
+    //toast poruke
     private val fillInAllFields = "Please fill in all fields."
     private val inputCorrectPrice = "Input correct price."
     private val itemSuccessfullyAdded = "Item successfully added!"
+    private val itemAddFailed = "Failed to add item. Please try again."
+    private val notLoggedIn = "You need to be logged in to add items."
 
     fun setupCategoryDropdown(categories: List<String>) {
         val adapter = ArrayAdapter(context, R.layout.dropdown_item, categories)
@@ -34,12 +42,19 @@ class AddView(private val binding: FragmentAddBinding, private val context: Cont
         val brand = binding.brandInput.text.toString()
         val color = binding.colorInput.text.toString()
 
-        if(title.isBlank() || description.isBlank() || priceText.isBlank() || category.isBlank() || condition.isBlank()
-            || brand.isBlank() || color.isBlank()){
+        val currentUser = auth.currentUser
+        if (currentUser == null) {
+            showToast(notLoggedIn)
+            return
+        }
+
+        if(title.isBlank() || description.isBlank() || priceText.isBlank() || category.isBlank() || condition.isBlank() || brand.isBlank() || color.isBlank()){
 
             showToast(fillInAllFields)
             return
+
         }
+
         val price = try {
             priceText.toFloat()
         } catch (e: NumberFormatException) {
@@ -48,26 +63,33 @@ class AddView(private val binding: FragmentAddBinding, private val context: Cont
         }
 
         val newItem = Item(
-            id = 4,
-            sellerId = 1,
-            sellerName = "Edi",
-            sellerRating = 3F,
             title = title,
             description = description,
-            category = category,
+            price = price.toDouble(),
             brand = brand,
             condition = condition,
+            sellerId = currentUser.uid,
             color = color,
-            price = price,
-            timestamp = System.currentTimeMillis()
+            createdAt = Date(),
+            category = category
         )
         saveItem(newItem)
+
     }
 
     private fun saveItem(item: Item) {
-        showToast(itemSuccessfullyAdded)
-        clearFields()
+        database.collection("items")
+            .add(item)
+            .addOnSuccessListener {
+                showToast(itemSuccessfullyAdded)
+                clearFields()
+            }
+            .addOnFailureListener { e ->
+                showToast("$itemAddFailed ${e.localizedMessage}")
+            }
     }
+
+
 
     fun clearFields() {
         with(binding) {

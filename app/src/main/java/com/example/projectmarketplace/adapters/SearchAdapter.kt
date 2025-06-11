@@ -11,9 +11,11 @@ import com.example.projectmarketplace.R
 import com.example.projectmarketplace.data.Item
 import com.example.projectmarketplace.databinding.ItemItemBinding
 import com.example.projectmarketplace.fragments.ItemFragment
+import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 class SearchAdapter(
     private val fragmentActivity: FragmentActivity,
@@ -62,9 +64,8 @@ class SearchAdapter(
                 // postavlja podatke na view-ove
                 title.text = item.title
                 price.text = itemView.context.getString(R.string.price_format, item.price)
-                date.text = Instant.ofEpochMilli(item.timestamp)
-                    .atZone(ZoneId.systemDefault())
-                    .format(DateTimeFormatter.ofPattern(dateFormat))
+                date.text = item.createdAt.toString()
+                date.text = SimpleDateFormat(dateFormat, Locale.getDefault()).format(item.createdAt)
 
                 itemView.setOnClickListener { // klikom na pojedini item se prikazuje novi fragment
 

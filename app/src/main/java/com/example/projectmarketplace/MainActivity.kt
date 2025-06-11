@@ -14,9 +14,11 @@ import com.example.projectmarketplace.fragments.InboxFragment
 import com.example.projectmarketplace.fragments.ProfileFragment
 import com.example.projectmarketplace.fragments.SearchFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import java.util.Date
 
 
 class MainActivity : AppCompatActivity() {
+
 
 
     private val userKey = "USER_KEY"
@@ -25,12 +27,17 @@ class MainActivity : AppCompatActivity() {
     private val conversationKey = "CONVERSATION_KEY"
 
      val user1 = User(
-        id = 1,
+        id = "u",
         name = "Edi",
         email = "edicolliva@gmail.com",
-        rating = 3.55F,
-        password = "edi"
+        rating = 3.55f
      )
+    val user2 = User(
+        id = "",
+        name = "Edi",
+        email = "branko@gmail.com",
+        rating = 3.55f
+    )
     val conversations = listOf(
         Conversation(
             id = 1,
@@ -53,109 +60,92 @@ class MainActivity : AppCompatActivity() {
     )
     val items = listOf(
         Item(
-            id = 1,
-            sellerId = 2,
-            sellerName = "Josip",
-            sellerRating = 2.5F,
             title = "Auto",
             description = "Brand new car fiat panda.",
-            category = "Vehicles",
+            price = 5000.00,
             brand = "Fiat",
             condition = "new",
+            sellerId = "2",
             color = "white",
-            price = 5000.00f,
-            timestamp = System.currentTimeMillis() - 486400000
-        ),Item(
-            id = 2,
-            sellerId = 2,
-            sellerName = "Josip",
-            sellerRating = 2.5F,
+            createdAt = Date(System.currentTimeMillis() - 486400000),
+            category = "Vehicles"
+        ),
+        Item(
             title = "Monitor",
             description = "Used wide monitor for gaming.",
-            category = "Electronics",
+            price = 40.00,
             brand = "Dell",
             condition = "used",
+            sellerId = "2",
             color = "black",
-            price = 40.00f,
-            timestamp = System.currentTimeMillis() - 96400000
-        ),Item(
-            id = 3,
-            sellerId = 2,
-            sellerName = "Josip",
-            sellerRating = 2.5F,
+            createdAt = Date(System.currentTimeMillis() - 96400000),
+            category = "Electronics"
+        ),
+        Item(
             title = "Laptop",
             description = "Used office laptop.",
-            category = "Electronics",
+            price = 300.00,
             brand = "Acer",
             condition = "used",
+            sellerId = "2",
             color = "silver",
-            price = 300.00f,
-            timestamp = System.currentTimeMillis() - 66400000
-        ),Item(
-            id = 4,
-            sellerId = 2,
-            sellerName = "karol g.",
-            sellerRating = 2.5F,
+            createdAt = Date(System.currentTimeMillis() - 66400000),
+            category = "Electronics"
+        ),
+        Item(
             title = "Sunglasses",
             description = "New ray ban stylish sunglasses",
-            category = "Accessories",
+            price = 100.00,
             brand = "Ray Ban",
             condition = "new",
+            sellerId = "2",
             color = "black",
-            price = 100.00f,
-            timestamp = System.currentTimeMillis() - 6400000
-        ),Item(
-            id = 5,
-            sellerId = 2,
-            sellerName = "Josip",
-            sellerRating = 2.5F,
+            createdAt = Date(System.currentTimeMillis() - 6400000),
+            category = "Accessories"
+        ),
+        Item(
             title = "Auto",
             description = "Brand new car audi a3.",
-            category = "Vehicles",
+            price = 10000.00,
             brand = "Audi",
             condition = "new",
+            sellerId = "2",
             color = "black",
-            price = 10000.00f,
-            timestamp = System.currentTimeMillis() - 486400000
-        ),Item(
-            id = 6,
-            sellerId = 2,
-            sellerName = "Josip",
-            sellerRating = 2.5F,
+            createdAt = Date(System.currentTimeMillis() - 486400000),
+            category = "Vehicles"
+        ),
+        Item(
             title = "Mouse",
             description = "Used mouse for gaming.",
-            category = "Electronics",
+            price = 20.00,
             brand = "Razer",
             condition = "used",
+            sellerId = "2",
             color = "black",
-            price = 20.00f,
-            timestamp = System.currentTimeMillis() - 96400000
-        ),Item(
-            id = 7,
-            sellerId = 2,
-            sellerName = "Josip",
-            sellerRating = 2.5F,
+            createdAt = Date(System.currentTimeMillis() - 96400000),
+            category = "Electronics"
+        ),
+        Item(
             title = "Laptop Asus",
             description = "Used office laptop.",
-            category = "Electronics",
+            price = 300.00,
             brand = "Asus",
             condition = "used",
+            sellerId = "2",
             color = "silver",
-            price = 300.00f,
-            timestamp = System.currentTimeMillis() - 66400000
-        ),Item(
-            id = 8,
-            sellerId = 2,
-            sellerName = "Josip",
-            sellerRating = 2.5F,
+            createdAt = Date(System.currentTimeMillis() - 66400000),
+            category = "Electronics"
+        ),
+        Item(
             title = "Sunglasses",
             description = "New Police stylish sunglasses",
-            category = "Accessories",
+            price = 100.00,
             brand = "Police",
             condition = "new",
+            sellerId = "2",
             color = "black",
-            price = 100.00f,
-            timestamp = System.currentTimeMillis() - 6400000
+            createdAt = Date(System.currentTimeMillis() - 6400000),
+            category = "Accessories"
         )
     )
     val reviews = listOf(

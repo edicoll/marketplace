@@ -15,6 +15,7 @@ import com.example.projectmarketplace.data.User
 import com.example.projectmarketplace.databinding.FragmentProfileBinding
 import com.example.projectmarketplace.fragments.base.BaseFragment
 import com.example.projectmarketplace.views.ProfileView
+import java.util.Date
 
 
 val orders = listOf(
@@ -22,19 +23,16 @@ val orders = listOf(
             id = 1,
             buyerId = 1,
             buyerName = "Edi",
-            item = Item(
-                id = 1001,
-                sellerId = 201,
-                sellerName = "Marko Marković",
-                sellerRating = 4.5f,
-                title = "Samsung Galaxy S23",
-                description = "Novi, neotpakiran, garancija 2 godine",
-                category = "Mobiteli",
-                brand = "Samsung",
-                condition = "Novo",
-                color = "Crni",
-                price = 899.99f,
-                timestamp = System.currentTimeMillis()
+            Item(
+                title = "kola",
+                description = "Brand new car fiat panda.",
+                price = 5000.00,
+                brand = "Fiat",
+                condition = "new",
+                sellerId = "2",
+                color = "white",
+                createdAt = Date(System.currentTimeMillis() - 486400000),
+                category = "Vehicles"
             ),
             orderDate = System.currentTimeMillis() - 86400000 // jučer
         ),
@@ -42,19 +40,16 @@ val orders = listOf(
             id = 2,
             buyerId = 1,
             buyerName = "Edi",
-            item = Item(
-                id = 1002,
-                sellerId = 202,
-                sellerName = "Petra Petrić",
-                sellerRating = 4.8f,
-                title = "Apple Watch Series 8",
-                description = "Kupljen prošli mjesec, savršeno stanje",
-                category = "Pametni satovi",
-                brand = "Apple",
-                condition = "Kao novo",
-                color = "Srebrni",
-                price = 499.99f,
-                timestamp = System.currentTimeMillis()
+            Item(
+                title = "ferrari",
+                description = "Brand new car fiat panda.",
+                price = 50300.00,
+                brand = "Fiat",
+                condition = "new",
+                sellerId = "2",
+                color = "white",
+                createdAt = Date(System.currentTimeMillis() - 486400000),
+                category = "Vehicles"
             ),
             orderDate = System.currentTimeMillis() - 3600000 // prije sat vremena
         ),
@@ -62,19 +57,16 @@ val orders = listOf(
             id = 3,
             buyerId = 1,
             buyerName = "Edi",
-            item = Item(
-                id = 1003,
-                sellerId = 203,
-                sellerName = "Ivana Ivić",
-                sellerRating = 4.2f,
-                title = "Sony WH-1000XM5",
-                description = "Najbolji bezžični slušalice na tržištu",
-                category = "Slušalice",
-                brand = "Sony",
-                condition = "Novo",
-                color = "Plavi",
-                price = 399.99f,
-                timestamp = System.currentTimeMillis()
+            Item(
+                title = "Auto mercede",
+                description = "Brand new car fiat panda.",
+                price = 1000.00,
+                brand = "Fiat",
+                condition = "new",
+                sellerId = "2",
+                color = "white",
+                createdAt = Date(System.currentTimeMillis() - 486400000),
+                category = "Vehicles"
             ),
             orderDate = System.currentTimeMillis() - 259200000 // prije 3 dana
         )
@@ -85,53 +77,44 @@ val favitems = listOf(
         FavItem(
             id = 1,
             item = Item(
-                id = 1001,
-                sellerId = 201,
-                sellerName = "TechShop",
-                sellerRating = 4.7f,
-                title = "Samsung Galaxy S23",
-                description = "Novi smartphone s najboljim performansama",
-                category = "Mobiteli",
-                brand = "Samsung",
-                condition = "Novo",
-                color = "Crni",
-                price = 899.99f,
-                timestamp = System.currentTimeMillis()
-            )
+                title = "pametni sat",
+                description = "Brand new car fiat panda.",
+                price = 5000.00,
+                brand = "Fiat",
+                condition = "new",
+                sellerId = "2",
+                color = "white",
+                createdAt = Date(System.currentTimeMillis() - 486400000),
+                category = "Vehicles"
+            ),
         ),
         FavItem(
             id = 2,
-            item = Item(
-                id = 1002,
-                sellerId = 202,
-                sellerName = "AudioExpert",
-                sellerRating = 4.9f,
-                title = "Sony WH-1000XM5",
-                description = "Bežične slušalice s NC tehnologijom",
-                category = "Slušalice",
-                brand = "Sony",
-                condition = "Novo",
-                color = "Srebrni",
-                price = 399.99f,
-                timestamp = System.currentTimeMillis()
-            )
+            Item(
+                title = "haloo",
+                description = "Brand new car fiat panda.",
+                price = 5000.00,
+                brand = "Fiat",
+                condition = "new",
+                sellerId = "2",
+                color = "white",
+                createdAt = Date(System.currentTimeMillis() - 486400000),
+                category = "Vehicles"
+            ),
         ),
         FavItem(
             id = 3,
-            item = Item(
-                id = 1003,
-                sellerId = 203,
-                sellerName = "SportVision",
-                sellerRating = 4.5f,
-                title = "Nike Air Max 270",
-                description = "Udobne sportske tenisice za svaki dan",
-                category = "Obuća",
-                brand = "Nike",
-                condition = "Kao novo",
-                color = "Crvene",
-                price = 129.99f,
-                timestamp = System.currentTimeMillis()
-            )
+            Item(
+                title = "wd40",
+                description = "Brand new car fiat panda.",
+                price = 5000.00,
+                brand = "Fiat",
+                condition = "new",
+                sellerId = "2",
+                color = "white",
+                createdAt = Date(System.currentTimeMillis() - 486400000),
+                category = "Vehicles"
+            ),
         )
     )
 
@@ -153,12 +136,13 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
         super.onViewCreated(view, savedInstanceState)
 
         // dohvaćanje podataka
-        currentUser = arguments?.getParcelable(userKey, User::class.java) ?: User(2, "ffh", "ww0,", 3F, "hh")
+        currentUser = arguments?.getParcelable(userKey, User::class.java) ?: User("", "ffh", "ww0,", 3.0f)
         reviews = arguments?.getParcelableArrayList<Review>(reviewKey, Review::class.java) ?: emptyList()
 
         profileView = ProfileView(binding, requireContext(), currentUser)
 
-        profileView.setData()
+        profileView.setupUserInfo()
+        profileView.setupLogout()
 
         setupMyReviews(binding.userInfoContainer)
         setupMyOrders(binding.myOrdersContainer)

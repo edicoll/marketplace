@@ -11,18 +11,24 @@ import com.example.projectmarketplace.adapters.SearchAdapter
 import com.example.projectmarketplace.data.Item
 import com.example.projectmarketplace.databinding.FragmentSearchBinding
 import com.example.projectmarketplace.fragments.CategoriesFragment
+import com.example.projectmarketplace.viewModels.SearchViewModel
 import kotlin.text.equals
 
 
 class SearchView(private val binding: FragmentSearchBinding,
                  private val activity: FragmentActivity,
-                 private var items: List<Item> = emptyList(),
-                 private val adapter: SearchAdapter
-                ) {
+                 private val adapter: SearchAdapter,
+                 private var viewModel: SearchViewModel
+) {
 
     private var selectedFilter: String = "Default"
     private var currentDisplayedItems: List<Item> = emptyList()
 
+    //možda bi trebalo za kategorije nabravit fetchItemsCategory
+    suspend fun fetchItems() {
+        viewModel.getItems() // ovo automatski sprema originalne iteme
+        performSearch(binding.searchBar.text.toString()) //potrebno kada se navigira između tabova da ostane search
+    }
     // funkcija za postavljanje spinnera
     fun setupDropdown(){
         val spinner = binding.filtering // dohvaća referencu na spinner
@@ -53,6 +59,7 @@ class SearchView(private val binding: FragmentSearchBinding,
             setOnClickListener {
                 binding.searchView.show()  //prikazuje se searchView kada se klikne na searchBar
                 //binding.searchView.editText.requestFocus()
+                //binding.searchView.visibility = View.VISIBLE
                 binding.searchView.requestFocusAndShowKeyboard()  //prikazivanje tastature
             }
         }
@@ -71,11 +78,13 @@ class SearchView(private val binding: FragmentSearchBinding,
             }
             //postavljanje listenera za live search
             editText.doOnTextChanged { text, _, _, _ ->
+                //Log.d("Promjena", "Tekst:  ${text} ")
                 text?.let { performSearch(it.toString()) } //pretraga se izvršava pri svakoj promjeni teksta
                 binding.searchBar.setText(text) //prikaz slova u search baru
             }
         }
     }
+
 
     // funkcija za pretraživanje
     fun performSearch(query: String){
@@ -84,7 +93,7 @@ class SearchView(private val binding: FragmentSearchBinding,
         val noResult = binding.noResult
 
         val filteredItems = if (query.length >= 3) {
-            val filteredList = items.filter { item ->
+            val filteredList = viewModel.originalItems.filter { item ->
                 item.title.contains(query, ignoreCase = true) ||
                         item.description.contains(query, ignoreCase = true)
             }
@@ -111,8 +120,8 @@ class SearchView(private val binding: FragmentSearchBinding,
     // funkcija kada se filtrira
     private fun applyFilter(list: List<Item>): List<Item> {
         return when (selectedFilter) {
-            "Default" -> list.sortedByDescending { it.timestamp }
-            "Newest first" -> list.sortedByDescending { it.timestamp }
+            "Default" -> list.sortedByDescending { it.createdAt }
+            "Newest first" -> list.sortedByDescending { it.createdAt }
             "Price: low to high" -> list.sortedBy { it.price }
             "Price: high to low" -> list.sortedByDescending { it.price }
             else -> list
@@ -120,18 +129,26 @@ class SearchView(private val binding: FragmentSearchBinding,
     }
 
     // funkcija za upravljanje kategorijama
-    fun setupCategoryClickListener(view: View, categoryName: String){
-        var filteredItems = items.filter { item ->
-            item.category.equals(categoryName, ignoreCase = true)
-        }
+    fun setupCategoryClickListener(categories: List<String>){
+        categories.forEach { category ->
+            val view = when (category.lowercase()) {
+                "electronics" -> binding.electronics
+                "accessories" -> binding.accessories
+                "vehicles" -> binding.vehicles
+                else -> null
+            }
 
-        view.setOnClickListener {  //listener kada se klikne na pojedinu kategoriju
+            view?.setOnClickListener {
+                val filteredItems = viewModel.originalItems.filter { item ->
+                    item.category.equals(category, ignoreCase = true)
+                }
 
-            val fragment = CategoriesFragment.newInstance(categoryName, filteredItems)
-            activity.supportFragmentManager.beginTransaction()
-                .replace(R.id.flFragment, fragment)
-                .addToBackStack(null)
-                .commit()
+                val fragment = CategoriesFragment.newInstance(category, filteredItems)
+                activity.supportFragmentManager.beginTransaction()
+                    .replace(R.id.flFragment, fragment)
+                    .addToBackStack(null)
+                    .commit()
+            }
         }
     }
 }

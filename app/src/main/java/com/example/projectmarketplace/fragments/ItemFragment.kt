@@ -9,6 +9,7 @@ import androidx.annotation.RequiresApi
 import com.example.projectmarketplace.data.Item
 import com.example.projectmarketplace.databinding.FragmentHomeIndividualBinding
 import com.example.projectmarketplace.fragments.base.BaseFragment
+import com.example.projectmarketplace.repositories.ItemRepository
 import com.example.projectmarketplace.views.ItemView
 
 
@@ -17,6 +18,8 @@ class ItemFragment : BaseFragment<FragmentHomeIndividualBinding>() {
     private lateinit var item: Item
     private val itemNotFound = "Item not found"
     private lateinit var itemView: ItemView
+    val itemRepository = ItemRepository()
+
 
     override fun inflateBinding(
         inflater: LayoutInflater,
@@ -34,7 +37,8 @@ class ItemFragment : BaseFragment<FragmentHomeIndividualBinding>() {
         //dohvaća za cijeli objekt Item
         item = arguments?.getParcelable(itemKey, Item::class.java) ?: throw IllegalStateException(itemNotFound)
 
-        itemView = ItemView(binding, requireContext(), item)
+        itemView = ItemView(binding, requireContext(), item, itemRepository,
+            lifecycleOwner = viewLifecycleOwner)
 
         //back tipka
         setupBackButton(binding.back)

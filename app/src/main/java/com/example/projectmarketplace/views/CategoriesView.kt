@@ -42,8 +42,8 @@ class CategoriesView(private val binding: FragmentCategoriesBinding,
     // funkcija kada se filtrira
     private fun applyFilter(list: List<Item>): List<Item> {
         return when (selectedFilter) {
-            "Default" -> list.sortedByDescending { it.timestamp }
-            "Newest first" -> list.sortedByDescending { it.timestamp }
+            "Default" -> list.sortedByDescending { it.createdAt }
+            "Newest first" -> list.sortedByDescending { it.createdAt }
             "Price: low to high" -> list.sortedBy { it.price }
             "Price: high to low" -> list.sortedByDescending { it.price }
             else -> list
