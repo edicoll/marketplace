@@ -1,6 +1,7 @@
 package com.example.projectmarketplace.views
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
@@ -8,13 +9,20 @@ import com.example.projectmarketplace.repositories.ItemRepository
 import com.example.projectmarketplace.R
 import com.example.projectmarketplace.data.Item
 import com.example.projectmarketplace.databinding.FragmentHomeIndividualBinding
+import com.example.projectmarketplace.fragments.InboxIndividualFragment
+import com.google.firebase.auth.FirebaseAuth
+import androidx.fragment.app.FragmentActivity
+import com.example.projectmarketplace.viewModels.ItemViewModel
 
 
 class ItemView(private val binding: FragmentHomeIndividualBinding,
                private val context: Context, private val item: Item,
                private val itemRepository: ItemRepository,
-               private val lifecycleOwner: LifecycleOwner
+               private val lifecycleOwner: LifecycleOwner,
+               private val activity: FragmentActivity,
+               private  var viewModel: ItemViewModel
     ) {
+    private val auth = FirebaseAuth.getInstance()
 
     fun bind(){
 
@@ -38,6 +46,25 @@ class ItemView(private val binding: FragmentHomeIndividualBinding,
             binding.sellerName.text = name
             binding.sellerRating.rating = rating!!
         }
+    }
+
+    suspend fun contactSeller(){
+        val conversationId = viewModel.createOrGetConversation(
+            currentUserId = auth.currentUser?.uid ?: "",
+            sellerId = item.sellerId
+        )
+        Log.d("ConversationRepository", "Došli smo do stage 1")
+        val fragment = InboxIndividualFragment.newInstance(
+            conversationId = conversationId,
+            participant1Id = auth.currentUser?.uid ?: "",
+            participant2Name = itemRepository.getSellerName(item.sellerId).toString()
+        )
+        Log.d("ConversationRepository", "Došli smo do stage 2")
+        activity.supportFragmentManager.beginTransaction()
+            .replace(R.id.flFragment, fragment)
+            .addToBackStack(null)
+            .commit()
+
     }
 
 }

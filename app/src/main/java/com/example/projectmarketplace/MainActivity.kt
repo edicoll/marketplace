@@ -38,26 +38,8 @@ class MainActivity : AppCompatActivity() {
         email = "branko@gmail.com",
         rating = 3.55f
     )
-    val conversations = listOf(
-        Conversation(
-            id = 1,
-            participant1Id = 1,
-            participant2Id = 2,
-            participant1Name = "Edi",
-            participant2Name = "Josip",
-            lastMessage = "Radi li ova aplikacija?",
-            timestamp = System.currentTimeMillis() - 86400000
-        ),
-        Conversation(
-            id = 2,
-            participant1Id = 1,
-            participant2Id = 3,
-            participant1Name = "Edi",
-            participant2Name = "Branko",
-            lastMessage = "Jesi li vidio moju poruku?",
-            timestamp = System.currentTimeMillis() - 86400000
-        )
-    )
+    val conversations = emptyList<Conversation>()
+
     val items = listOf(
         Item(
             title = "Auto",

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.projectmarketplace.R
 import com.example.projectmarketplace.data.Conversation
 import com.example.projectmarketplace.fragments.InboxIndividualFragment
+import com.google.firebase.auth.FirebaseAuth
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -20,6 +21,8 @@ class ConversationAdapter(private val conversations: List<Conversation>,
                           private val fragmentActivity: FragmentActivity
 ) : RecyclerView.Adapter<ConversationAdapter.ViewHolder>() {
 
+     private val auth = FirebaseAuth.getInstance()
+    private val currentUserId = auth.currentUser?.uid ?: ""
      val timeFormat = "HH:mm"
 
     //čuva podatke za svaki red liste
@@ -42,7 +45,17 @@ class ConversationAdapter(private val conversations: List<Conversation>,
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val conversation = conversations[position]
 
-        holder.name.text = conversation.participant2Name
+            // određivanje suprotnog korisnika kako bi se conversation pokazali prema drugoj osobi
+        val (thisParticipantId, otherParticipantId, otherParticipantName) = when {
+            currentUserId == conversation.participant1Id ->
+                Triple(conversation.participant1Id, conversation.participant2Id, conversation.participant2Name)
+            currentUserId == conversation.participant2Id ->
+                Triple(conversation.participant2Id, conversation.participant1Id, conversation.participant1Name)
+            else -> Triple("", "", "Unknown")
+        }
+
+
+        holder.name.text = otherParticipantName
         holder.lastMessage.text = conversation.lastMessage
         holder.time.text = Instant.ofEpochMilli(conversation.timestamp)
             .atZone(ZoneId.systemDefault())
@@ -55,8 +68,8 @@ class ConversationAdapter(private val conversations: List<Conversation>,
 
         holder.itemView.setOnClickListener {
 
-            val fragment = InboxIndividualFragment.newInstance(conversation.id, conversation.participant2Name, conversation.participant1Id)
-
+            val fragment = InboxIndividualFragment.newInstance(conversation.id, thisParticipantId, otherParticipantName)
+            //stvaranje fragmenta i prelazak na njega
             fragmentActivity.supportFragmentManager.beginTransaction()
                 .replace(R.id.flFragment, fragment)
                 .addToBackStack(null)

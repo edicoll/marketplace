@@ -7,9 +7,9 @@ import com.example.projectmarketplace.repositories.ItemRepository
 
 class HomeViewModel(private val repository: ItemRepository) : ViewModel() {
     private var _items = listOf<Item>()
-    val items: List<Item> get() = _items //svi itemi se ovdje spremaju, to je kao getter za _originalItems
+    val items: List<Item> get() = _items //svi itemi se ovdje spremaju, to je kao getter za _items
 
-    //fun hasItems(): Boolean = _items.isNotEmpty()
+
 
     suspend fun getItemsExcludingCurrentUser(): List<Item> {
         if (_items.isEmpty()) {                   //da se ne događa ponovno učitavanje bezveze

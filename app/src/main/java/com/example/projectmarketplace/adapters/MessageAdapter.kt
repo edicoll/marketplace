@@ -10,7 +10,7 @@ import com.example.projectmarketplace.data.Message
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MessageAdapter(private val messages: List<Message>, private val currentUserId: Int?) :
+class MessageAdapter(private val messages: List<Message>, private val currentUserId: String?) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val timeFormat = "HH:mm"

@@ -5,21 +5,23 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.projectmarketplace.R
 import androidx.annotation.RequiresApi
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.projectmarketplace.adapters.ConversationAdapter
-import com.example.projectmarketplace.data.Conversation
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.projectmarketplace.databinding.FragmentInboxBinding
 import com.example.projectmarketplace.fragments.base.BaseFragment
+import com.example.projectmarketplace.repositories.ConversationRepository
+import com.example.projectmarketplace.viewModels.InboxViewModel
+import com.example.projectmarketplace.views.InboxView
+import kotlinx.coroutines.launch
 
 
 class InboxFragment : BaseFragment<FragmentInboxBinding>() {
 
-    private var conversations: List<Conversation> = emptyList()
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: ConversationAdapter
+
+    private lateinit var viewModel: InboxViewModel
+    private lateinit var inboxView: InboxView
 
     override fun inflateBinding(
         inflater: LayoutInflater,
@@ -32,17 +34,22 @@ class InboxFragment : BaseFragment<FragmentInboxBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //dohvaćaju se podatci o razgovorima
-        conversations = arguments?.getParcelableArrayList<Conversation>(conversationKey, Conversation::class.java) ?: emptyList()
+        viewModelInit()
 
-        //definira se recycleview i spaja s layoutom
-        recyclerView = view.findViewById(R.id.inboxRecyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(context)
+        inboxView = InboxView(binding, requireContext(), requireActivity(), viewModel)
 
-        //u adapter se šalju razgovori
-        adapter = ConversationAdapter(conversations, requireActivity())
+        inboxView.setupRecyclerView()
 
-        //rec se spaja s adapterom
-        recyclerView.adapter = adapter
+        lifecycleScope.launch {
+            inboxView.fetchConversations()
+        }
+    }
+
+    private fun viewModelInit(){
+        viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return InboxViewModel(ConversationRepository()) as T
+            }
+        }).get(InboxViewModel::class.java)
     }
 }
