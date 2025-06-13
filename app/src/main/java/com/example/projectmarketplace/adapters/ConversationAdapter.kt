@@ -61,7 +61,14 @@ class ConversationAdapter(private val conversations: List<Conversation>,
             .atZone(ZoneId.systemDefault())
             .format(DateTimeFormatter.ofPattern(timeFormat))
 
-        val textColor = if (conversation.unreadCount > 0) Color.GRAY else Color.GRAY
+        //postavljanje boje ovisno jesu li poruke pročitane ili ne
+        var textColor: Int = Color.GRAY
+        if(currentUserId == conversation.participant1Id){
+            textColor = if (conversation.participant1unreadCount > 0) Color.BLACK else Color.GRAY
+        }else if(currentUserId == conversation.participant2Id){
+            textColor = if (conversation.participant2unreadCount > 0) Color.BLACK else Color.GRAY
+        }
+
         holder.name.setTextColor(textColor)
         holder.lastMessage.setTextColor(textColor)
         holder.time.setTextColor(textColor)
@@ -77,6 +84,8 @@ class ConversationAdapter(private val conversations: List<Conversation>,
         }
 
     }
+
+
 
     override fun getItemCount() = conversations.size
 }

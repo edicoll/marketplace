@@ -83,4 +83,8 @@
 
     <string name="default_web_client_id">129783984142-62gg3tba9a7vdhua5lru6ftmtdr22oo9.apps.googleusercontent.com</string>
     <string name="sign_in">Sign in with Google</string>
+
+    <!-- MY ORDERS  -->
+    <string name="type_message">Type a message</string>
+    <string name="send">Send</string>
 </resources>

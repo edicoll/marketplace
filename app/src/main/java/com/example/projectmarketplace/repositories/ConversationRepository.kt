@@ -1,6 +1,5 @@
 package com.example.projectmarketplace.repositories
 
-import android.util.Log
 import com.example.projectmarketplace.data.Conversation
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -64,13 +63,13 @@ class ConversationRepository {
                 participant2Name = getUserName(participant2Id).toString(),
                 lastMessage = "",
                 timestamp = System.currentTimeMillis(),
-                unreadCount = 0
+                participant1unreadCount = 0,
+                participant2unreadCount = 0
             )
 
             conversationCollection.document(conversationId)
                 .set(conversation)
                 .await()
-            Log.d("ConversationRepository", "ID novog dokumenta: ${conversationId}, a ovo je postavljeni $conversationId")
 
              conversationId
 
@@ -115,4 +114,5 @@ class ConversationRepository {
             emptyList()
         }
     }
+
 }

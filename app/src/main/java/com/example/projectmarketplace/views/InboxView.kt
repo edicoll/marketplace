@@ -24,14 +24,16 @@ class InboxView(private val binding: FragmentInboxBinding,
         recyclerView.layoutManager = LinearLayoutManager(context)
 
 
-        adapter = ConversationAdapter(viewModel.conversations, activity)
+        adapter = ConversationAdapter(emptyList(), activity)
         recyclerView.adapter = adapter
+
     }
 
     suspend fun fetchConversations() {
-        viewModel.getConversations()
+        val conversations = viewModel.getConversations()
 
-        adapter = ConversationAdapter(viewModel.conversations, activity)
+        adapter = ConversationAdapter(conversations, activity)
         recyclerView.adapter = adapter
+
     }
 }

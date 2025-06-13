@@ -11,7 +11,8 @@ data class Conversation(
     val participant2Name: String,
     val lastMessage: String,
     val timestamp: Long,
-    val unreadCount: Int = 0
+    val participant1unreadCount: Int = 0,
+    val participant2unreadCount: Int = 0
 ): Parcelable {
     constructor() : this("", "", "", "", "", "", 0L, 0)
 }

@@ -7,12 +7,11 @@ import com.example.projectmarketplace.repositories.ConversationRepository
 class InboxViewModel(private val repository: ConversationRepository) : ViewModel() {
 
     private var _conversations = listOf<Conversation>()
-    val conversations: List<Conversation> get() = _conversations //svi conversationi se ovdje spremaju, to je kao getter za _conversations
 
+    // ne koristim logiku koja je bez ponovnog učitavanja, jer mi se treba učitati lastMessage svaki put
     suspend fun getConversations(): List<Conversation>{
-        if (_conversations.isEmpty()) {                   //da se ne događa ponovno učitavanje bezveze
-            _conversations = repository.getConversations()
-        }
+
+        _conversations = repository.getConversations()
         return _conversations
     }
 }

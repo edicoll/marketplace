@@ -2,18 +2,19 @@ package com.example.projectmarketplace.fragments
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.projectmarketplace.adapters.MessageAdapter
-import com.example.projectmarketplace.data.Message
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.projectmarketplace.databinding.FragmentInboxIndividualBinding
 import com.example.projectmarketplace.fragments.base.BaseFragment
-
+import com.example.projectmarketplace.repositories.MessageRepository
+import com.example.projectmarketplace.viewModels.InboxIndividualViewModel
+import com.example.projectmarketplace.views.InboxIndividualView
+import kotlinx.coroutines.launch
 
 
 class InboxIndividualFragment : BaseFragment<FragmentInboxIndividualBinding>() {
@@ -22,8 +23,8 @@ class InboxIndividualFragment : BaseFragment<FragmentInboxIndividualBinding>() {
     private var conversationId: String? = null
     private var participant1Id: String? = null
     private var participant2Name: String? = null
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: MessageAdapter
+    private lateinit var viewModel: InboxIndividualViewModel
+    private lateinit var inboxIndividualView: InboxIndividualView
 
     override fun inflateBinding(
         inflater: LayoutInflater,
@@ -37,38 +38,31 @@ class InboxIndividualFragment : BaseFragment<FragmentInboxIndividualBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModelInit()
+
         //dohvaćanje proslijeđenih podataka
         arguments?.let {
             conversationId = it.getString("conversationId")
             participant1Id = it.getString("participant1Id")
             participant2Name = it.getString("participant2Name")
         }
-
-        Log.d("conversationId", " mora raditi svaki put $conversationId, provjera")
-
-
         binding.name.text = participant2Name
 
-        // tu nastavljaName
-        /*
+        inboxIndividualView = InboxIndividualView(binding, requireContext(), requireActivity(), viewModel,
+            conversationId.toString(), participant1Id.toString(), viewLifecycleOwner
+        )
+
         //back tipka
         setupBackButton(binding.back)
 
+        inboxIndividualView.setupRecyclerView()
+        inboxIndividualView.setupMessageSending()
+        inboxIndividualView.setupRealtimeUpdates()
 
+        lifecycleScope.launch {
+            inboxIndividualView.fetchMessages()
+        }
 
-        val filteredMessages = messages
-            .filter {conversationId == it.conversationId}
-            .sortedBy { it.timestamp }
-
-
-        recyclerView = binding.messagesRecyclerView
-        recyclerView.layoutManager = LinearLayoutManager(context)
-
-       /* adapter = MessageAdapter(
-            filteredMessages,
-            participant1Id
-        )*/
-        recyclerView.adapter = adapter*/
 
     }
 
@@ -83,5 +77,13 @@ class InboxIndividualFragment : BaseFragment<FragmentInboxIndividualBinding>() {
                 }
             }
         }
+    }
+
+    private fun viewModelInit(){
+        viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return InboxIndividualViewModel(MessageRepository()) as T
+            }
+        }).get(InboxIndividualViewModel::class.java)
     }
 }
