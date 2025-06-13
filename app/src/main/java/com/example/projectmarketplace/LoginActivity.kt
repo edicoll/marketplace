@@ -144,7 +144,8 @@ class LoginActivity : AppCompatActivity() {
             id = firebaseUser.uid,
             name = credential.givenName ?: "Unknown",
             email = firebaseUser.email ?: "",
-            rating = 0.0f // Default rating
+            rating = 0.0f ,
+            favItems = emptyList()
         )
 
         firestore.collection("users").document(firebaseUser.uid)

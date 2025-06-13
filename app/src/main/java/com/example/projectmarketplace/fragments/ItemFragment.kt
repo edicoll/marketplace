@@ -53,6 +53,8 @@ class ItemFragment : BaseFragment<FragmentHomeIndividualBinding>() {
         //back tipka
         setupBackButton(binding.back)
 
+        itemView.setFavItem()
+
         binding.buttonContact.setOnClickListener {
             lifecycleScope.launch {
                 itemView.contactSeller()

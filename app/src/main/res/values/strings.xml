@@ -87,4 +87,7 @@
     <!-- MY ORDERS  -->
     <string name="type_message">Type a message</string>
     <string name="send">Send</string>
+
+    <!-- FAVORITES  -->
+    <string name="heart">heart</string>
 </resources>

@@ -2,6 +2,7 @@ package com.example.projectmarketplace.views
 
 import android.content.Context
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
@@ -65,6 +66,37 @@ class ItemView(private val binding: FragmentHomeIndividualBinding,
             .addToBackStack(null)
             .commit()
 
+    }
+
+    fun setFavItem(){
+
+        lifecycleOwner.lifecycleScope.launch {
+            val isFavorite = viewModel.isItemFavorite(item.id)
+            updateHeartIcons(isFavorite)
+            Log.e("set", "JE LI TRUE ILI FALSE $isFavorite")
+        }
+
+
+        binding.heartIconBorder.setOnClickListener {
+            binding.heartIconBorder.visibility = View.GONE
+            binding.heartIconFilled.visibility = View.VISIBLE
+
+            lifecycleOwner.lifecycleScope.launch {
+                viewModel.setFavItem(item)
+            }
+        }
+        binding.heartIconFilled.setOnClickListener {
+            binding.heartIconFilled.visibility = View.GONE
+            binding.heartIconBorder.visibility = View.VISIBLE
+
+            lifecycleOwner.lifecycleScope.launch {
+                viewModel.removeFavItem(item)
+            }
+        }
+    }
+    private fun updateHeartIcons(isFavorite: Boolean) {
+        binding.heartIconBorder.visibility = if (isFavorite) View.GONE else View.VISIBLE
+        binding.heartIconFilled.visibility = if (isFavorite) View.VISIBLE else View.GONE
     }
 
 }

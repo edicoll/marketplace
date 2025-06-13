@@ -1,11 +1,16 @@
 package com.example.projectmarketplace.repositories
 
+import android.util.Log
 import com.example.projectmarketplace.data.Conversation
+import com.example.projectmarketplace.data.Item
+import com.example.projectmarketplace.data.User
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
+import kotlin.text.get
 
 class ConversationRepository {
     private val database: FirebaseFirestore = Firebase.firestore
@@ -112,6 +117,48 @@ class ConversationRepository {
             }
         } catch (e: Exception) {
             emptyList()
+        }
+    }
+
+    suspend fun setFavItem(item: Item){
+        try {
+            val userId = auth.currentUser?.uid
+            val userRef = database.collection("users").document(userId.toString())
+
+            userRef.update("favItems", FieldValue.arrayUnion(item.id)).await()
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
+    suspend fun removeFavItem(item: Item) {
+        try {
+            val userId = auth.currentUser?.uid
+            val userRef = database.collection("users").document(userId.toString())
+
+            userRef.update("favItems", FieldValue.arrayRemove(item.id)).await()
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
+    suspend fun isItemFavorite(itemId: String): Boolean {
+        return try {
+            val userId = auth.currentUser?.uid
+
+            val userRef = database.collection("users").document(userId.toString())
+            val document = userRef.get().await()
+
+            val favItems = document.get("favItems") as? List<*>
+
+            val containsItem = favItems?.any {
+                it?.toString() == itemId
+            } == true
+
+            containsItem
+        } catch (e: Exception) {
+
+            false
         }
     }
 

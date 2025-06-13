@@ -8,12 +8,14 @@ import com.example.projectmarketplace.data.Item
 import com.example.projectmarketplace.databinding.FragmentAddBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
 import java.util.Date
 
 class AddView(private val binding: FragmentAddBinding, private val context: Context) {
 
     private val database = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
+    private val itemCollection = database.collection("items")
 
     //toast poruke
     private val fillInAllFields = "Please fill in all fields."
@@ -62,7 +64,10 @@ class AddView(private val binding: FragmentAddBinding, private val context: Cont
             return
         }
 
+        val itemId = itemCollection.document().id
+
         val newItem = Item(
+            id = itemId,
             title = title,
             description = description,
             price = price.toDouble(),
@@ -73,13 +78,16 @@ class AddView(private val binding: FragmentAddBinding, private val context: Cont
             createdAt = Date(),
             category = category
         )
-        saveItem(newItem)
+
+        saveItem(newItem, itemId)
 
     }
 
-    private fun saveItem(item: Item) {
-        database.collection("items")
-            .add(item)
+    private fun saveItem(item: Item, itemId: String) {
+
+
+        itemCollection.document(itemId)
+            .set(item)
             .addOnSuccessListener {
                 showToast(itemSuccessfullyAdded)
                 clearFields()

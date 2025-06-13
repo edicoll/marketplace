@@ -2,6 +2,7 @@ package com.example.projectmarketplace.repositories
 
 import com.example.projectmarketplace.data.Item
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -85,5 +86,29 @@ class ItemRepository {
 
     suspend fun deleteItem(itemId: String) {
         itemsCollection.document(itemId).delete().await()
+    }
+
+    suspend fun getFavItems():List<Item> {
+        return try {
+
+            val userId = auth.currentUser?.uid
+
+            val userDoc = database.collection("users").document(userId.toString())
+                .get()
+                .await()
+
+            val favItemIds = userDoc.get("favItems") as? List<*> ?: return emptyList()
+
+            val items = itemsCollection
+                .whereIn(FieldPath.documentId(), favItemIds)
+                .get()
+                .await()
+                .mapNotNull { it.toObject(Item::class.java) }
+
+            items
+        } catch (e: Exception) {
+
+            emptyList()
+        }
     }
 }

@@ -6,21 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.projectmarketplace.adapters.FavitemAdapter
-import com.example.projectmarketplace.R
-import com.example.projectmarketplace.data.FavItem
-import com.example.projectmarketplace.data.User
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.projectmarketplace.databinding.FragmentFavitemBinding
 import com.example.projectmarketplace.fragments.base.BaseFragment
+import com.example.projectmarketplace.repositories.ItemRepository
+import com.example.projectmarketplace.viewModels.FavItemViewModel
+import com.example.projectmarketplace.views.FavItemView
+import kotlinx.coroutines.launch
 
 class FavItemFragment : BaseFragment<FragmentFavitemBinding>() {
 
-    private var favitems: List<FavItem> = emptyList()
-    private lateinit var adapter: FavitemAdapter
-    private lateinit var recyclerView: RecyclerView
-
+    private lateinit var viewModel: FavItemViewModel
+    private lateinit var favItemView: FavItemView
 
     override fun inflateBinding(
         inflater: LayoutInflater,
@@ -29,27 +28,31 @@ class FavItemFragment : BaseFragment<FragmentFavitemBinding>() {
         return FragmentFavitemBinding.inflate(inflater, container, false)
     }
 
-
     //konfiguracija kreiranog viewa
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // dohvaćanje podataka
-        currentUser = parseUserFromArguments() ?: User("", "", "", 3.0f)
-        favitems = arguments?.getParcelableArrayList<FavItem>(favItemKey, FavItem::class.java) ?: emptyList()
+        viewModelInit()
+
+        favItemView = FavItemView(binding, requireContext(), requireActivity(), viewModel)
 
         setupBackButton(binding.back)
 
-        //definira se recycleview i spaja s layoutom
-        recyclerView = view.findViewById(R.id.favitemsRecyclerView)
-        recyclerView.layoutManager = GridLayoutManager(context, 2)
+        favItemView.setupRecyclerView()
 
-        adapter = FavitemAdapter(favitems)
+        lifecycleScope.launch {
+            favItemView.fetchFavItems()
+        }
 
-        //rec se spaja s adapterom
-        recyclerView.adapter = adapter
+    }
 
+    private fun viewModelInit(){
+        viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return FavItemViewModel(ItemRepository()) as T
+            }
+        }).get(FavItemViewModel::class.java)
     }
 
 }

@@ -5,7 +5,7 @@ import java.util.Date
 
 @Parcelize
 data class Item(
-    //val id: String,
+    val id: String,
     val title: String,
     val description: String,
     val price: Double,
@@ -17,5 +17,5 @@ data class Item(
     val category: String,
 
     ): Parcelable {
-    constructor() : this("", "", 0.0, "", "", "", "", Date(), "")
+    constructor() : this("", "", "", 0.0, "", "", "", "", Date(), "")
 }

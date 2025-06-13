@@ -18,7 +18,8 @@ import com.example.projectmarketplace.views.ProfileView
 import java.util.Date
 
 
-val orders = listOf(
+val orders = emptyList<Order>()
+    /*listOf(
         Order(
             id = 1,
             buyerId = 1,
@@ -70,10 +71,11 @@ val orders = listOf(
             ),
             orderDate = System.currentTimeMillis() - 259200000 // prije 3 dana
         )
-    )
+    )*/
 
 
-val favitems = listOf(
+val favitems = emptyList<FavItem>()
+    /*listOf(
         FavItem(
             id = 1,
             item = Item(
@@ -116,7 +118,7 @@ val favitems = listOf(
                 category = "Vehicles"
             ),
         )
-    )
+    )*/
 
 
 class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
