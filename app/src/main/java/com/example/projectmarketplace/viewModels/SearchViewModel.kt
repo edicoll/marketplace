@@ -9,7 +9,7 @@ class SearchViewModel(private val repository: ItemRepository) : ViewModel() {
     val originalItems: List<Item> get() = _originalItems //podatci searcha se ovdje spremaju, to je kao getter za _originalItems
 
     suspend fun getItems(): List<Item> {
-        _originalItems = repository.getItems()
+        _originalItems = repository.getItemsExcludingCurrentUser()
         return _originalItems
     }
 }

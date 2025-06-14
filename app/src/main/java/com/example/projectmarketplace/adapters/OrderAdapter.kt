@@ -9,9 +9,11 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projectmarketplace.R
 import com.example.projectmarketplace.data.Order
+import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 class OrderAdapter (private val orders: List<Order>
 ) : RecyclerView.Adapter<OrderAdapter.OrderViewHolder>() {
@@ -38,12 +40,10 @@ class OrderAdapter (private val orders: List<Order>
     override fun onBindViewHolder(holder: OrderViewHolder, position: Int) {
         val order = orders[position]
 
-        holder.title.text = order.item.title
-        holder.price.text = holder.itemView.context.getString(R.string.price_format, order.item.price)
+        holder.title.text = order.title
+        holder.price.text = holder.itemView.context.getString(R.string.price_format, order.price)
 
-        holder.date.text = Instant.ofEpochMilli(order.orderDate)
-            .atZone(ZoneId.systemDefault())
-            .format(DateTimeFormatter.ofPattern(dateFormat))
+        holder.date.text = SimpleDateFormat(dateFormat, Locale.getDefault()).format(order.orderDate)
 
     }
 

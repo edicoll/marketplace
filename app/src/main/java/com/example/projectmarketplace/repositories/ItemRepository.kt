@@ -36,20 +36,6 @@ class ItemRepository {
         }
     }
 
-    suspend fun getItems(): List<Item> {
-
-        return try {
-            val querySnapshot = database.collection("items")
-                .get()
-                .await()
-
-            querySnapshot.documents.mapNotNull { doc ->
-                doc.toObject(Item::class.java)
-            }
-        } catch (e: Exception) {
-            emptyList()
-        }
-    }
 
     suspend fun getSellerName(sellerId: String): String? {
         return try {

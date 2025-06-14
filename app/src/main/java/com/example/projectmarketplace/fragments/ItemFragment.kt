@@ -61,6 +61,12 @@ class ItemFragment : BaseFragment<FragmentHomeIndividualBinding>() {
             }
         }
 
+        binding.buttonBuy.setOnClickListener {
+            lifecycleScope.launch {
+                itemView.buyItem()
+            }
+        }
+
         itemView.bind()
 
     }

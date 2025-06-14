@@ -6,21 +6,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.projectmarketplace.R
-import com.example.projectmarketplace.adapters.OrderAdapter
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.projectmarketplace.data.Order
-import com.example.projectmarketplace.data.User
 import com.example.projectmarketplace.databinding.FragmentMyordersBinding
 import com.example.projectmarketplace.fragments.base.BaseFragment
+import com.example.projectmarketplace.repositories.OrderRepository
+import com.example.projectmarketplace.viewModels.OrderViewModel
+import com.example.projectmarketplace.views.OrderView
+import kotlinx.coroutines.launch
 
 class OrderFragment : BaseFragment<FragmentMyordersBinding>() {
 
 
     private var orders: List<Order> = emptyList()
-    private lateinit var adapter: OrderAdapter
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var viewModel: OrderViewModel
+    private lateinit var orderView: OrderView
 
     override fun inflateBinding(
         inflater: LayoutInflater,
@@ -35,21 +37,40 @@ class OrderFragment : BaseFragment<FragmentMyordersBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        currentUser = arguments?.getParcelable(userKey, User::class.java) ?: User("", "", ",", 3.0f)
-        orders = arguments?.getParcelableArrayList<Order>(orderKey, Order::class.java) ?: emptyList()
+        arguments?.let { bundle ->
+            orders = bundle.getParcelableArrayList<Order>(orderKey) ?: emptyList()
+        }
+
+        viewModelInit()
+
+        orderView = OrderView(binding, requireContext(), requireActivity(), viewModel, orders)
 
         setupBackButton(binding.back)
 
-        //definira se recycleview i spaja s layoutom
-        recyclerView = view.findViewById(R.id.myordersRecyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(context)
+        orderView.setupRecyclerView()
 
-        adapter = OrderAdapter(
-            orders
-        )
-        //rec se spaja s adapterom
-        recyclerView.adapter = adapter
+        lifecycleScope.launch {
+            orderView.fetchOrders()
+        }
 
+    }
+
+    companion object {
+        fun newInstance(orders: List<Order>): OrderFragment {
+            return OrderFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelableArrayList(orderKey, ArrayList(orders))
+                }
+            }
+        }
+    }
+
+    private fun viewModelInit(){
+        viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return OrderViewModel(OrderRepository()) as T
+            }
+        }).get(OrderViewModel::class.java)
     }
 
 }

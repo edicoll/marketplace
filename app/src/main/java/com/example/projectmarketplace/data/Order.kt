@@ -2,12 +2,16 @@ package com.example.projectmarketplace.data
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import java.util.Date
 
 @Parcelize
 data class Order(
-    val id: Int,
-    val buyerId: Int,
-    val buyerName: String,
-    val item: Item,
-    val orderDate: Long
-) : Parcelable
+    val id: String,
+    val sellerId: String,
+    val buyerId: String,
+    val title: String,
+    val price: Double,
+    val orderDate: Date
+) : Parcelable{
+    constructor() : this("", "", "", "", 0.0, Date())
+}

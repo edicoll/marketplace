@@ -3,6 +3,7 @@ package com.example.projectmarketplace.viewModels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.projectmarketplace.data.Item
+import com.example.projectmarketplace.data.Order
 import com.example.projectmarketplace.repositories.ConversationRepository
 
 class ItemViewModel(private val repository: ConversationRepository) : ViewModel() {
@@ -29,6 +30,9 @@ class ItemViewModel(private val repository: ConversationRepository) : ViewModel(
     }
     suspend fun isItemFavorite(itemId: String): Boolean{
         return repository.isItemFavorite(itemId)
+    }
+    suspend fun buyItem(item: Item): List<Order>{
+        return repository.buyItem(item)
     }
 }
 

@@ -3,6 +3,7 @@ package com.example.projectmarketplace.repositories
 import android.util.Log
 import com.example.projectmarketplace.data.Conversation
 import com.example.projectmarketplace.data.Item
+import com.example.projectmarketplace.data.Order
 import com.example.projectmarketplace.data.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
@@ -10,11 +11,14 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
+import java.util.Date
 import kotlin.text.get
 
 class ConversationRepository {
     private val database: FirebaseFirestore = Firebase.firestore
     private val conversationCollection = database.collection("conversations")
+    private val orderCollection = database.collection("orders")
+    private val itemCollection = database.collection("items")
     private val auth = FirebaseAuth.getInstance()
 
 
@@ -159,6 +163,40 @@ class ConversationRepository {
         } catch (e: Exception) {
 
             false
+        }
+    }
+
+    suspend fun buyItem(item: Item): List<Order>{
+
+        val userId = auth.currentUser?.uid
+
+        return try {
+            val orderId = orderCollection.document().id
+
+            val order = Order(
+                id = orderId,
+                sellerId = item.sellerId,
+                buyerId = userId.toString(),
+                title = item.title,
+                price = item.price,
+                orderDate = Date()
+            )
+
+            orderCollection.document(orderId)
+                .set(order)
+                .await()
+
+            itemCollection.document(item.id).delete().await()
+
+            val orders = orderCollection
+                .whereEqualTo("buyerId", userId)
+                .get()
+                .await()
+                .toObjects(Order::class.java)
+
+            orders
+        }catch (e: Exception){
+            emptyList<Order>()
         }
     }
 
