@@ -2,18 +2,23 @@ package com.example.projectmarketplace.views
 
 import android.content.Context
 import android.content.Intent
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 
 import com.example.projectmarketplace.LoginActivity
-import com.example.projectmarketplace.data.User
 import com.example.projectmarketplace.databinding.FragmentProfileBinding
+import com.example.projectmarketplace.viewModels.ProfileViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
 
 
 class ProfileView(private val binding: FragmentProfileBinding,
-                  private val context: Context, private val currentUser: User?
+                  private val context: Context,
+                  private var viewModel: ProfileViewModel,
+                  private val lifecycleOwner: LifecycleOwner,
 ) {
     private lateinit var googleSignInClient: GoogleSignInClient
     private var firebaseAuth = FirebaseAuth.getInstance()
@@ -23,7 +28,10 @@ class ProfileView(private val binding: FragmentProfileBinding,
 
         binding.name.text = firebaseAuth.currentUser?.displayName
         binding.email.text = firebaseAuth.currentUser?.email
-        //binding.ratingBar.rating = currentUser?.rating!! //zamijeniti
+        lifecycleOwner.lifecycleScope.launch {
+            binding.ratingBar.rating = viewModel.getUserRating()!!
+        }
+
     }
 
 

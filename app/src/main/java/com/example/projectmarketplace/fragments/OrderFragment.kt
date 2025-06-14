@@ -2,6 +2,7 @@ package com.example.projectmarketplace.fragments
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,8 +22,13 @@ class OrderFragment : BaseFragment<FragmentMyordersBinding>() {
 
 
     private var orders: List<Order> = emptyList()
+    private var rating: Boolean = false
+    private var sellerId: String = ""
     private lateinit var viewModel: OrderViewModel
     private lateinit var orderView: OrderView
+    private val ratingKey = "has_rating_key"
+    private val sellerIdKey = "sellerId_Key"
+
 
     override fun inflateBinding(
         inflater: LayoutInflater,
@@ -39,11 +45,16 @@ class OrderFragment : BaseFragment<FragmentMyordersBinding>() {
 
         arguments?.let { bundle ->
             orders = bundle.getParcelableArrayList<Order>(orderKey) ?: emptyList()
+            rating = bundle.getBoolean(ratingKey)
+            sellerId = bundle.getString(sellerIdKey).toString()
         }
+        Log.d("rating", "ima li ratinga $rating,i sellerid $sellerId haha")
+
 
         viewModelInit()
 
-        orderView = OrderView(binding, requireContext(), requireActivity(), viewModel, orders)
+        orderView = OrderView(binding, requireContext(), requireActivity(),
+            viewModel, orders, lifecycleOwner = viewLifecycleOwner, sellerId)
 
         setupBackButton(binding.back)
 
@@ -53,13 +64,17 @@ class OrderFragment : BaseFragment<FragmentMyordersBinding>() {
             orderView.fetchOrders()
         }
 
+        if(rating)orderView.setSellerReview()
+
     }
 
     companion object {
-        fun newInstance(orders: List<Order>): OrderFragment {
+        fun newInstance(orders: List<Order>, rating: Boolean, sellerId: String): OrderFragment {
             return OrderFragment().apply {
                 arguments = Bundle().apply {
                     putParcelableArrayList(orderKey, ArrayList(orders))
+                    putBoolean(ratingKey, rating)
+                    putString(sellerIdKey, sellerId)
                 }
             }
         }

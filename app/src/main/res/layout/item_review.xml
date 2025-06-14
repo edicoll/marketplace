@@ -41,7 +41,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="164dp"
-
+        android:progressTint="@color/gold"
+        android:progressBackgroundTint="@color/gray"
         android:rating="1"
         android:isIndicator="true"
         android:scaleX="0.4"

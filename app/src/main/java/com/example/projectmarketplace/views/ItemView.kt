@@ -73,7 +73,9 @@ class ItemView(private val binding: FragmentHomeIndividualBinding,
         boughtItems = viewModel.buyItem(item)
 
         val fragment = OrderFragment.newInstance(
-            orders = boughtItems
+            orders = boughtItems,
+            rating = true,
+            sellerId = item.sellerId
         )
         activity.supportFragmentManager.beginTransaction()
             .replace(R.id.flFragment, fragment)

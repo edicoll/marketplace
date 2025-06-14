@@ -145,6 +145,7 @@ class LoginActivity : AppCompatActivity() {
             name = credential.givenName ?: "Unknown",
             email = firebaseUser.email ?: "",
             rating = 0.0f ,
+            ratingCount = 0,
             favItems = emptyList()
         )
 

@@ -6,16 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.projectmarketplace.R
 import com.example.projectmarketplace.data.FavItem
-import com.example.projectmarketplace.data.Item
 import com.example.projectmarketplace.data.Order
 import com.example.projectmarketplace.data.Review
 import com.example.projectmarketplace.data.User
 import com.example.projectmarketplace.databinding.FragmentProfileBinding
 import com.example.projectmarketplace.fragments.base.BaseFragment
+import com.example.projectmarketplace.repositories.ItemRepository
+import com.example.projectmarketplace.viewModels.ProfileViewModel
 import com.example.projectmarketplace.views.ProfileView
-import java.util.Date
 
 
 val orders = emptyList<Order>()
@@ -125,6 +127,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
 
     private var reviews: List<Review> = emptyList()
     private lateinit var profileView: ProfileView
+    private lateinit var viewModel: ProfileViewModel
 
     override fun inflateBinding(
         inflater: LayoutInflater,
@@ -137,11 +140,13 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModelInit()
         // dohvaćanje podataka
-        currentUser = arguments?.getParcelable(userKey, User::class.java) ?: User("", "ffh", "ww0,", 3.0f)
+        currentUser = arguments?.getParcelable(userKey, User::class.java) ?: User("", "ffh", "ww0,", 3.0f, 0)
         reviews = arguments?.getParcelableArrayList<Review>(reviewKey, Review::class.java) ?: emptyList()
 
-        profileView = ProfileView(binding, requireContext(), currentUser)
+        profileView = ProfileView(binding, requireContext(),
+            viewModel, lifecycleOwner = viewLifecycleOwner)
 
         profileView.setupUserInfo()
         profileView.setupLogout()
@@ -171,18 +176,16 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
 
     private fun setupMyOrders(view: View) {
         view.setOnClickListener {
-            val orderFragment = OrderFragment()
+            val fragment = OrderFragment.newInstance(
+                orders = orders,
+                rating = false,
+                sellerId = ""
+            )
 
-            val bundle = Bundle().apply {
-                putParcelable(userKey, currentUser)
-                putParcelableArrayList(orderKey, ArrayList(orders))
-            }
-            orderFragment.arguments = bundle
-
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.flFragment, orderFragment)
-                .addToBackStack(null)
-                .commit()
+            activity?.supportFragmentManager?.beginTransaction()
+                ?.replace(R.id.flFragment, fragment)
+                ?.addToBackStack(null)
+                ?.commit()
         }
     }
 
@@ -203,6 +206,12 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
         }
     }
 
-
+    private fun viewModelInit(){
+        viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return ProfileViewModel(ItemRepository()) as T
+            }
+        }).get(ProfileViewModel::class.java)
+    }
 
 }

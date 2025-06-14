@@ -15,5 +15,12 @@ class OrderViewModel(private val repository: OrderRepository) : ViewModel() {
         }
         return _orders
     }
+
+    suspend fun setReview(sellerId: String, rating: Int, comment: String){
+            repository.setReview(sellerId, rating, comment)
+    }
+    suspend fun getUserName(sellerId: String): String{
+            return repository.getUserName(sellerId).toString()
+    }
 }
 
