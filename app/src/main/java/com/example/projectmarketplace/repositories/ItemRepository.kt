@@ -55,16 +55,6 @@ class ItemRepository {
         }
     }
 
-    suspend fun getUserRating(): Float? {
-        val userId = auth.currentUser?.uid
-
-        return try {
-            val document = database.collection("users").document(userId.toString()).get().await()
-            document.getDouble("rating")?.toFloat()
-        } catch (e: Exception) {
-            null
-        }
-    }
 
     /*  za sad ami ne koristi
     suspend fun getItemsByUser(userId: String): List<Item> {

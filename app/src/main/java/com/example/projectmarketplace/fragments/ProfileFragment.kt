@@ -1,13 +1,17 @@
 package com.example.projectmarketplace.fragments
 
+import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.projectmarketplace.LoginActivity
 import com.example.projectmarketplace.R
 import com.example.projectmarketplace.data.FavItem
 import com.example.projectmarketplace.data.Order
@@ -16,8 +20,12 @@ import com.example.projectmarketplace.data.User
 import com.example.projectmarketplace.databinding.FragmentProfileBinding
 import com.example.projectmarketplace.fragments.base.BaseFragment
 import com.example.projectmarketplace.repositories.ItemRepository
+import com.example.projectmarketplace.repositories.ProfileRepository
 import com.example.projectmarketplace.viewModels.ProfileViewModel
 import com.example.projectmarketplace.views.ProfileView
+import com.google.firebase.auth.FirebaseAuth
+import androidx.core.content.edit
+import java.io.File
 
 
 val orders = emptyList<Order>()
@@ -146,10 +154,11 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
         reviews = arguments?.getParcelableArrayList<Review>(reviewKey, Review::class.java) ?: emptyList()
 
         profileView = ProfileView(binding, requireContext(),
-            viewModel, lifecycleOwner = viewLifecycleOwner)
+            viewModel, lifecycleOwner = viewLifecycleOwner, requireActivity())
 
         profileView.setupUserInfo()
         profileView.setupLogout()
+        profileView.deleteAccount()
 
         setupMyReviews(binding.userInfoContainer)
         setupMyOrders(binding.myOrdersContainer)
@@ -209,7 +218,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
     private fun viewModelInit(){
         viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return ProfileViewModel(ItemRepository()) as T
+                return ProfileViewModel(ProfileRepository()) as T
             }
         }).get(ProfileViewModel::class.java)
     }
