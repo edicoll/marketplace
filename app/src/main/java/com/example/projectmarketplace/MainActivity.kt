@@ -1,43 +1,31 @@
 package com.example.projectmarketplace
 
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.example.projectmarketplace.data.Conversation
 import com.example.projectmarketplace.data.Item
-import com.example.projectmarketplace.data.Review
-import com.example.projectmarketplace.data.User
 import com.example.projectmarketplace.fragments.AddFragment
 import com.example.projectmarketplace.fragments.HomeFragment
 import com.example.projectmarketplace.fragments.InboxFragment
 import com.example.projectmarketplace.fragments.ProfileFragment
 import com.example.projectmarketplace.fragments.SearchFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import java.util.Date
+import android.Manifest
+import android.util.Log
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 
 
 class MainActivity : AppCompatActivity() {
 
 
-
-    private val userKey = "USER_KEY"
-    private val reviewKey = "REVIEW_KEY"
-    private val itemKey = "ITEM_KEY"
-    private val conversationKey = "CONVERSATION_KEY"
-
-     val user1 = User(
-        id = "u",
-        name = "Edi",
-        email = "edicolliva@gmail.com",
-        rating = 3.55f,
-         ratingCount = 0
-     )
-
-    val conversations = emptyList<Conversation>()
-
     val items = emptyList<Item>()
-    val reviews = emptyList<Review>()
 
 
 
@@ -46,31 +34,18 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
+        requestNotificationPermission()
+        saveFcmTokenToFirestore()
+
+
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
 
 
-        val homeFragment = HomeFragment().apply {
-            arguments = Bundle().apply{
-                putParcelableArrayList(itemKey, ArrayList(items))
-            }
-        }
-        val searchFragment = SearchFragment().apply {
-            arguments = Bundle().apply{
-                putParcelableArrayList(itemKey, ArrayList(items))
-            }
-        }
+        val homeFragment = HomeFragment()
+        val searchFragment = SearchFragment()
         val addFragment = AddFragment()
-        val inboxFragment = InboxFragment().apply {
-            arguments = Bundle().apply {
-                putParcelableArrayList(conversationKey, ArrayList(conversations))
-            }
-        }
-        val profileFragment = ProfileFragment().apply {
-            arguments = Bundle().apply {
-                putParcelable(userKey, user1)
-                putParcelableArrayList(reviewKey, ArrayList(reviews))
-            }
-        }
+        val inboxFragment = InboxFragment()
+        val profileFragment = ProfileFragment()
 
         setCurrentFragment(homeFragment)
 
@@ -93,4 +68,45 @@ class MainActivity : AppCompatActivity() {
             commit()
         }
 
+
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    1
+                )
+            }
+        }
+    }
+    private fun saveFcmTokenToFirestore() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val token = task.result
+                Log.d("FCM", "Dobiven token: $token")
+
+                val userId = FirebaseAuth.getInstance().currentUser?.uid
+                if (userId != null) {
+                    FirebaseFirestore.getInstance().collection("users")
+                        .document(userId)
+                        .update("fcmToken", token)
+                        .addOnSuccessListener {
+                            Log.d("FCM", "Token uspješno spremljen u Firestore")
+                        }
+                        .addOnFailureListener {
+                            Log.e("FCM", "Greška pri spremanju tokena", it)
+                        }
+                } else {
+                    Log.e("FCM", "Korisnik nije prijavljen")
+                }
+            } else {
+                Log.e("FCM", "Greška pri dohvaćanju tokena", task.exception)
+            }
+        }
+    }
 }

@@ -9,8 +9,9 @@ data class User(
     val email: String,
     var rating: Float,
     val ratingCount: Int,
-    val favItems: List<String> = emptyList()
+    val favItems: List<String> = emptyList(),
+    val fcmToken: String = ""
 ) : Parcelable{
 
-    constructor() : this("", "", "", 0.0f, 0, emptyList())
+    constructor() : this("", "", "", 0.0f, 0, emptyList(), "")
 }

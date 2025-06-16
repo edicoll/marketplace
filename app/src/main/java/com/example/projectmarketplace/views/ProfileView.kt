@@ -63,7 +63,6 @@ class ProfileView(private val binding: FragmentProfileBinding,
     fun deleteAccount(){
         binding.deleteAccount.setOnClickListener {
             lifecycleOwner.lifecycleScope.launch {
-                Log.d("sss", "je li ovo sranje uspjelo ${viewModel.deleteAccount()}")
 
                 if(viewModel.deleteAccount()){
                     clearLocalData()
@@ -77,7 +76,6 @@ class ProfileView(private val binding: FragmentProfileBinding,
     }
 
     private fun clearLocalData() {
-
         val prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         prefs.edit() { clear() }
 

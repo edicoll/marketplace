@@ -19,6 +19,7 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 
 
 class LoginActivity : AppCompatActivity() {
@@ -101,6 +102,8 @@ class LoginActivity : AppCompatActivity() {
                         val firebaseUser = firebaseAuth.currentUser
                         firebaseUser?.let { user ->
 
+                            saveFcmToken(user.uid)
+
                             firestore.collection("users").document(user.uid)
                                 .get()
                                 .addOnSuccessListener { document ->
@@ -146,7 +149,8 @@ class LoginActivity : AppCompatActivity() {
             email = firebaseUser.email ?: "",
             rating = 0.0f ,
             ratingCount = 0,
-            favItems = emptyList()
+            favItems = emptyList(),
+            fcmToken = ""
         )
 
         firestore.collection("users").document(firebaseUser.uid)
@@ -159,5 +163,20 @@ class LoginActivity : AppCompatActivity() {
                 Log.e("Firestore", "Error creating user document", e)
                 Toast.makeText(this, "Error saving user data", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    private fun saveFcmToken(userId: String) {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val token = task.result
+                firestore.collection("users").document(userId)
+                    .update("fcmToken", token)
+                    .addOnFailureListener { e ->
+                        Log.e("FCM", "Error saving FCM token", e)
+                    }
+            } else {
+                Log.e("FCM", "Failed to get FCM token", task.exception)
+            }
+        }
     }
 }
