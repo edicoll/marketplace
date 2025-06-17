@@ -13,7 +13,9 @@
     <color name="button3">#2196F3</color>
     <color name="button4">#9B3A3A</color>
     <color name="button5">#BFA22C</color>
-    <color name="gold">#C79357</color>
+    <color name="gold">#C7A957</color>
     <color name="bg_container4">#D9D5D5</color>
+    <color name="bg_container5">#BCBABA</color>
+    <color name="bg_blur">#80FFFFFF</color>
 
 </resources>

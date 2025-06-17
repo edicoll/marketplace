@@ -2,25 +2,33 @@ package com.example.projectmarketplace.fragments
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.projectmarketplace.R
-import com.example.projectmarketplace.adapters.OrderAdapter
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.projectmarketplace.data.Order
-import com.example.projectmarketplace.data.User
 import com.example.projectmarketplace.databinding.FragmentMyordersBinding
 import com.example.projectmarketplace.fragments.base.BaseFragment
+import com.example.projectmarketplace.repositories.OrderRepository
+import com.example.projectmarketplace.viewModels.OrderViewModel
+import com.example.projectmarketplace.views.OrderView
+import kotlinx.coroutines.launch
 
 class OrderFragment : BaseFragment<FragmentMyordersBinding>() {
 
 
     private var orders: List<Order> = emptyList()
-    private lateinit var adapter: OrderAdapter
-    private lateinit var recyclerView: RecyclerView
+    private var rating: Boolean = false
+    private var sellerId: String = ""
+    private lateinit var viewModel: OrderViewModel
+    private lateinit var orderView: OrderView
+    private val ratingKey = "has_rating_key"
+    private val sellerIdKey = "sellerId_Key"
+
 
     override fun inflateBinding(
         inflater: LayoutInflater,
@@ -35,21 +43,49 @@ class OrderFragment : BaseFragment<FragmentMyordersBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        currentUser = arguments?.getParcelable(userKey, User::class.java) ?: User("", "", ",", 3.0f)
-        orders = arguments?.getParcelableArrayList<Order>(orderKey, Order::class.java) ?: emptyList()
+        arguments?.let { bundle ->
+            orders = bundle.getParcelableArrayList<Order>(orderKey) ?: emptyList()
+            rating = bundle.getBoolean(ratingKey)
+            sellerId = bundle.getString(sellerIdKey).toString()
+        }
+        Log.d("rating", "ima li ratinga $rating,i sellerid $sellerId haha")
+
+
+        viewModelInit()
+
+        orderView = OrderView(binding, requireContext(), requireActivity(),
+            viewModel, orders, lifecycleOwner = viewLifecycleOwner, sellerId)
 
         setupBackButton(binding.back)
 
-        //definira se recycleview i spaja s layoutom
-        recyclerView = view.findViewById(R.id.myordersRecyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(context)
+        orderView.setupRecyclerView()
 
-        adapter = OrderAdapter(
-            orders
-        )
-        //rec se spaja s adapterom
-        recyclerView.adapter = adapter
+        lifecycleScope.launch {
+            orderView.fetchOrders()
+        }
 
+        if(rating)orderView.setSellerReview()
+
+    }
+
+    companion object {
+        fun newInstance(orders: List<Order>, rating: Boolean, sellerId: String): OrderFragment {
+            return OrderFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelableArrayList(orderKey, ArrayList(orders))
+                    putBoolean(ratingKey, rating)
+                    putString(sellerIdKey, sellerId)
+                }
+            }
+        }
+    }
+
+    private fun viewModelInit(){
+        viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return OrderViewModel(OrderRepository()) as T
+            }
+        }).get(OrderViewModel::class.java)
     }
 
 }

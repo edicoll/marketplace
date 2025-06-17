@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projectmarketplace.adapters.ItemAdapter
+import com.example.projectmarketplace.data.Item
 import com.example.projectmarketplace.databinding.FragmentHomeBinding
 import com.example.projectmarketplace.viewModels.HomeViewModel
 
@@ -16,6 +17,7 @@ class HomeView(private val binding: FragmentHomeBinding,
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ItemAdapter
+    private var items = listOf<Item>()
 
 
     fun setupRecyclerView() {
@@ -24,14 +26,14 @@ class HomeView(private val binding: FragmentHomeBinding,
         recyclerView.layoutManager = GridLayoutManager(context, 2)
 
 
-        adapter = ItemAdapter(viewModel.items, activity)
+        adapter = ItemAdapter(items, activity)
         recyclerView.adapter = adapter
     }
 
     suspend fun fetchItems() {
-        viewModel.getItemsExcludingCurrentUser()
+        items = viewModel.getItemsExcludingCurrentUser()
 
-        adapter = ItemAdapter(viewModel.items, activity)
+        adapter = ItemAdapter(items, activity)
         recyclerView.adapter = adapter
     }
 }

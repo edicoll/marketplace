@@ -37,7 +37,7 @@ class ReviewAdapter (private val reviews: List<Review>
     override fun onBindViewHolder(holder: ReviewViewHolder, position: Int) {
         val review = reviews[position]
 
-        holder.name.text = review.userIdFrom.toString()
+        holder.name.text = review.userNameFrom.toString()
         holder.text.text = review.comment
         holder.rating.rating = review.rating.toFloat()
 

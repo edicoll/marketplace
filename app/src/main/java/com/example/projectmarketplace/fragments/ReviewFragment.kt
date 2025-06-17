@@ -6,21 +6,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.projectmarketplace.R
-import com.example.projectmarketplace.adapters.ReviewAdapter
-import com.example.projectmarketplace.data.Review
-import com.example.projectmarketplace.data.User
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.projectmarketplace.databinding.FragmentReviewBinding
 import com.example.projectmarketplace.fragments.base.BaseFragment
+import com.example.projectmarketplace.repositories.ReviewRepository
+import com.example.projectmarketplace.viewModels.ReviewViewModel
+import com.example.projectmarketplace.views.ReviewView
+import kotlinx.coroutines.launch
 
 
 class ReviewFragment : BaseFragment<FragmentReviewBinding>() {
 
-    private var reviews: List<Review> = emptyList()
-    private lateinit var adapter: ReviewAdapter
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var viewModel: ReviewViewModel
+    private lateinit var reviewView: ReviewView
 
 
     override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentReviewBinding {
@@ -33,25 +33,29 @@ class ReviewFragment : BaseFragment<FragmentReviewBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // dohvaćanje podataka
-        currentUser = arguments?.getParcelable(userKey, User::class.java) ?: User("", "", "", 3.0f)
-        reviews = arguments?.getParcelableArrayList<Review>(reviewKey, Review::class.java) ?: emptyList()
+        viewModelInit()
 
-        binding.name.text = currentUser?.name
+        reviewView = ReviewView(binding, requireContext(), requireActivity(), viewModel)
 
         setupBackButton(binding.back)
 
 
-        //definira se recycleview i spaja s layoutom
-        recyclerView = view.findViewById(R.id.reviewRecyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(context)
+        reviewView.setupRecyclerView()
 
-        adapter = ReviewAdapter(
-            reviews
-        )
-        //rec se spaja s adapterom
-        recyclerView.adapter = adapter
+        lifecycleScope.launch {
+            reviewView.setUserName()
+            reviewView.fetchReviews()
+        }
 
+
+    }
+
+    private fun viewModelInit(){
+        viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return ReviewViewModel(ReviewRepository()) as T
+            }
+        }).get(ReviewViewModel::class.java)
     }
 
 

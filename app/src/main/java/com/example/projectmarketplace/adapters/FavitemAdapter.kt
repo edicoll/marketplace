@@ -6,14 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projectmarketplace.R
-import com.example.projectmarketplace.data.FavItem
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
+import com.example.projectmarketplace.data.Item
+import com.example.projectmarketplace.fragments.ItemFragment
+import java.text.SimpleDateFormat
+import java.util.Locale
 
-class FavitemAdapter (private val favitems: List<FavItem>
+class FavitemAdapter (private val favitems: List<Item>,
+                      private val fragmentActivity: FragmentActivity
 ) : RecyclerView.Adapter<FavitemAdapter.FavitemViewHolder>() {
 
     val dateFormat = "dd.MM.yyyy."
@@ -38,11 +40,20 @@ class FavitemAdapter (private val favitems: List<FavItem>
     override fun onBindViewHolder(holder: FavitemViewHolder, position: Int) {
         val favitem = favitems[position]
 
-        holder.title.text = favitem.item.title
-        holder.price.text = holder.itemView.context.getString(R.string.price_format, favitem.item.price)
-        holder.date.text = favitem.item.createdAt.toString()
+        holder.title.text = favitem.title
+        holder.price.text = holder.itemView.context.getString(R.string.price_format, favitem.price)
+        holder.date.text = SimpleDateFormat(dateFormat, Locale.getDefault()).format(favitem.createdAt)
 
 
+        holder.itemView.setOnClickListener {
+
+            val fragment = ItemFragment.newInstance(favitem)
+
+            fragmentActivity.supportFragmentManager.beginTransaction()
+                .replace(R.id.flFragment, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
     }
 
     override fun getItemCount() = favitems.size

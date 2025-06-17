@@ -5,12 +5,13 @@ import android.os.Parcelable
 
 @Parcelize
 data class Message(
-    val id: Int,
-    val conversationId: Int,
-    val senderId: Int,
+    var id: String,
+    val conversationId: String,
+    val senderId: String,
     val senderName: String,
-    val receiverId: Int,
     val text: String,
     val timestamp: Long,
     var isRead: Boolean = false
-    ): Parcelable
+    ): Parcelable{
+        constructor() : this("", "", "", "", "", 0L, false)
+    }
