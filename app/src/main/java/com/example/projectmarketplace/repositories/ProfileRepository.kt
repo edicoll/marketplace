@@ -8,7 +8,6 @@ import kotlinx.coroutines.tasks.await
 
 class ProfileRepository {
     private val database: FirebaseFirestore = Firebase.firestore
-    private val itemsCollection = database.collection("items")
     private val usersCollection = database.collection("users")
     private val auth = FirebaseAuth.getInstance()
     private val user = auth.currentUser
@@ -27,8 +26,8 @@ class ProfileRepository {
     suspend fun deleteAccount(): Boolean{
         val userId = auth.currentUser?.uid
         return try {
-            usersCollection.document(userId.toString()).delete()
-            user?.delete()
+            usersCollection.document(userId.toString()).delete().await()
+            user?.delete()?.await()
             auth.signOut()
 
             true

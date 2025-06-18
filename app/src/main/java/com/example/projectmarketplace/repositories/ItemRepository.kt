@@ -11,19 +11,15 @@ import kotlinx.coroutines.tasks.await
 class ItemRepository {
     private val database: FirebaseFirestore = Firebase.firestore
     private val itemsCollection = database.collection("items")
+    private val userCollection = database.collection("users")
     private val auth = FirebaseAuth.getInstance()
-
-    suspend fun addItem(item: Item): String {  //suspend služi da ta funkcija može biti pauzirana i nastaviti se kasnije, bez ometanja  glavnog threada
-        val ref = itemsCollection.add(item).await() //await kao pretvara firebase task u kotlin rezultat
-        return ref.id
-    }
 
 
     suspend fun getItemsExcludingCurrentUser(): List<Item> {
         val currentUserId = auth.currentUser?.uid ?: return emptyList()
 
         return try {
-            val querySnapshot = database.collection("items")
+            val querySnapshot = itemsCollection
                 .whereNotEqualTo("sellerId", currentUserId) // filtriranje po sellerId
                 .get()
                 .await()
@@ -39,7 +35,7 @@ class ItemRepository {
 
     suspend fun getSellerName(sellerId: String): String? {
         return try {
-            val document = database.collection("users").document(sellerId).get().await()
+            val document = userCollection.document(sellerId).get().await()
             document.getString("name")
         } catch (e: Exception) {
             null
@@ -48,28 +44,13 @@ class ItemRepository {
 
     suspend fun getSellerRating(sellerId: String): Float? {
         return try {
-            val document = database.collection("users").document(sellerId).get().await()
+            val document = userCollection.document(sellerId).get().await()
             document.getDouble("rating")?.toFloat()
         } catch (e: Exception) {
             null
         }
     }
 
-
-    /*  za sad ami ne koristi
-    suspend fun getItemsByUser(userId: String): List<Item> {
-        val querySnapshot = itemsCollection
-            .whereEqualTo("userId", userId)
-            .get()
-            .await()
-        return querySnapshot.documents.map { doc ->
-            doc.toObject(Item::class.java)?.copy(id = doc.id) ?: Item()
-        }
-    }*/
-    /* za sada ništa
-    suspend fun updateItem(item: Item) {
-        itemsCollection.document(item.id).set(item).await()
-    }*/
 
     suspend fun deleteItem(itemId: String) {
         itemsCollection.document(itemId).delete().await()
@@ -80,7 +61,7 @@ class ItemRepository {
 
             val userId = auth.currentUser?.uid
 
-            val userDoc = database.collection("users").document(userId.toString())
+            val userDoc = userCollection.document(userId.toString())
                 .get()
                 .await()
 

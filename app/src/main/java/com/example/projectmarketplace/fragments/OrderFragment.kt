@@ -48,7 +48,6 @@ class OrderFragment : BaseFragment<FragmentMyordersBinding>() {
             rating = bundle.getBoolean(ratingKey)
             sellerId = bundle.getString(sellerIdKey).toString()
         }
-        Log.d("rating", "ima li ratinga $rating,i sellerid $sellerId haha")
 
 
         viewModelInit()

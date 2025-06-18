@@ -46,15 +46,7 @@ abstract class BaseFragment<VBinding : ViewBinding> : Fragment() {
         }
     }
 
-    // Common method to parse user from arguments
-    protected fun parseUserFromArguments(): User? {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            arguments?.getParcelable(userKey, User::class.java)
-        } else {
-            @Suppress("DEPRECATION")
-            arguments?.getParcelable(userKey)
-        }
-    }
+
     fun showToast(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }

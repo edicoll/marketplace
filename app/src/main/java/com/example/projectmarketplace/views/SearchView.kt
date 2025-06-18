@@ -23,6 +23,15 @@ class SearchView(private val binding: FragmentSearchBinding,
 
     private var selectedFilter: String = "Default"
     private var currentDisplayedItems: List<Item> = emptyList()
+    private val default = "Default"
+    private val newest_first = "Newest first"
+    private val price_low_to_hight = "Price: low to high"
+    private val price_hight_to_low = "Price: high to low"
+    private val categoryViews = mapOf(
+        "electronics" to binding.electronics,
+        "accessories" to binding.accessories,
+        "vehicles" to binding.vehicles
+    )
 
     //možda bi trebalo za kategorije nabravit fetchItemsCategory
     suspend fun fetchItems() {
@@ -120,23 +129,18 @@ class SearchView(private val binding: FragmentSearchBinding,
     // funkcija kada se filtrira
     private fun applyFilter(list: List<Item>): List<Item> {
         return when (selectedFilter) {
-            "Default" -> list.sortedByDescending { it.createdAt }
-            "Newest first" -> list.sortedByDescending { it.createdAt }
-            "Price: low to high" -> list.sortedBy { it.price }
-            "Price: high to low" -> list.sortedByDescending { it.price }
+            default -> list.sortedByDescending { it.createdAt }
+            newest_first -> list.sortedByDescending { it.createdAt }
+            price_low_to_hight -> list.sortedBy { it.price }
+            price_hight_to_low -> list.sortedByDescending { it.price }
             else -> list
         }
     }
 
-    // funkcija za upravljanje kategorijama
-    fun setupCategoryClickListener(categories: List<String>){
+    fun setupCategoryClickListener(categories: List<String>) {
         categories.forEach { category ->
-            val view = when (category.lowercase()) {
-                "electronics" -> binding.electronics
-                "accessories" -> binding.accessories
-                "vehicles" -> binding.vehicles
-                else -> null
-            }
+
+            val view = categoryViews[category.lowercase()]
 
             view?.setOnClickListener {
                 val filteredItems = viewModel.originalItems.filter { item ->

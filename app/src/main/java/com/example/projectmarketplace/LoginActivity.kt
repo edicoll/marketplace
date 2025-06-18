@@ -2,7 +2,6 @@ package com.example.projectmarketplace
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
@@ -38,7 +37,6 @@ class LoginActivity : AppCompatActivity() {
             val credential = oneTapClient.getSignInCredentialFromIntent(result.data)
             handleSignInResult(credential)
         } catch (e: ApiException) {
-            Log.e("GoogleSignIn", "Sign-in failed", e)
             Toast.makeText(this, "Sign-in failed: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
@@ -79,13 +77,11 @@ class LoginActivity : AppCompatActivity() {
                         IntentSenderRequest.Builder(result.pendingIntent.intentSender).build()
                     )
                 } catch (e: Exception) {
-                    Log.e("GoogleSignIn", "Couldn't start One Tap UI", e)
                     Toast.makeText(this, "Error starting sign-in", Toast.LENGTH_SHORT).show()
                 }
             }
             .addOnFailureListener { e ->
                 // one tap nije dostupan, možda korisnik nema Google račune na uređaju
-                Log.e("GoogleSignIn", "One Tap UI not available", e)
                 Toast.makeText(this, "Please install Google Play services", Toast.LENGTH_SHORT).show()
             }
     }
@@ -117,7 +113,6 @@ class LoginActivity : AppCompatActivity() {
                                 }
 
                                 .addOnFailureListener { e ->
-                                    Log.e("Firestore", "Error checking user", e)
                                     Toast.makeText(this, "Error checking user data", Toast.LENGTH_SHORT).show()
                                 }
                         }
@@ -156,11 +151,9 @@ class LoginActivity : AppCompatActivity() {
         firestore.collection("users").document(firebaseUser.uid)
             .set(user)
             .addOnSuccessListener {
-                Log.d("Firestore", "User document created successfully")
                 proceedToMainActivity()
             }
             .addOnFailureListener { e ->
-                Log.e("Firestore", "Error creating user document", e)
                 Toast.makeText(this, "Error saving user data", Toast.LENGTH_SHORT).show()
             }
     }
@@ -172,10 +165,8 @@ class LoginActivity : AppCompatActivity() {
                 firestore.collection("users").document(userId)
                     .update("fcmToken", token)
                     .addOnFailureListener { e ->
-                        Log.e("FCM", "Error saving FCM token", e)
                     }
             } else {
-                Log.e("FCM", "Failed to get FCM token", task.exception)
             }
         }
     }

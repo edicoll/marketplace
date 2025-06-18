@@ -13,6 +13,8 @@ class MessageRepository {
 
     private val database: FirebaseFirestore = Firebase.firestore
     private val messageCollection = database.collection("messages")
+    private val conversationCollection = database.collection("conversations")
+    private val userCollection = database.collection("users")
     private val auth = FirebaseAuth.getInstance()
 
     suspend fun getMessages(conversationId: String): List<Message>{
@@ -68,7 +70,7 @@ class MessageRepository {
 
     suspend fun getUserName(userId: String): String? {
         return try {
-            val document = database.collection("users").document(userId).get().await()
+            val document = userCollection.document(userId).get().await()
             document.getString("name")
         } catch (e: Exception) {
             null
@@ -101,7 +103,7 @@ class MessageRepository {
             "timestamp" to lastMessage.timestamp
         )
 
-        database.collection("conversations").document(lastMessage.conversationId)
+        conversationCollection.document(lastMessage.conversationId)
             .update(updates)
 
 
@@ -109,7 +111,7 @@ class MessageRepository {
 
     fun setUnreadCount(lastMessage: Message){
 
-        val conversation = database.collection("conversations").document(lastMessage.conversationId)
+        val conversation = conversationCollection.document(lastMessage.conversationId)
 
         conversation.get()
             .addOnSuccessListener { document ->
@@ -133,9 +135,9 @@ class MessageRepository {
 
     }
 
-    private fun clearUnreadCount(conversationId: String) {
+    fun clearUnreadCount(conversationId: String) {
 
-        val conversation = database.collection("conversations").document(conversationId)
+        val conversation = conversationCollection.document(conversationId)
         val currentUserId = auth.currentUser?.uid
 
         conversation.get()
@@ -159,4 +161,5 @@ class MessageRepository {
                 }
             }
     }
+
 }

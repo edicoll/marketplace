@@ -19,6 +19,7 @@ class ConversationRepository {
     private val conversationCollection = database.collection("conversations")
     private val orderCollection = database.collection("orders")
     private val itemCollection = database.collection("items")
+    private val userCollection = database.collection("users")
     private val auth = FirebaseAuth.getInstance()
 
 
@@ -82,8 +83,6 @@ class ConversationRepository {
 
              conversationId
 
-
-
         } catch (e: Exception) {
             throw e
         }
@@ -91,7 +90,7 @@ class ConversationRepository {
 
     suspend fun getUserName(userId: String): String? {
         return try {
-            val document = database.collection("users").document(userId).get().await()
+            val document = userCollection.document(userId).get().await()
             document.getString("name")
         } catch (e: Exception) {
             null
@@ -127,7 +126,7 @@ class ConversationRepository {
     suspend fun setFavItem(item: Item){
         try {
             val userId = auth.currentUser?.uid
-            val userRef = database.collection("users").document(userId.toString())
+            val userRef = userCollection.document(userId.toString())
 
             userRef.update("favItems", FieldValue.arrayUnion(item.id)).await()
         } catch (e: Exception) {
@@ -138,7 +137,7 @@ class ConversationRepository {
     suspend fun removeFavItem(item: Item) {
         try {
             val userId = auth.currentUser?.uid
-            val userRef = database.collection("users").document(userId.toString())
+            val userRef = userCollection.document(userId.toString())
 
             userRef.update("favItems", FieldValue.arrayRemove(item.id)).await()
         } catch (e: Exception) {
@@ -150,7 +149,7 @@ class ConversationRepository {
         return try {
             val userId = auth.currentUser?.uid
 
-            val userRef = database.collection("users").document(userId.toString())
+            val userRef = userCollection.document(userId.toString())
             val document = userRef.get().await()
 
             val favItems = document.get("favItems") as? List<*>

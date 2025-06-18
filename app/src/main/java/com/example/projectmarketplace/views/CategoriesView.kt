@@ -15,6 +15,10 @@ class CategoriesView(private val binding: FragmentCategoriesBinding,
                  private val adapter: SearchAdapter
 ) {
     private var selectedFilter: String = "Default"
+    private val default = "Default"
+    private val newest_first = "Newest first"
+    private val price_low_to_hight = "Price: low to high"
+    private val price_hight_to_low = "Price: high to low"
 
     // funkcija za postavljanje spinnera
     fun setupDropdown(){
@@ -42,10 +46,10 @@ class CategoriesView(private val binding: FragmentCategoriesBinding,
     // funkcija kada se filtrira
     private fun applyFilter(list: List<Item>): List<Item> {
         return when (selectedFilter) {
-            "Default" -> list.sortedByDescending { it.createdAt }
-            "Newest first" -> list.sortedByDescending { it.createdAt }
-            "Price: low to high" -> list.sortedBy { it.price }
-            "Price: high to low" -> list.sortedByDescending { it.price }
+            default -> list.sortedByDescending { it.createdAt }
+            newest_first -> list.sortedByDescending { it.createdAt }
+            price_low_to_hight -> list.sortedBy { it.price }
+            price_hight_to_low -> list.sortedByDescending { it.price }
             else -> list
         }
     }

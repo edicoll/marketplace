@@ -3,19 +3,18 @@ package com.example.projectmarketplace.views
 import android.content.Context
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.example.projectmarketplace.R
-import com.example.projectmarketplace.data.Item
 import com.example.projectmarketplace.databinding.FragmentAddBinding
+import com.example.projectmarketplace.viewModels.AddViewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.tasks.await
-import java.util.Date
+import kotlinx.coroutines.launch
 
-class AddView(private val binding: FragmentAddBinding, private val context: Context) {
+class AddView(private val binding: FragmentAddBinding, private val context: Context,
+              private val lifecycleOwner: LifecycleOwner, private  var viewModel: AddViewModel) {
 
-    private val database = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
-    private val itemCollection = database.collection("items")
 
     //toast poruke
     private val fillInAllFields = "Please fill in all fields."
@@ -64,40 +63,17 @@ class AddView(private val binding: FragmentAddBinding, private val context: Cont
             return
         }
 
-        val itemId = itemCollection.document().id
-
-        val newItem = Item(
-            id = itemId,
-            title = title,
-            description = description,
-            price = price.toDouble(),
-            brand = brand,
-            condition = condition,
-            sellerId = currentUser.uid,
-            color = color,
-            createdAt = Date(),
-            category = category
-        )
-
-        saveItem(newItem, itemId)
-
-    }
-
-    private fun saveItem(item: Item, itemId: String) {
-
-
-        itemCollection.document(itemId)
-            .set(item)
-            .addOnSuccessListener {
+        lifecycleOwner.lifecycleScope.launch {
+            if(viewModel.addItem(title, description, price, category, condition,
+                brand, color)){
                 showToast(itemSuccessfullyAdded)
                 clearFields()
+            }else{
+                showToast(itemAddFailed)
             }
-            .addOnFailureListener { e ->
-                showToast("$itemAddFailed ${e.localizedMessage}")
-            }
+        }
+
     }
-
-
 
     fun clearFields() {
         with(binding) {
