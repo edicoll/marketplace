@@ -11,6 +11,9 @@ import com.example.projectmarketplace.fragments.base.BaseFragment
 import com.example.projectmarketplace.repositories.AddRepository
 import com.example.projectmarketplace.viewModels.AddViewModel
 import com.example.projectmarketplace.views.AddView
+import android.net.Uri
+import android.content.Intent
+import androidx.activity.result.contract.ActivityResultContracts
 
 class AddFragment : BaseFragment<FragmentAddBinding>() {
 
@@ -18,6 +21,13 @@ class AddFragment : BaseFragment<FragmentAddBinding>() {
     val conditions = listOf("New", "Like new", "Used")
     private lateinit var addView: AddView
     private lateinit var viewModel: AddViewModel
+    private var selectedImageUri: Uri? = null
+    private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        uri?.let {
+            selectedImageUri = it
+            binding.imagePreview.setImageURI(it)
+        }
+    }
 
 
     override fun inflateBinding(
@@ -37,8 +47,11 @@ class AddFragment : BaseFragment<FragmentAddBinding>() {
         addView.setupCategoryDropdown(categories)
         addView.setupConditionDropdown(conditions)
 
+        binding.selectImageButton.setOnClickListener {
+            pickImageLauncher.launch("image/*")
+        }
         binding.saveButton.setOnClickListener {
-            addView.handleSaveButtonClick()
+            addView.handleSaveButtonClick(selectedImageUri)
         }
     }
 

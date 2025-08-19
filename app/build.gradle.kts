@@ -64,6 +64,11 @@ dependencies {
     implementation (libs.kotlinx.coroutines.android)
     implementation (libs.firebase.messaging)
     implementation (libs.firebase.analytics.ktx)
+    implementation (libs.firebase.storage.ktx)
+    implementation (libs.glide)
+    annotationProcessor (libs.compiler)
+    implementation (libs.roundedimageview)
+    implementation (libs.glide.transformations)
 
 
 }

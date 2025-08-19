@@ -95,4 +95,6 @@
     <string name="submit">Submit</string>
 
     <string name="default_notification_channel_id">notification_channel</string>
+    <string name="fullscreen_image">Fullscreen product image</string>
+    <string name="close">Close</string>
 </resources>

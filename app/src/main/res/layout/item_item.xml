@@ -16,16 +16,18 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@id/title">
 
-    <ImageView
+    <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/image"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_width="170dp"
+        android:layout_height="120dp"
         android:contentDescription="@string/image"
-        android:src="@drawable/logo"
+        android:scaleType="centerCrop"
+        app:riv_corner_radius="6dp"
+        app:riv_mutate_background="true"
+        app:riv_oval="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintEnd_toEndOf="parent"/>
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"

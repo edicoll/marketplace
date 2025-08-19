@@ -14,8 +14,9 @@ data class Item(
     val sellerId: String,
     val color: String,
     val createdAt: Date,
-    val category: String
+    val category: String,
+    val imageUrl: String
 
     ): Parcelable {
-    constructor() : this("", "", "", 0.0, "", "", "", "", Date(), "")
+    constructor() : this("", "", "", 0.0, "", "", "", "", Date(), "", "")
 }

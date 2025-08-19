@@ -4,13 +4,17 @@ import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.projectmarketplace.R
 import com.example.projectmarketplace.data.Item
 import com.example.projectmarketplace.fragments.ItemFragment
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -26,7 +30,7 @@ class ItemAdapter (private val items: List<Item>,
         val title: TextView = itemView.findViewById(R.id.title)
         val price: TextView = itemView.findViewById(R.id.price)
         val date: TextView = itemView.findViewById(R.id.date)
-
+        val image: ImageView = itemView.findViewById(R.id.image)
     }
 
     //kreira se novi UI element, to jest item
@@ -45,6 +49,16 @@ class ItemAdapter (private val items: List<Item>,
         holder.price.text = holder.itemView.context.getString(R.string.price_format, item.price)
         holder.date.text = SimpleDateFormat(dateFormat, Locale.getDefault()).format(item.createdAt)
 
+
+        // Učitavanje slike
+        item.imageUrl.let { imageUrl ->
+            Glide.with(holder.itemView.context)
+                .load(imageUrl)
+                .placeholder(R.drawable.ic_placeholder)
+                .error(R.drawable.ic_error)
+                .centerCrop()
+                .into(holder.image)
+        }
 
 
         holder.itemView.setOnClickListener {

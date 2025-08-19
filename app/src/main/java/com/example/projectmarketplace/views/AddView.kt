@@ -10,11 +10,13 @@ import com.example.projectmarketplace.databinding.FragmentAddBinding
 import com.example.projectmarketplace.viewModels.AddViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
+import android.net.Uri
 
 class AddView(private val binding: FragmentAddBinding, private val context: Context,
               private val lifecycleOwner: LifecycleOwner, private  var viewModel: AddViewModel) {
 
     private val auth = FirebaseAuth.getInstance()
+    private var selectedImageUri: Uri? = null
 
     //toast poruke
     private val fillInAllFields = "Please fill in all fields."
@@ -33,7 +35,10 @@ class AddView(private val binding: FragmentAddBinding, private val context: Cont
         binding.conditionInput.setAdapter(adapter)
     }
 
-    fun handleSaveButtonClick(){
+    fun handleSaveButtonClick(imageUri: Uri?){
+
+        selectedImageUri = imageUri
+
         //dohvaćanje unesenih vrijednosti
         val title = binding.titleInput.text.toString()
         val description = binding.descriptionInput.text.toString()
@@ -49,9 +54,10 @@ class AddView(private val binding: FragmentAddBinding, private val context: Cont
             return
         }
 
-        if(title.isBlank() || description.isBlank() || priceText.isBlank() || category.isBlank() || condition.isBlank() || brand.isBlank() || color.isBlank()){
+        if(title.isBlank() || description.isBlank() || priceText.isBlank() || category.isBlank() || condition.isBlank() || brand.isBlank() || color.isBlank() || imageUri == null){
 
-            showToast(fillInAllFields)
+            val message = if (imageUri == null) "Please select an image" else fillInAllFields
+            showToast(message)
             return
 
         }
@@ -65,11 +71,12 @@ class AddView(private val binding: FragmentAddBinding, private val context: Cont
 
         lifecycleOwner.lifecycleScope.launch {
             if(viewModel.addItem(title, description, price, category, condition,
-                brand, color)){
+                brand, color, imageUri)){
                 showToast(itemSuccessfullyAdded)
                 clearFields()
+                selectedImageUri = null
             }else{
-                showToast(itemAddFailed)
+                showToast(itemAddFailed)        //tu je greska
             }
         }
 
@@ -84,6 +91,7 @@ class AddView(private val binding: FragmentAddBinding, private val context: Cont
             brandInput.text?.clear()
             colorInput.text?.clear()
             priceInput.text?.clear()
+            imagePreview.setImageResource(android.R.drawable.ic_menu_gallery)
             titleInput.requestFocus()
         }
     }
