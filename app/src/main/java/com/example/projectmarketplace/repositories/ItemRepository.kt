@@ -52,8 +52,14 @@ class ItemRepository {
     }
 
 
-    suspend fun deleteItem(itemId: String) {
-        itemsCollection.document(itemId).delete().await()
+    suspend fun deleteItem(item: Item): Boolean {
+
+        return try {
+            itemsCollection.document(item.id).delete().await()
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 
     suspend fun getFavItems():List<Item> {
@@ -76,6 +82,23 @@ class ItemRepository {
             items
         } catch (e: Exception) {
 
+            emptyList()
+        }
+    }
+
+    suspend fun getItemsByCurrentUser(): List<Item> {
+        val currentUserId = auth.currentUser?.uid ?: return emptyList()
+
+        return try {
+            val querySnapshot = itemsCollection
+                .whereEqualTo("sellerId", currentUserId)
+                .get()
+                .await()
+
+            querySnapshot.documents.mapNotNull { doc ->
+                doc.toObject(Item::class.java)?.copy(id = doc.id)
+            }
+        } catch (e: Exception) {
             emptyList()
         }
     }

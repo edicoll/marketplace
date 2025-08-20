@@ -1,0 +1,72 @@
+package com.example.projectmarketplace.adapters
+
+import android.os.Build
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.annotation.RequiresApi
+import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.projectmarketplace.R
+import com.example.projectmarketplace.data.Item
+import com.example.projectmarketplace.fragments.EditItemFragment
+import java.text.SimpleDateFormat
+import java.util.Locale
+
+class MyItemAdapter (private val myitems: List<Item>,
+                      private val fragmentActivity: FragmentActivity
+) : RecyclerView.Adapter<MyItemAdapter.MyitemViewHolder>() {
+
+    val dateFormat = "dd.MM.yyyy."
+
+    //čuva podatke za svaki red liste
+    class MyitemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val title: TextView = itemView.findViewById(R.id.title)
+        val price: TextView = itemView.findViewById(R.id.price)
+        val date: TextView = itemView.findViewById(R.id.date)
+        val image: ImageView = itemView.findViewById(R.id.image)
+
+    }
+
+    //kreira se novi UI element, to jest review
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyitemViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_item, parent, false)
+        return MyitemViewHolder(view)
+    }
+
+    //postavlja se nakon što se kreira item
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onBindViewHolder(holder: MyitemViewHolder, position: Int) {
+        val item = myitems[position]
+
+        holder.title.text = item.title
+        holder.price.text = holder.itemView.context.getString(R.string.price_format, item.price)
+        holder.date.text = SimpleDateFormat(dateFormat, Locale.getDefault()).format(item.createdAt)
+
+        // Učitavanje slike
+        item.imageUrl.let { imageUrl ->
+            Glide.with(holder.itemView.context)
+                .load(imageUrl)
+                .placeholder(R.drawable.ic_placeholder)
+                .error(R.drawable.ic_error)
+                .centerCrop()
+                .into(holder.image)
+        }
+
+        holder.itemView.setOnClickListener {
+
+            val fragment = EditItemFragment.newInstance(item)
+
+            fragmentActivity.supportFragmentManager.beginTransaction()
+                .replace(R.id.flFragment, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
+    }
+
+    override fun getItemCount() = myitems.size
+}

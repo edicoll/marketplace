@@ -10,29 +10,26 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.projectmarketplace.data.Item
-import com.example.projectmarketplace.databinding.FragmentHomeIndividualBinding
+import com.example.projectmarketplace.databinding.FragmentEditItemBinding
 import com.example.projectmarketplace.fragments.base.BaseFragment
-import com.example.projectmarketplace.repositories.ConversationRepository
 import com.example.projectmarketplace.repositories.ItemRepository
-import com.example.projectmarketplace.viewModels.ItemViewModel
-import com.example.projectmarketplace.views.ItemView
+import com.example.projectmarketplace.viewModels.EditItemViewModel
+import com.example.projectmarketplace.views.EditItemView
 import kotlinx.coroutines.launch
 
-
-class ItemFragment : BaseFragment<FragmentHomeIndividualBinding>() {
+class EditItemFragment : BaseFragment<FragmentEditItemBinding>() {
 
     private lateinit var item: Item
     private val itemNotFound = "Item not found"
-    private lateinit var itemView: ItemView
-    private lateinit var viewModel: ItemViewModel
+    private lateinit var itemView: EditItemView
+    private lateinit var viewModel: EditItemViewModel
     val itemRepository = ItemRepository()
-
 
     override fun inflateBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentHomeIndividualBinding {
-        return FragmentHomeIndividualBinding.inflate(inflater, container, false)
+    ): FragmentEditItemBinding {
+        return FragmentEditItemBinding.inflate(inflater, container, false)
     }
 
     //konfiguracija kreiranog viewa
@@ -45,24 +42,17 @@ class ItemFragment : BaseFragment<FragmentHomeIndividualBinding>() {
         //dohvaća za cijeli objekt Item
         item = arguments?.getParcelable(itemKey, Item::class.java) ?: throw IllegalStateException(itemNotFound)
 
-        itemView = ItemView(binding, requireContext(), item, itemRepository,
+        itemView = EditItemView(binding, requireContext(), item, itemRepository,
             lifecycleOwner = viewLifecycleOwner, requireActivity(), viewModel,
-            )
+        )
 
         //back tipka
         setupBackButton(binding.back)
 
-        itemView.setFavItem()
 
-        binding.buttonContact.setOnClickListener {
+        binding.buttonDelete.setOnClickListener {
             lifecycleScope.launch {
-                itemView.contactSeller()
-            }
-        }
-
-        binding.buttonBuy.setOnClickListener {
-            lifecycleScope.launch {
-                itemView.buyItem()
+                itemView.deleteItem()
             }
         }
 
@@ -71,8 +61,8 @@ class ItemFragment : BaseFragment<FragmentHomeIndividualBinding>() {
     }
 
     companion object {
-        fun newInstance(item: Item): ItemFragment {
-            return ItemFragment().apply {
+        fun newInstance(item: Item): EditItemFragment {
+            return EditItemFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable(itemKey, item)
                 }
@@ -83,8 +73,8 @@ class ItemFragment : BaseFragment<FragmentHomeIndividualBinding>() {
     private fun viewModelInit(){
         viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return ItemViewModel(ConversationRepository()) as T
+                return EditItemViewModel(ItemRepository()) as T
             }
-        }).get(ItemViewModel::class.java)
+        }).get(EditItemViewModel::class.java)
     }
 }

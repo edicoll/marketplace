@@ -1,36 +1,38 @@
 package com.example.projectmarketplace.views
 
+
 import android.content.Context
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projectmarketplace.adapters.FavitemAdapter
-import com.example.projectmarketplace.databinding.FragmentFavitemBinding
-import com.example.projectmarketplace.viewModels.FavItemViewModel
+import com.example.projectmarketplace.adapters.MyItemAdapter
+import com.example.projectmarketplace.databinding.FragmentMyitemBinding
+import com.example.projectmarketplace.viewModels.MyItemViewModel
 
-class FavItemView (private val binding: FragmentFavitemBinding,
+class MyItemView (private val binding: FragmentMyitemBinding,
                    private val context: Context,
                    private val activity: FragmentActivity,
-                   private  var viewModel: FavItemViewModel ) {
+                   private  var viewModel: MyItemViewModel ) {
 
-    private lateinit var adapter: FavitemAdapter
+    private lateinit var adapter: MyItemAdapter
     private lateinit var recyclerView: RecyclerView
 
     fun setupRecyclerView() {
 
-        recyclerView = binding.favitemsRecyclerView
+        recyclerView = binding.myitemRecyclerView
         recyclerView.layoutManager = GridLayoutManager(context, 2)
 
-        adapter = FavitemAdapter(emptyList(), activity)
+        adapter = MyItemAdapter(emptyList(), activity)
 
         recyclerView.adapter = adapter
     }
 
-    suspend fun fetchFavItems() {
+    suspend fun fetchMyItems() {
 
-        val favItems = viewModel.fetchFavItems()
+        val myItems = viewModel.fetchMyItems()
 
-        adapter = FavitemAdapter(favItems, activity)
+        adapter = MyItemAdapter(myItems, activity)
         recyclerView.adapter = adapter
     }
 

@@ -47,6 +47,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
         setupMyReviews(binding.userInfoContainer)
         setupMyOrders(binding.myOrdersContainer)
         setupFavItems(binding.favItemsContainer)
+        setupMyItems(binding.myItemsContainer)
 
     }
 
@@ -93,6 +94,23 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
 
             parentFragmentManager.beginTransaction()
                 .replace(R.id.flFragment, favItemFragment)
+                .addToBackStack(null)
+                .commit()
+        }
+    }
+
+    private fun setupMyItems(view: View) {
+        view.setOnClickListener {
+            val myItemFragment = MyItemFragment()
+
+            val bundle = Bundle().apply {
+                putParcelable(userKey, currentUser)
+                putParcelableArrayList(myItemKey, ArrayList(emptyList()))
+            }
+            myItemFragment.arguments = bundle
+
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.flFragment, myItemFragment)
                 .addToBackStack(null)
                 .commit()
         }

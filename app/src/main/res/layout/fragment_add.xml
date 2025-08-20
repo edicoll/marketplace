@@ -195,6 +195,19 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <ImageButton
+        android:id="@+id/removeImageButton"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/ic_close"
+        android:background="@drawable/circle_background"
+        android:visibility="gone"
+        android:contentDescription="TODO"
+        app:layout_constraintTop_toTopOf="@id/imagePreview"
+        app:layout_constraintEnd_toEndOf="@id/imagePreview"
+        android:layout_marginTop="-8dp"
+        android:layout_marginEnd="-8dp"/>
+
+    <ImageButton
         android:id="@+id/selectImageButton"
         android:layout_width="150dp"
         android:layout_height="150dp"

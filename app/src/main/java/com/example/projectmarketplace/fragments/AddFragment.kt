@@ -22,10 +22,13 @@ class AddFragment : BaseFragment<FragmentAddBinding>() {
     private lateinit var addView: AddView
     private lateinit var viewModel: AddViewModel
     private var selectedImageUri: Uri? = null
+
     private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
             selectedImageUri = it
             binding.imagePreview.setImageURI(it)
+            binding.removeImageButton.visibility = View.VISIBLE
+            binding.selectImageButton.visibility = View.GONE
         }
     }
 
@@ -50,9 +53,21 @@ class AddFragment : BaseFragment<FragmentAddBinding>() {
         binding.selectImageButton.setOnClickListener {
             pickImageLauncher.launch("image/*")
         }
+
+        binding.removeImageButton.setOnClickListener {
+            removeSelectedImage()
+        }
+
         binding.saveButton.setOnClickListener {
             addView.handleSaveButtonClick(selectedImageUri)
         }
+    }
+
+    private fun removeSelectedImage() {
+        selectedImageUri = null
+        binding.imagePreview.setImageResource(android.R.drawable.ic_menu_gallery)
+        binding.removeImageButton.visibility = View.GONE
+        binding.selectImageButton.visibility = View.VISIBLE
     }
 
     private fun viewModelInit(){

@@ -11,6 +11,7 @@ import com.example.projectmarketplace.viewModels.AddViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 import android.net.Uri
+import android.view.View
 
 class AddView(private val binding: FragmentAddBinding, private val context: Context,
               private val lifecycleOwner: LifecycleOwner, private  var viewModel: AddViewModel) {
@@ -92,6 +93,8 @@ class AddView(private val binding: FragmentAddBinding, private val context: Cont
             colorInput.text?.clear()
             priceInput.text?.clear()
             imagePreview.setImageResource(android.R.drawable.ic_menu_gallery)
+            removeImageButton.visibility = View.GONE
+            binding.selectImageButton.visibility = View.VISIBLE
             titleInput.requestFocus()
         }
     }
