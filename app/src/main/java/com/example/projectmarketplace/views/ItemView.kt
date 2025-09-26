@@ -45,6 +45,12 @@ class ItemView(private val binding: FragmentHomeIndividualBinding,
             logo.setOnClickListener {
                 showFullScreenImage()
             }
+
+            if (item.latitude == null || item.longitude == null) {
+                mapView.visibility = View.GONE
+                locationTitle.visibility = View.GONE
+                locationText.visibility = View.GONE
+            }
         }
 
         item.imageUrl.let { imageUrl ->
@@ -112,7 +118,8 @@ class ItemView(private val binding: FragmentHomeIndividualBinding,
         val fragment = OrderFragment.newInstance(
             orders = boughtItems,
             rating = true,
-            sellerId = item.sellerId
+            sellerId = item.sellerId,
+            item = item
         )
         activity.supportFragmentManager.beginTransaction()
             .replace(R.id.flFragment, fragment)
@@ -145,9 +152,14 @@ class ItemView(private val binding: FragmentHomeIndividualBinding,
             }
         }
     }
+
     private fun updateHeartIcons(isFavorite: Boolean) {
         binding.heartIconBorder.visibility = if (isFavorite) View.GONE else View.VISIBLE
         binding.heartIconFilled.visibility = if (isFavorite) View.VISIBLE else View.GONE
+    }
+
+    suspend fun upgradeRecentlyViewed(itemId: String){
+        viewModel.upgradeRecentlyViewed(itemId)
     }
 
 }

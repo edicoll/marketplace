@@ -88,7 +88,10 @@ export const notifyNewMessage = functions.firestore
       data: {
         conversationId: conversationId,
         messageId: messageId,
-        type: 'NEW_MESSAGE'
+        type: 'NEW_MESSAGE',
+        click_action: 'OPEN_INBOX',
+        target_fragment: 'InboxFragment',
+        navigation_destination: 'inbox'
       }
     };
 
@@ -159,7 +162,10 @@ export const notifyNewReview = functions.firestore
         reviewId: reviewId,
         userIdFrom: userIdFrom,
         userIdTo: userIdTo,
-        type: 'NEW_REVIEW'
+        type: 'NEW_REVIEW',
+        click_action: 'OPEN_REVIEWS',
+        target_fragment: 'ReviewFragment',
+        navigation_destination: 'reviews'
       }
     };
 

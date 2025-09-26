@@ -10,11 +10,12 @@ class AddViewModel(private val repository: AddRepository) : ViewModel() {
 
     suspend fun addItem(
         title: String, description: String, price: Float, category: String,
-        condition: String, brand: String, color: String, imageUri: Uri?
+        condition: String, brand: String, color: String, imageUri: Uri?,
+        latitude: Double?, longitude: Double?
     ): Boolean{
 
         return repository.addItem(title, description, price, category, condition,
-            brand, color, imageUri)
+            brand, color, imageUri, latitude, longitude)
 
     }
 }

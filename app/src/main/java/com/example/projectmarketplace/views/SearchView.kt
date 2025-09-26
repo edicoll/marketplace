@@ -1,9 +1,14 @@
 package com.example.projectmarketplace.views
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.FragmentActivity
 import com.example.projectmarketplace.R
@@ -12,7 +17,14 @@ import com.example.projectmarketplace.data.Item
 import com.example.projectmarketplace.databinding.FragmentSearchBinding
 import com.example.projectmarketplace.fragments.CategoriesFragment
 import com.example.projectmarketplace.viewModels.SearchViewModel
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.LatLng
 import kotlin.text.equals
+import android.widget.SeekBar
+import androidx.lifecycle.lifecycleScope
+import com.example.projectmarketplace.utils.LocationUtils
+import kotlinx.coroutines.launch
 
 
 class SearchView(private val binding: FragmentSearchBinding,
@@ -32,6 +44,10 @@ class SearchView(private val binding: FragmentSearchBinding,
         "accessories" to binding.accessories,
         "vehicles" to binding.vehicles
     )
+    private var fusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity)
+    private var currentLocation: LatLng? = null
+    private var isRadiusSearchActive = false
+
 
     //možda bi trebalo za kategorije nabravit fetchItemsCategory
     suspend fun fetchItems() {
@@ -101,19 +117,42 @@ class SearchView(private val binding: FragmentSearchBinding,
         val categories = binding.categories
         val noResult = binding.noResult
 
+        //provjerava ako je null da traži lokaciju, jer je ona već dana u nekim sučajevima
+        if (currentLocation == null){
+            activity.lifecycleScope.launch {
+                currentLocation = LocationUtils.getCurrentLocation(activity, fusedLocationClient)
+            }
+        }
+
         val filteredItems = if (query.length >= 3) {
-            val filteredList = viewModel.originalItems.filter { item ->
+            val textFilteredList = viewModel.originalItems.filter { item ->
                 item.title.contains(query, ignoreCase = true) ||
                         item.description.contains(query, ignoreCase = true)
             }
 
-            // upravljanje vizibilnošću elemenata
-            spinner.visibility = if (filteredList.isNotEmpty()) View.VISIBLE else View.GONE
-            categories.visibility = View.GONE
-            noResult.visibility = if (filteredList.isEmpty()) View.VISIBLE else View.GONE
+            // provjera je li radius aktivan
+            val finalList = if (isRadiusSearchActive && currentLocation != null) {
+                val radius = binding.radiusSeekBar.progress + 10
+                textFilteredList.filter { item ->
+                    item.latitude != null && item.longitude != null &&
+                            LocationUtils.calculateDistance(
+                                currentLocation!!.latitude,
+                                currentLocation!!.longitude,
+                                item.latitude,
+                                item.longitude
+                            ) <= radius
+                }
+            } else {
+                textFilteredList
+            }
 
-            applyFilter(filteredList)
-            filteredList // vraćamo filtriranu listu
+            // upravljanje vizibilnošću elemenata
+            spinner.visibility = if (finalList.isNotEmpty()) View.VISIBLE else View.GONE
+            categories.visibility = View.GONE
+            noResult.visibility = if (finalList.isEmpty()) View.VISIBLE else View.GONE
+
+            applyFilter(finalList)
+
         } else {
             spinner.visibility = View.GONE
             categories.visibility = View.VISIBLE
@@ -154,5 +193,84 @@ class SearchView(private val binding: FragmentSearchBinding,
                     .commit()
             }
         }
+    }
+
+    init {
+        setupRadiusSearch()
+    }
+
+    private fun setupRadiusSearch() {
+        // postvalja se SeekBar
+        binding.radiusSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                val radius = progress + 10 // 10-100 km
+                binding.radiusText.text = "$radius km"
+
+                // osvježava pretragu kada se radius mijenja
+                if (fromUser && isRadiusSearchActive && currentLocation != null) {
+                    performSearch(binding.searchBar.text.toString())
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar) {}
+        })
+
+        // Gumb za radius pretragu
+        binding.radiusSearchButton.setOnClickListener {
+            if (isRadiusSearchActive) {
+                disableRadiusSearch()
+            } else {
+                enableRadiusSearch()
+            }
+        }
+    }
+
+    private fun enableRadiusSearch() {
+
+        isRadiusSearchActive = true
+        binding.radiusSearchButton.setColorFilter(ContextCompat.getColor(activity, R.color.colorPrimary))
+        binding.radiusLayout.visibility = View.VISIBLE
+
+        // Dohvati trenutnu lokaciju
+        activity.lifecycleScope.launch {
+
+            currentLocation = LocationUtils.getCurrentLocation(activity, fusedLocationClient)
+
+            if (currentLocation != null) {
+
+                performSearch(binding.searchBar.text.toString())
+            } else {
+                requestLocationPermissions()
+            }
+        }
+    }
+
+
+    private fun disableRadiusSearch() {
+
+        isRadiusSearchActive = false
+        binding.radiusSearchButton.setColorFilter(ContextCompat.getColor(activity, android.R.color.darker_gray))
+        binding.radiusLayout.visibility = View.GONE
+        // osviježavanje performSearcha
+        performSearch(binding.searchBar.text.toString())
+    }
+
+
+    private fun requestLocationPermissions() {
+        // traženje dozvola za lokaciju
+        val permissions = arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) !=
+            PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity, permissions, LOCATION_PERMISSION_REQUEST_CODE)
+        }
+    }
+
+    companion object {
+        const val LOCATION_PERMISSION_REQUEST_CODE = 1001
     }
 }

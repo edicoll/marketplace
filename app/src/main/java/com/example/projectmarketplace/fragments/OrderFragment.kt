@@ -10,6 +10,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.example.projectmarketplace.data.Item
 import com.example.projectmarketplace.data.Order
 import com.example.projectmarketplace.databinding.FragmentMyordersBinding
 import com.example.projectmarketplace.fragments.base.BaseFragment
@@ -24,6 +25,7 @@ class OrderFragment : BaseFragment<FragmentMyordersBinding>() {
     private var orders: List<Order> = emptyList()
     private var rating: Boolean = false
     private var sellerId: String = ""
+    private lateinit var item: Item
     private lateinit var viewModel: OrderViewModel
     private lateinit var orderView: OrderView
     private val ratingKey = "has_rating_key"
@@ -47,6 +49,7 @@ class OrderFragment : BaseFragment<FragmentMyordersBinding>() {
             orders = bundle.getParcelableArrayList<Order>(orderKey) ?: emptyList()
             rating = bundle.getBoolean(ratingKey)
             sellerId = bundle.getString(sellerIdKey).toString()
+            item = bundle.getParcelable<Item>(itemKey)!!
         }
 
 
@@ -63,17 +66,18 @@ class OrderFragment : BaseFragment<FragmentMyordersBinding>() {
             orderView.fetchOrders()
         }
 
-        if(rating)orderView.setSellerReview()
+        if(rating)orderView.setSellerReview(item)
 
     }
 
     companion object {
-        fun newInstance(orders: List<Order>, rating: Boolean, sellerId: String): OrderFragment {
+        fun newInstance(orders: List<Order>, rating: Boolean, sellerId: String, item: Item): OrderFragment {
             return OrderFragment().apply {
                 arguments = Bundle().apply {
                     putParcelableArrayList(orderKey, ArrayList(orders))
                     putBoolean(ratingKey, rating)
                     putString(sellerIdKey, sellerId)
+                    putParcelable(itemKey, item)
                 }
             }
         }

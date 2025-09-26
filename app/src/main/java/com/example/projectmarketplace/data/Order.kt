@@ -10,8 +10,10 @@ data class Order(
     val sellerId: String,
     val buyerId: String,
     val title: String,
+    val category: String,
     val price: Double,
-    val orderDate: Date
+    val orderDate: Date,
+    val imageUrl: String
 ) : Parcelable{
-    constructor() : this("", "", "", "", 0.0, Date())
+    constructor() : this("", "", "", "", "", 0.0, Date(), "")
 }

@@ -34,5 +34,9 @@ class ItemViewModel(private val repository: ConversationRepository) : ViewModel(
     suspend fun buyItem(item: Item): List<Order>{
         return repository.buyItem(item)
     }
+
+    suspend fun upgradeRecentlyViewed(itemId: String){
+        repository.upgradeRecentlyViewed(itemId)
+    }
 }
 

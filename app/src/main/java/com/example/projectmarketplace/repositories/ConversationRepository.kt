@@ -177,8 +177,10 @@ class ConversationRepository {
                 sellerId = item.sellerId,
                 buyerId = userId.toString(),
                 title = item.title,
+                category = item.category,
                 price = item.price,
-                orderDate = Date()
+                orderDate = Date(),
+                imageUrl = item.imageUrl
             )
 
             orderCollection.document(orderId)
@@ -197,6 +199,38 @@ class ConversationRepository {
         }catch (e: Exception){
             emptyList<Order>()
         }
+    }
+
+    suspend fun upgradeRecentlyViewed(itemId: String){
+        val userId = auth.currentUser?.uid
+
+        try{
+            val userRef = userCollection.document(userId.toString())
+            val document = userRef.get().await()
+
+            val currentViewedItems = document.get("recViewedItems") as? List<String> ?: emptyList()
+
+            val newViewedItems = ArrayList(currentViewedItems)
+
+            newViewedItems.remove(itemId)
+
+            newViewedItems.add(itemId)
+
+            if (newViewedItems.size > 6) {
+                newViewedItems.removeAt(0) // Ukloni prvi (najstariji) element
+            }
+
+            userRef.update("recViewedItems", newViewedItems).await()
+
+            Log.d("RecentlyViewed", "Updated recently viewed for user $userId: $newViewedItems")
+
+        } catch (e: Exception) {
+        Log.e("RecentlyViewed", "Error updating recently viewed", e)
+        throw e
+    }
+
+
+
     }
 
 }

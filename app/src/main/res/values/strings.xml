@@ -99,4 +99,24 @@
     <string name="close">Close</string>
     <string name="my_items">My items</string>
     <string name="delete_item">Delete</string>
+    <string name="review_for_item">Review for item:</string>
+    <string name="save">Save</string>
+    <string name="set_location">Set location 🌍</string>
+    <string name="removeImage">remove image</string>
+    <string name="selectImage">select image</string>
+    <string name="imagePreview">imagePreview</string>
+    <string name="located_in">Located in</string>
+    <string name="not_found">not found</string>
+    <string name="item_location">Item location:</string>
+    <string name="fetching_location">Fetching location...</string>
+    <string name="map">map</string>
+    <string name="geo_search">Geo search</string>
+    <string name="distance_km">10 km</string>
+    <string name="radius_search">Radius</string>
+    <string name="recomended_items">Recommended items</string>
+    <string name="all_items">All items</string>
+    <string name="all_other_articles">All other items</string>
+    <string name="recently_viewed">Recently viewed</string>
+    <string name="image_search">Image search</string>
+    <string name="date_text">Date:</string>
 </resources>

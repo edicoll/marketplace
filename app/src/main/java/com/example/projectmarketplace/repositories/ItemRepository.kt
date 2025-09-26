@@ -1,5 +1,6 @@
 package com.example.projectmarketplace.repositories
 
+import android.util.Log
 import com.example.projectmarketplace.data.Item
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldPath
@@ -98,6 +99,55 @@ class ItemRepository {
             querySnapshot.documents.mapNotNull { doc ->
                 doc.toObject(Item::class.java)?.copy(id = doc.id)
             }
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    suspend fun updateItem(item: Item): Boolean {
+        return try {
+            val itemData = hashMapOf(
+                "title" to item.title,
+                "price" to item.price,
+                "brand" to item.brand,
+                "description" to item.description,
+                "condition" to item.condition,
+                "color" to item.color,
+            )
+
+            itemsCollection.document(item.id).update(itemData.toMap()).await()
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    suspend fun getRecentlyViewedItems(): List<Item> {
+
+        val userId = auth.currentUser?.uid ?: return emptyList()
+
+        return try {
+
+            val userDoc = userCollection.document(userId).get().await()
+            val recentlyViewedIds = userDoc.get("recViewedItems") as? List<*> ?: return emptyList()
+
+            if (recentlyViewedIds.isEmpty()) {
+                return emptyList()
+            }
+
+            val snapshot = itemsCollection
+                .whereIn(FieldPath.documentId(), recentlyViewedIds)
+                .get()
+                .await()
+
+            val itemsMap = snapshot.documents
+                .mapNotNull { it.toObject(Item::class.java)?.let { item -> it.id to item } }
+                .toMap()
+
+            val sortedItems = recentlyViewedIds.mapNotNull { itemsMap[it] }
+
+            sortedItems.reversed()
+
         } catch (e: Exception) {
             emptyList()
         }

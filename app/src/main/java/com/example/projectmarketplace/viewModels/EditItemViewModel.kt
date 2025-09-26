@@ -11,4 +11,8 @@ class EditItemViewModel(private val repository: ItemRepository) : ViewModel() {
         return repository.deleteItem(item)
     }
 
+    suspend fun updateItem(item: Item): Boolean {
+        return repository.updateItem(item)
+    }
+
 }

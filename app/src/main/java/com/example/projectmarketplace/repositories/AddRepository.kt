@@ -2,6 +2,8 @@ package com.example.projectmarketplace.repositories
 
 import android.net.Uri
 import com.example.projectmarketplace.data.Item
+import com.firebase.geofire.GeoFireUtils
+import com.firebase.geofire.GeoLocation
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
@@ -18,7 +20,8 @@ class AddRepository {
 
     suspend fun addItem(
         title: String, description: String, price: Float, category: String,
-        condition: String, brand: String, color: String, imageUri: Uri?
+        condition: String, brand: String, color: String, imageUri: Uri?,
+        latitude: Double?, longitude: Double?
     ): Boolean{
         return try {
 
@@ -27,6 +30,13 @@ class AddRepository {
                 val imageRef = storageRef.child("item_images/${System.currentTimeMillis()}.jpg")
                 imageRef.putFile(uri).await()
                 imageRef.downloadUrl.await().toString()
+            }
+
+
+            val geohash = if (latitude != null && longitude != null) {
+                GeoFireUtils.getGeoHashForLocation(GeoLocation(latitude, longitude))
+            } else {
+                null
             }
 
             val itemId = itemsCollection.document().id
@@ -43,7 +53,10 @@ class AddRepository {
                 color = color,
                 createdAt = Date(),
                 category = category,
-                imageUrl = imageUrl.toString()
+                imageUrl = imageUrl.toString(),
+                latitude = latitude,
+                longitude = longitude,
+                geohash = geohash
             )
 
             itemsCollection.document(itemId)

@@ -187,7 +187,7 @@
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginTop="16dp"
-        android:contentDescription="TODO"
+        android:contentDescription="@string/imagePreview"
         android:scaleType="centerCrop"
         android:src="@android:drawable/ic_menu_gallery"
         app:layout_constraintTop_toBottomOf="@id/priceInputLayout"
@@ -201,7 +201,7 @@
         android:src="@drawable/ic_close"
         android:background="@drawable/circle_background"
         android:visibility="gone"
-        android:contentDescription="TODO"
+        android:contentDescription="@string/removeImage"
         app:layout_constraintTop_toTopOf="@id/imagePreview"
         app:layout_constraintEnd_toEndOf="@id/imagePreview"
         android:layout_marginTop="-8dp"
@@ -211,7 +211,7 @@
         android:id="@+id/selectImageButton"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:contentDescription="TODO"
+        android:contentDescription="@string/selectImage"
         android:src="@drawable/ic_add2"
         android:background="?attr/selectableItemBackgroundBorderless"
         app:layout_constraintTop_toTopOf="@id/imagePreview"
@@ -220,6 +220,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         />
 
+    <!-- LOKACIJA -->
+    <Button
+        android:id="@+id/locationButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/set_location"
+        android:backgroundTint="@color/button4"
+        app:layout_constraintTop_toBottomOf="@id/imagePreview"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <!-- GUMB -->
     <Button
@@ -229,10 +240,14 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="128dp"
         android:text="@string/add_item"
-        app:layout_constraintTop_toBottomOf="@id/imagePreview"
+        app:layout_constraintTop_toBottomOf="@id/locationButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

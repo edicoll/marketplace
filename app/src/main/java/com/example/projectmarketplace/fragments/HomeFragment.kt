@@ -12,6 +12,8 @@ import androidx.lifecycle.lifecycleScope
 import com.example.projectmarketplace.databinding.FragmentHomeBinding
 import com.example.projectmarketplace.fragments.base.BaseFragment
 import com.example.projectmarketplace.repositories.ItemRepository
+import com.example.projectmarketplace.repositories.UserRepository
+import com.example.projectmarketplace.services.LocationService
 import com.example.projectmarketplace.viewModels.HomeViewModel
 import com.example.projectmarketplace.views.HomeView
 import kotlinx.coroutines.launch
@@ -48,7 +50,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     private fun viewModelInit(){
         viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return HomeViewModel(ItemRepository()) as T
+                return HomeViewModel(ItemRepository(), UserRepository(), LocationService(requireContext())) as T
             }
         }).get(HomeViewModel::class.java)
     }

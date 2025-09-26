@@ -1,5 +1,6 @@
 package com.example.projectmarketplace.adapters
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +19,7 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class ItemAdapter (private val items: List<Item>,
+class ItemAdapter (private var items: List<Item>,
                    private val fragmentActivity: FragmentActivity
 ) : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 
@@ -73,6 +74,12 @@ class ItemAdapter (private val items: List<Item>,
 
     }
 
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateItems(newItems: List<Item>) {
+        this.items = newItems   // items se nekako prosljeđuje ovdje
+        notifyDataSetChanged() // obavještava adapter
+    }
 
     override fun getItemCount() = items.size
 }

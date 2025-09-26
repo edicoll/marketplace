@@ -1,6 +1,7 @@
 package com.example.projectmarketplace.views
 
 import android.content.Context
+import android.location.Location
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
@@ -12,6 +13,7 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 import android.net.Uri
 import android.view.View
+import androidx.core.content.ContextCompat
 
 class AddView(private val binding: FragmentAddBinding, private val context: Context,
               private val lifecycleOwner: LifecycleOwner, private  var viewModel: AddViewModel) {
@@ -26,6 +28,8 @@ class AddView(private val binding: FragmentAddBinding, private val context: Cont
     private val itemAddFailed = "Failed to add item. Please try again."
     private val notLoggedIn = "You need to be logged in to add items."
 
+    private val setLocation = ""
+
     fun setupCategoryDropdown(categories: List<String>) {
         val adapter = ArrayAdapter(context, R.layout.dropdown_item, categories)
         binding.categoryInput.setAdapter(adapter)
@@ -36,7 +40,7 @@ class AddView(private val binding: FragmentAddBinding, private val context: Cont
         binding.conditionInput.setAdapter(adapter)
     }
 
-    fun handleSaveButtonClick(imageUri: Uri?){
+    fun handleSaveButtonClick(imageUri: Uri?, location: Location?){
 
         selectedImageUri = imageUri
 
@@ -70,9 +74,12 @@ class AddView(private val binding: FragmentAddBinding, private val context: Cont
             return
         }
 
+        val latitude = location?.latitude
+        val longitude = location?.longitude
+
         lifecycleOwner.lifecycleScope.launch {
             if(viewModel.addItem(title, description, price, category, condition,
-                brand, color, imageUri)){
+                brand, color, imageUri, latitude, longitude)){
                 showToast(itemSuccessfullyAdded)
                 clearFields()
                 selectedImageUri = null
@@ -96,6 +103,10 @@ class AddView(private val binding: FragmentAddBinding, private val context: Cont
             removeImageButton.visibility = View.GONE
             binding.selectImageButton.visibility = View.VISIBLE
             titleInput.requestFocus()
+            locationButton.setText(R.string.set_location)
+            locationButton.setBackgroundColor(
+                ContextCompat.getColor(context, R.color.button4)
+            )
         }
     }
 

@@ -33,7 +33,9 @@ class ProfileView(private val binding: FragmentProfileBinding,
         binding.name.text = firebaseAuth.currentUser?.displayName
         binding.email.text = firebaseAuth.currentUser?.email
         lifecycleOwner.lifecycleScope.launch {
-            binding.ratingBar.rating = viewModel.getUserRating()!!
+            if(firebaseAuth.currentUser != null){
+                binding.ratingBar.rating = viewModel.getUserRating()!!
+            }
         }
 
     }

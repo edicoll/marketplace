@@ -69,6 +69,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/image" />
 
+    <Button
+        android:id="@+id/buttonSave"
+        android:layout_width="138dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/save"
+        android:backgroundTint="@color/button5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/colorInput" />
+
     <TextView
         android:id="@+id/price"
         android:layout_width="wrap_content"
@@ -84,29 +95,22 @@
         app:layout_constraintStart_toStartOf="parent"
         />
 
-    <TextView
+    <EditText
         android:id="@+id/priceValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/value"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
         android:layout_marginStart="8dp"
-        android:textStyle="bold"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="-14dp"
         android:textSize="16sp"
+        android:inputType="numberDecimal"
+        android:textStyle="bold"
+        android:text="@string/value"
         app:layout_constraintBottom_toBottomOf="@id/price"
         app:layout_constraintStart_toEndOf="@id/price"
+        app:layout_constraintEnd_toEndOf="parent"
         />
 
-    <View
-        android:id="@+id/priceBorder"
-        android:layout_width="0dp"
-        android:layout_height="2dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:background="@color/gray"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/price"/>
 
 
     <TextView
@@ -118,33 +122,25 @@
         android:textSize="16sp"
         android:textColor="@color/gray"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/priceBorder"
+        app:layout_constraintTop_toBottomOf="@id/priceValue"
         app:layout_constraintStart_toStartOf="@id/price"
         />
 
-    <TextView
+    <EditText
         android:id="@+id/brandInput"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/some_brand"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="-14dp"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:layout_marginStart="4dp"
+        android:text="@string/brand"
         app:layout_constraintBottom_toBottomOf="@id/brand"
         app:layout_constraintStart_toEndOf="@id/brand"
+        app:layout_constraintEnd_toEndOf="parent"
         />
 
-    <View
-        android:id="@+id/brandBorder"
-        android:layout_width="0dp"
-        android:layout_height="2dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:background="@color/gray"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/brandInput"/>
 
     <TextView
         android:id="@+id/description"
@@ -155,33 +151,26 @@
         android:textSize="16sp"
         android:textColor="@color/gray"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/brandBorder"
+        app:layout_constraintTop_toBottomOf="@id/brandInput"
         app:layout_constraintStart_toStartOf="@id/brand"
         />
 
-    <TextView
+    <EditText
         android:id="@+id/descriptionInput"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:text="@string/about_this_item"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="-14dp"
         android:textSize="16sp"
         android:textStyle="bold"
+        android:text="@string/description"
         app:layout_constraintBottom_toBottomOf="@id/description"
         app:layout_constraintStart_toEndOf="@id/description"
+        app:layout_constraintEnd_toEndOf="parent"
         />
 
-    <View
-        android:id="@+id/descriptionBorder"
-        android:layout_width="0dp"
-        android:layout_height="2dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:background="@color/gray"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/descriptionInput"/>
+
 
     <TextView
         android:id="@+id/condition"
@@ -192,33 +181,25 @@
         android:textSize="16sp"
         android:textColor="@color/gray"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/descriptionBorder"
+        app:layout_constraintTop_toBottomOf="@id/descriptionInput"
         app:layout_constraintStart_toStartOf="@id/description"
         />
 
-    <TextView
+    <EditText
         android:id="@+id/conditionInput"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:text="@string/new_used"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="-14dp"
         android:textSize="16sp"
         android:textStyle="bold"
+        android:text="@string/condition"
         app:layout_constraintBottom_toBottomOf="@id/condition"
         app:layout_constraintStart_toEndOf="@id/condition"
+        app:layout_constraintEnd_toEndOf="parent"
         />
 
-    <View
-        android:id="@+id/conditionBorder"
-        android:layout_width="0dp"
-        android:layout_height="2dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:background="@color/gray"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/conditionInput"/>
 
     <TextView
         android:id="@+id/color"
@@ -229,31 +210,25 @@
         android:textSize="16sp"
         android:textColor="@color/gray"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/conditionBorder"
+        app:layout_constraintTop_toBottomOf="@id/conditionInput"
         app:layout_constraintStart_toStartOf="@id/condition"
         />
 
-    <TextView
+    <EditText
         android:id="@+id/colorInput"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:text="@string/color"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="-14dp"
         android:textSize="16sp"
         android:textStyle="bold"
+        android:text="@string/color"
         app:layout_constraintBottom_toBottomOf="@id/color"
         app:layout_constraintStart_toEndOf="@id/color"
+        app:layout_constraintEnd_toEndOf="parent"
         />
 
-    <View
-        android:id="@+id/colorBorder"
-        android:layout_width="0dp"
-        android:layout_height="2dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:background="@color/gray"        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/colorInput"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

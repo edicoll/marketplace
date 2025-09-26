@@ -26,11 +26,11 @@ import com.example.projectmarketplace.viewModels.ItemViewModel
 
 
 class EditItemView(private val binding: FragmentEditItemBinding,
-               private val context: Context, private val item: Item,
-               private val itemRepository: ItemRepository,
-               private val lifecycleOwner: LifecycleOwner,
-               private val activity: FragmentActivity,
-               private  var viewModel: EditItemViewModel
+                   private val context: Context, private var item: Item,
+                   private val itemRepository: ItemRepository,
+                   private val lifecycleOwner: LifecycleOwner,
+                   private val activity: FragmentActivity,
+                   private  var viewModel: EditItemViewModel
 ) {
     private val auth = FirebaseAuth.getInstance()
     private var boughtItems: List<Order> = emptyList()
@@ -39,13 +39,16 @@ class EditItemView(private val binding: FragmentEditItemBinding,
 
         with(binding) {
             title.text = item.title
-            priceValue.text = context.getString(R.string.price_format, item.price)
-            brandInput.text = item.brand
-            descriptionInput.text = item.description
-            conditionInput.text = item.condition
-            colorInput.text = item.color
+            priceValue.setText(item.price.toString())
+            brandInput.setText(item.brand)
+            descriptionInput.setText(item.description)
+            conditionInput.setText(item.condition)
+            colorInput.setText(item.color)
             image.setOnClickListener {
                 showFullScreenImage()
+            }
+            buttonSave.setOnClickListener {
+                saveItemChanges()
             }
         }
 
@@ -67,7 +70,7 @@ class EditItemView(private val binding: FragmentEditItemBinding,
         val closeButton = dialog.findViewById<ImageButton>(R.id.close_button)
 
         // Učitaj sliku u fullscreen prikaz
-        item.imageUrl?.let { imageUrl ->
+        item.imageUrl.let { imageUrl ->
             Glide.with(context)
                 .load(imageUrl)
                 .into(imageView)
@@ -91,6 +94,36 @@ class EditItemView(private val binding: FragmentEditItemBinding,
 
     fun showToast(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun saveItemChanges() {
+        with(binding) {
+
+            val newPrice = priceValue.text.toString().toDoubleOrNull() ?: item.price
+            val newBrand = brandInput.text.toString().takeIf { it.isNotBlank() } ?: item.brand
+            val newDescription = descriptionInput.text.toString().takeIf { it.isNotBlank() } ?: item.description
+            val newCondition = conditionInput.text.toString().takeIf { it.isNotBlank() } ?: item.condition
+            val newColor = colorInput.text.toString().takeIf { it.isNotBlank() } ?: item.color
+
+
+            val updatedItem = item.copy(
+                price = newPrice,
+                brand = newBrand,
+                description = newDescription,
+                condition = newCondition,
+                color = newColor
+            )
+
+
+            lifecycleOwner.lifecycleScope.launch {
+                if (viewModel.updateItem(updatedItem)) {
+                    showToast("Item successfully updated")
+                    item = updatedItem
+                } else {
+                    showToast("Error updating item")
+                }
+            }
+        }
     }
 
 

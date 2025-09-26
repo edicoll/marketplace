@@ -8,11 +8,10 @@
     <!-- SEARCH -->
     <com.google.android.material.search.SearchBar
         android:id="@+id/search_bar"
-        android:layout_width="0dp"
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="72dp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:hint="@string/search_hint"
@@ -28,6 +27,7 @@
         tools:ignore="MissingConstraints" />
 
 
+
     <!-- FILTRIRANJE -->
     <Spinner
         android:id="@+id/filtering"
@@ -40,9 +40,64 @@
         android:spinnerMode="dropdown"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_bar"
-        app:layout_goneMarginTop="112dp"
+        app:layout_constraintTop_toBottomOf="@id/radiusLayout"
+        app:layout_goneMarginTop="24dp"
         />
+
+    <!-- Geo search -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_container6"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="16dp"
+        android:padding="8dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:id="@+id/radiusLayout"
+        app:layout_constraintTop_toBottomOf="@id/search_bar">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/radius_search"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="8dp"/>
+
+        <SeekBar
+            android:id="@+id/radiusSeekBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:max="90"
+            android:progress="10"
+            android:layout_marginEnd="8dp"/>
+
+        <TextView
+            android:id="@+id/radiusText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/distance_km"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_gravity="center_vertical"/>
+
+    </LinearLayout>
+    <ImageButton
+        android:id="@+id/radiusSearchButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="4dp"
+        android:src="@drawable/ic_location"
+        android:background="@drawable/bg_container7"
+        android:contentDescription="@string/geo_search"
+        app:layout_constraintBottom_toBottomOf="@id/search_bar"
+        app:layout_constraintStart_toEndOf="@id/search_bar"
+        android:layout_marginStart="12dp"/>
 
 
     <!-- PRIKAZ PROIZVODA -->
@@ -63,11 +118,13 @@
 
     <!-- KATEGORIJE -->
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/categories"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@id/search_bar"
-        app:layout_constraintTop_toBottomOf="@id/search_bar"
-        android:id="@+id/categories">
+        app:layout_constraintTop_toBottomOf="@id/radiusLayout"
+        >
+
 
         <!-- ELEKTRONIKA -->
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -198,6 +255,53 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/Vehicles"/>
 
+    <!-- fragment_search.xml -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/imageSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginTop="48dp"
+        app:layout_constraintTop_toBottomOf="@id/Vehicles"
+        android:background="@drawable/bg_container2"
+        android:padding="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+                <TextView
+                    android:id="@+id/search_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/image_search"
+                    android:layout_marginStart="4dp"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <ImageButton
+                    android:id="@+id/imageSearchButton"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_camera"
+                    android:contentDescription="@string/image_search"
+                    android:background="@android:color/transparent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/search_image"
+                    app:tint="@color/white" />
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@id/imageSearchButton"
+                    app:layout_constraintEnd_toEndOf="@id/imageSearchButton"
+                    app:layout_constraintStart_toStartOf="@id/imageSearchButton"
+                    app:layout_constraintTop_toTopOf="@id/imageSearchButton"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 

@@ -10,6 +10,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.projectmarketplace.R
+import com.example.projectmarketplace.data.Item
 import com.example.projectmarketplace.data.Review
 import com.example.projectmarketplace.databinding.FragmentProfileBinding
 import com.example.projectmarketplace.fragments.base.BaseFragment
@@ -23,6 +24,8 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
     private var reviews: List<Review> = emptyList()
     private lateinit var profileView: ProfileView
     private lateinit var viewModel: ProfileViewModel
+    private var reviewId: String? = null
+    private var showReviewsTab: Boolean = false
 
     override fun inflateBinding(
         inflater: LayoutInflater,
@@ -34,6 +37,11 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        arguments?.let {
+            reviewId = it.getString("reviewId")
+            showReviewsTab = it.getBoolean("showReviewsTab", false)
+        }
 
         viewModelInit()
 
@@ -49,6 +57,9 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
         setupFavItems(binding.favItemsContainer)
         setupMyItems(binding.myItemsContainer)
 
+        if (showReviewsTab) {
+            openReviewsFragment()
+        }
     }
 
     private fun setupMyReviews(view: View) {
@@ -69,10 +80,14 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
 
     private fun setupMyOrders(view: View) {
         view.setOnClickListener {
+
+            val defaultItem = Item()
+
             val fragment = OrderFragment.newInstance(
                 orders = emptyList(),
                 rating = false,
-                sellerId = ""
+                sellerId = "",
+                item = defaultItem
             )
 
             activity?.supportFragmentManager?.beginTransaction()
@@ -114,6 +129,21 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
                 .addToBackStack(null)
                 .commit()
         }
+    }
+
+    private fun openReviewsFragment() {
+        val reviewFragment = ReviewFragment()
+        val bundle = Bundle().apply {
+            putParcelableArrayList(reviewKey, ArrayList(reviews))
+            // Možda proslijediti specificni reviewId ako je potrebno
+            reviewId?.let { putString("highlightReviewId", it) }
+        }
+        reviewFragment.arguments = bundle
+
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.flFragment, reviewFragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun viewModelInit(){
