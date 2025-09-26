@@ -51,7 +51,7 @@ class ConversationAdapter(private val conversations: List<Conversation>,
                 Triple(conversation.participant1Id, conversation.participant2Id, conversation.participant2Name)
             currentUserId == conversation.participant2Id ->
                 Triple(conversation.participant2Id, conversation.participant1Id, conversation.participant1Name)
-            else -> Triple("", "", "Unknown")
+            else -> Triple("", "", "")
         }
 
 

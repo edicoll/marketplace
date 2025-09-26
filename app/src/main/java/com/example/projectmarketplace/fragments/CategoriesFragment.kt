@@ -2,6 +2,7 @@ package com.example.projectmarketplace.fragments
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,17 +37,27 @@ class CategoriesFragment : BaseFragment<FragmentCategoriesBinding>() {
 
         binding.title.text = category // prikaz koja je kategorija
         binding.searchRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
+
+        if (items.isEmpty()){
+            binding.noResult.visibility = View.VISIBLE
+        }
+
         adapter = SearchAdapter(
             requireActivity(),
             items
         )
         binding.searchRecyclerView.adapter = adapter  //na recycleView se postavlja kreirano u adapteru
 
+
+
         categoriesView = CategoriesView(binding, requireActivity(), items, adapter)
 
         setupBackButton(binding.back)
 
         categoriesView.setupDropdown()
+
+        categoriesView.setupRadiusSearch()
+
 
     }
 
@@ -59,5 +70,7 @@ class CategoriesFragment : BaseFragment<FragmentCategoriesBinding>() {
                 }
             }
         }
+
     }
+
 }

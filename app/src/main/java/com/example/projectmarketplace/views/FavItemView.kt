@@ -27,7 +27,7 @@ class FavItemView (private val binding: FragmentFavitemBinding,
     }
 
     suspend fun fetchFavItems() {
-        viewModel.fetchFavItems()
+
         val favItems = viewModel.fetchFavItems()
 
         adapter = FavitemAdapter(favItems, activity)

@@ -30,4 +30,6 @@ class InboxIndividualViewModel(private val repository: MessageRepository) : View
             onUpdate(messages)                              //poziva callback funkciju
         }
     }
+
+
 }

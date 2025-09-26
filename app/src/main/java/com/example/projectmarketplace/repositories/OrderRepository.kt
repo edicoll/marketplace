@@ -1,5 +1,6 @@
 package com.example.projectmarketplace.repositories
 
+import com.example.projectmarketplace.data.Item
 import com.example.projectmarketplace.data.Order
 import com.example.projectmarketplace.data.Review
 import com.google.firebase.auth.FirebaseAuth
@@ -7,6 +8,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
+import java.util.Date
 
 class OrderRepository {
     private val database: FirebaseFirestore = Firebase.firestore
@@ -33,7 +35,7 @@ class OrderRepository {
         }
     }
 
-    suspend fun setReview(sellerId: String, rating: Int, comment: String){
+    suspend fun setReview(sellerId: String, rating: Int, comment: String, item: Item){
 
         val userId = auth.currentUser?.uid
         val userNameFrom = getUserName(userId.toString())
@@ -48,7 +50,10 @@ class OrderRepository {
                 userIdFrom = userId.toString(),
                 userNameFrom = userNameFrom.toString(),
                 rating = rating,
-                comment = comment
+                comment = comment,
+                itemName = item.title,
+                imageUrl = item.imageUrl,
+                createdAt = Date()
             )
 
             reviewCollection.document(reviewId)

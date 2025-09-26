@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/inbox_individual">
+
+    <!-- TOOLBAR -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="108dp"
+        android:background="@drawable/bg_container3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/back"
+            android:src="@drawable/ic_arrow_back"/>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="64dp"
+            android:layout_marginTop= "64dp"
+            android:text="@string/title"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            />
+    </androidx.appcompat.widget.Toolbar>
+
+    <!-- SLIKE -->
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/image"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:contentDescription="@string/image"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="32dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:riv_corner_radius="6dp"
+        app:riv_mutate_background="true"
+        app:riv_oval="false"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"/>
+
+
+    <Button
+        android:id="@+id/buttonDelete"
+        android:layout_width="138dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/delete_item"
+        android:backgroundTint="@color/button4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/image" />
+
+    <Button
+        android:id="@+id/buttonSave"
+        android:layout_width="138dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/save"
+        android:backgroundTint="@color/button5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/colorInput" />
+
+    <TextView
+        android:id="@+id/price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginStart="32dp"
+        android:text="@string/price_input"
+        android:textSize="16sp"
+        android:textColor="@color/gray"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/buttonDelete"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <EditText
+        android:id="@+id/priceValue"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="-14dp"
+        android:textSize="16sp"
+        android:inputType="numberDecimal"
+        android:textStyle="bold"
+        android:text="@string/value"
+        app:layout_constraintBottom_toBottomOf="@id/price"
+        app:layout_constraintStart_toEndOf="@id/price"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+
+
+    <TextView
+        android:id="@+id/brand"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/brand_input"
+        android:textSize="16sp"
+        android:textColor="@color/gray"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/priceValue"
+        app:layout_constraintStart_toStartOf="@id/price"
+        />
+
+    <EditText
+        android:id="@+id/brandInput"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="-14dp"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="@string/brand"
+        app:layout_constraintBottom_toBottomOf="@id/brand"
+        app:layout_constraintStart_toEndOf="@id/brand"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/description_input"
+        android:textSize="16sp"
+        android:textColor="@color/gray"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/brandInput"
+        app:layout_constraintStart_toStartOf="@id/brand"
+        />
+
+    <EditText
+        android:id="@+id/descriptionInput"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="-14dp"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="@string/description"
+        app:layout_constraintBottom_toBottomOf="@id/description"
+        app:layout_constraintStart_toEndOf="@id/description"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+
+
+    <TextView
+        android:id="@+id/condition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/condition_input"
+        android:textSize="16sp"
+        android:textColor="@color/gray"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/descriptionInput"
+        app:layout_constraintStart_toStartOf="@id/description"
+        />
+
+    <EditText
+        android:id="@+id/conditionInput"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="-14dp"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="@string/condition"
+        app:layout_constraintBottom_toBottomOf="@id/condition"
+        app:layout_constraintStart_toEndOf="@id/condition"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+
+    <TextView
+        android:id="@+id/color"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/color_input"
+        android:textSize="16sp"
+        android:textColor="@color/gray"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/conditionInput"
+        app:layout_constraintStart_toStartOf="@id/condition"
+        />
+
+    <EditText
+        android:id="@+id/colorInput"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="-14dp"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="@string/color"
+        app:layout_constraintBottom_toBottomOf="@id/color"
+        app:layout_constraintStart_toEndOf="@id/color"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

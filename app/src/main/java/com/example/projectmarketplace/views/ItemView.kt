@@ -1,7 +1,10 @@
 package com.example.projectmarketplace.views
 
+import android.app.Dialog
 import android.content.Context
 import android.view.View
+import android.widget.ImageButton
+import android.widget.ImageView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
@@ -12,6 +15,7 @@ import com.example.projectmarketplace.databinding.FragmentHomeIndividualBinding
 import com.example.projectmarketplace.fragments.InboxIndividualFragment
 import com.google.firebase.auth.FirebaseAuth
 import androidx.fragment.app.FragmentActivity
+import com.bumptech.glide.Glide
 import com.example.projectmarketplace.data.Order
 import com.example.projectmarketplace.fragments.OrderFragment
 import com.example.projectmarketplace.viewModels.ItemViewModel
@@ -38,7 +42,46 @@ class ItemView(private val binding: FragmentHomeIndividualBinding,
             descriptionInput.text = item.description
             conditionInput.text = item.condition
             colorInput.text = item.color
+            logo.setOnClickListener {
+                showFullScreenImage()
+            }
+
+            if (item.latitude == null || item.longitude == null) {
+                mapView.visibility = View.GONE
+                locationTitle.visibility = View.GONE
+                locationText.visibility = View.GONE
+            }
         }
+
+        item.imageUrl.let { imageUrl ->
+            Glide.with(context)
+                .load(imageUrl)
+                .placeholder(R.drawable.ic_placeholder)
+                .error(R.drawable.ic_error)
+                .centerCrop()
+                .into(binding.logo)
+        }
+    }
+
+    private fun showFullScreenImage(){
+        val dialog = Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+        dialog.setContentView(R.layout.dialog_fullscreen_image)
+
+        val imageView = dialog.findViewById<ImageView>(R.id.fullscreen_image)
+        val closeButton = dialog.findViewById<ImageButton>(R.id.close_button)
+
+        // Učitaj sliku u fullscreen prikaz
+        item.imageUrl?.let { imageUrl ->
+            Glide.with(context)
+                .load(imageUrl)
+                .into(imageView)
+        }
+
+        closeButton.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     private fun loadSellerInfo() {
@@ -75,7 +118,8 @@ class ItemView(private val binding: FragmentHomeIndividualBinding,
         val fragment = OrderFragment.newInstance(
             orders = boughtItems,
             rating = true,
-            sellerId = item.sellerId
+            sellerId = item.sellerId,
+            item = item
         )
         activity.supportFragmentManager.beginTransaction()
             .replace(R.id.flFragment, fragment)
@@ -108,9 +152,14 @@ class ItemView(private val binding: FragmentHomeIndividualBinding,
             }
         }
     }
+
     private fun updateHeartIcons(isFavorite: Boolean) {
         binding.heartIconBorder.visibility = if (isFavorite) View.GONE else View.VISIBLE
         binding.heartIconFilled.visibility = if (isFavorite) View.VISIBLE else View.GONE
+    }
+
+    suspend fun upgradeRecentlyViewed(itemId: String){
+        viewModel.upgradeRecentlyViewed(itemId)
     }
 
 }

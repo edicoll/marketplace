@@ -8,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projectmarketplace.adapters.OrderAdapter
+import com.example.projectmarketplace.data.Item
 import com.example.projectmarketplace.data.Order
 import com.example.projectmarketplace.databinding.FragmentMyordersBinding
 import com.example.projectmarketplace.viewModels.OrderViewModel
@@ -41,7 +42,7 @@ class OrderView(private val binding: FragmentMyordersBinding,
         recyclerView.adapter = adapter
     }
 
-    fun setSellerReview(){
+    fun setSellerReview(item: Item){
         binding.sellerRating.visibility = View.VISIBLE
         binding.blurOverlay.visibility = View.VISIBLE
 
@@ -56,7 +57,7 @@ class OrderView(private val binding: FragmentMyordersBinding,
             val comment = binding.ratingComment.text.toString()
 
             lifecycleOwner.lifecycleScope.launch {
-                viewModel.setReview(sellerId, rating, comment)
+                viewModel.setReview(sellerId, rating, comment, item)
             }
 
             binding.sellerRating.visibility = View.GONE

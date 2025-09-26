@@ -3,12 +3,15 @@ package com.example.projectmarketplace.adapters
 import android.annotation.SuppressLint
 import android.os.Build
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.projectmarketplace.R
 import com.example.projectmarketplace.data.Item
+import com.example.projectmarketplace.databinding.FragmentCategoriesBinding
 import com.example.projectmarketplace.databinding.ItemItemBinding
 import com.example.projectmarketplace.fragments.ItemFragment
 import java.text.SimpleDateFormat
@@ -28,6 +31,7 @@ class SearchAdapter(
     @SuppressLint("NotifyDataSetChanged")
     fun updateItems(newItems: List<Item>) {
         items = newItems   // items se nekako prosljeđuje ovdje
+
         notifyDataSetChanged() // obavještava adapter
     }
 
@@ -66,6 +70,14 @@ class SearchAdapter(
                 price.text = itemView.context.getString(R.string.price_format, item.price)
                 date.text = item.createdAt.toString()
                 date.text = SimpleDateFormat(dateFormat, Locale.getDefault()).format(item.createdAt)
+
+                // Učitavanje slike
+                Glide.with(itemView.context)
+                    .load(item.imageUrl)
+                    .placeholder(R.drawable.ic_placeholder)
+                    .error(R.drawable.ic_error)
+                    .centerCrop()
+                    .into(image)
 
                 itemView.setOnClickListener { // klikom na pojedini item se prikazuje novi fragment
 

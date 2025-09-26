@@ -1,6 +1,7 @@
 package com.example.projectmarketplace.viewModels
 
 import androidx.lifecycle.ViewModel
+import com.example.projectmarketplace.data.Item
 import com.example.projectmarketplace.data.Order
 import com.example.projectmarketplace.repositories.OrderRepository
 
@@ -16,8 +17,8 @@ class OrderViewModel(private val repository: OrderRepository) : ViewModel() {
         return _orders
     }
 
-    suspend fun setReview(sellerId: String, rating: Int, comment: String){
-            repository.setReview(sellerId, rating, comment)
+    suspend fun setReview(sellerId: String, rating: Int, comment: String, item: Item){
+            repository.setReview(sellerId, rating, comment, item)
     }
     suspend fun getUserName(sellerId: String): String{
             return repository.getUserName(sellerId).toString()

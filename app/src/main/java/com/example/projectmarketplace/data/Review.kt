@@ -1,6 +1,5 @@
 package com.example.projectmarketplace.data
 import android.os.Parcelable
-import com.example.projectmarketplace.data.Order
 import kotlinx.parcelize.Parcelize
 import java.util.Date
 
@@ -11,7 +10,11 @@ data class Review(
     val userIdFrom: String,
     val userNameFrom: String,
     val rating: Int,
-    val comment: String) : Parcelable{
+    val comment: String,
+    val itemName: String,
+    val imageUrl: String,
+    val createdAt: Date
+    ) : Parcelable{
 
-    constructor() : this("", "", "", "", 0, "")
+    constructor() : this("", "", "", "", 0, "", "", "", Date())
 }

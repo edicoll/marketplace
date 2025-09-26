@@ -1,21 +1,25 @@
 package com.example.projectmarketplace.views
 
 import android.content.Context
+import android.location.Location
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.example.projectmarketplace.R
-import com.example.projectmarketplace.data.Item
 import com.example.projectmarketplace.databinding.FragmentAddBinding
+import com.example.projectmarketplace.viewModels.AddViewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.tasks.await
-import java.util.Date
+import kotlinx.coroutines.launch
+import android.net.Uri
+import android.view.View
+import androidx.core.content.ContextCompat
 
-class AddView(private val binding: FragmentAddBinding, private val context: Context) {
+class AddView(private val binding: FragmentAddBinding, private val context: Context,
+              private val lifecycleOwner: LifecycleOwner, private  var viewModel: AddViewModel) {
 
-    private val database = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
-    private val itemCollection = database.collection("items")
+    private var selectedImageUri: Uri? = null
 
     //toast poruke
     private val fillInAllFields = "Please fill in all fields."
@@ -23,6 +27,8 @@ class AddView(private val binding: FragmentAddBinding, private val context: Cont
     private val itemSuccessfullyAdded = "Item successfully added!"
     private val itemAddFailed = "Failed to add item. Please try again."
     private val notLoggedIn = "You need to be logged in to add items."
+
+    private val setLocation = ""
 
     fun setupCategoryDropdown(categories: List<String>) {
         val adapter = ArrayAdapter(context, R.layout.dropdown_item, categories)
@@ -34,7 +40,10 @@ class AddView(private val binding: FragmentAddBinding, private val context: Cont
         binding.conditionInput.setAdapter(adapter)
     }
 
-    fun handleSaveButtonClick(){
+    fun handleSaveButtonClick(imageUri: Uri?, location: Location?){
+
+        selectedImageUri = imageUri
+
         //dohvaćanje unesenih vrijednosti
         val title = binding.titleInput.text.toString()
         val description = binding.descriptionInput.text.toString()
@@ -50,9 +59,10 @@ class AddView(private val binding: FragmentAddBinding, private val context: Cont
             return
         }
 
-        if(title.isBlank() || description.isBlank() || priceText.isBlank() || category.isBlank() || condition.isBlank() || brand.isBlank() || color.isBlank()){
+        if(title.isBlank() || description.isBlank() || priceText.isBlank() || category.isBlank() || condition.isBlank() || brand.isBlank() || color.isBlank() || imageUri == null){
 
-            showToast(fillInAllFields)
+            val message = if (imageUri == null) "Please select an image" else fillInAllFields
+            showToast(message)
             return
 
         }
@@ -64,40 +74,21 @@ class AddView(private val binding: FragmentAddBinding, private val context: Cont
             return
         }
 
-        val itemId = itemCollection.document().id
+        val latitude = location?.latitude
+        val longitude = location?.longitude
 
-        val newItem = Item(
-            id = itemId,
-            title = title,
-            description = description,
-            price = price.toDouble(),
-            brand = brand,
-            condition = condition,
-            sellerId = currentUser.uid,
-            color = color,
-            createdAt = Date(),
-            category = category
-        )
-
-        saveItem(newItem, itemId)
-
-    }
-
-    private fun saveItem(item: Item, itemId: String) {
-
-
-        itemCollection.document(itemId)
-            .set(item)
-            .addOnSuccessListener {
+        lifecycleOwner.lifecycleScope.launch {
+            if(viewModel.addItem(title, description, price, category, condition,
+                brand, color, imageUri, latitude, longitude)){
                 showToast(itemSuccessfullyAdded)
                 clearFields()
+                selectedImageUri = null
+            }else{
+                showToast(itemAddFailed)        //tu je greska
             }
-            .addOnFailureListener { e ->
-                showToast("$itemAddFailed ${e.localizedMessage}")
-            }
+        }
+
     }
-
-
 
     fun clearFields() {
         with(binding) {
@@ -108,7 +99,14 @@ class AddView(private val binding: FragmentAddBinding, private val context: Cont
             brandInput.text?.clear()
             colorInput.text?.clear()
             priceInput.text?.clear()
+            imagePreview.setImageResource(android.R.drawable.ic_menu_gallery)
+            removeImageButton.visibility = View.GONE
+            binding.selectImageButton.visibility = View.VISIBLE
             titleInput.requestFocus()
+            locationButton.setText(R.string.set_location)
+            locationButton.setBackgroundColor(
+                ContextCompat.getColor(context, R.color.button4)
+            )
         }
     }
 

@@ -20,11 +20,13 @@ abstract class BaseFragment<VBinding : ViewBinding> : Fragment() {
     protected var currentUser: User? = null
     protected val userKey = "USER_KEY"
     protected val favItemKey = "FAVITEM_KEY"
-    protected val itemKey = "ITEM_KEY"
+    protected val myItemKey = "MYITEM_KEY"
+    val itemKey = "ITEM_KEY"
     protected val conversationKey = "CONVERSATION_KEY"
     protected val orderKey = "ORDER_KEY"
     protected val reviewKey = "REVIEW_KEY"
     protected val categoryKey = "CATEGORY_KEY"
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,15 +48,7 @@ abstract class BaseFragment<VBinding : ViewBinding> : Fragment() {
         }
     }
 
-    // Common method to parse user from arguments
-    protected fun parseUserFromArguments(): User? {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            arguments?.getParcelable(userKey, User::class.java)
-        } else {
-            @Suppress("DEPRECATION")
-            arguments?.getParcelable(userKey)
-        }
-    }
+
     fun showToast(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }

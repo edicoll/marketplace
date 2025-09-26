@@ -25,6 +25,7 @@ class InboxIndividualFragment : BaseFragment<FragmentInboxIndividualBinding>() {
     private var participant2Name: String? = null
     private lateinit var viewModel: InboxIndividualViewModel
     private lateinit var inboxIndividualView: InboxIndividualView
+    private val repository = MessageRepository()
 
     override fun inflateBinding(
         inflater: LayoutInflater,
@@ -53,7 +54,7 @@ class InboxIndividualFragment : BaseFragment<FragmentInboxIndividualBinding>() {
         )
 
         //back tipka
-        setupBackButton(binding.back)
+        setupBackButtonInbox()
 
         inboxIndividualView.setupRecyclerView()
         inboxIndividualView.setupMessageSending()
@@ -85,5 +86,15 @@ class InboxIndividualFragment : BaseFragment<FragmentInboxIndividualBinding>() {
                 return InboxIndividualViewModel(MessageRepository()) as T
             }
         }).get(InboxIndividualViewModel::class.java)
+    }
+
+    fun setupBackButtonInbox() {
+        binding.back.setOnClickListener {
+
+            repository.clearUnreadCount(conversationId.toString())
+
+            parentFragmentManager.popBackStack()
+
+        }
     }
 }

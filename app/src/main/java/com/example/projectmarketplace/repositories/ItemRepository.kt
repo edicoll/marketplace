@@ -1,5 +1,6 @@
 package com.example.projectmarketplace.repositories
 
+import android.util.Log
 import com.example.projectmarketplace.data.Item
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldPath
@@ -11,19 +12,15 @@ import kotlinx.coroutines.tasks.await
 class ItemRepository {
     private val database: FirebaseFirestore = Firebase.firestore
     private val itemsCollection = database.collection("items")
+    private val userCollection = database.collection("users")
     private val auth = FirebaseAuth.getInstance()
-
-    suspend fun addItem(item: Item): String {  //suspend služi da ta funkcija može biti pauzirana i nastaviti se kasnije, bez ometanja  glavnog threada
-        val ref = itemsCollection.add(item).await() //await kao pretvara firebase task u kotlin rezultat
-        return ref.id
-    }
 
 
     suspend fun getItemsExcludingCurrentUser(): List<Item> {
         val currentUserId = auth.currentUser?.uid ?: return emptyList()
 
         return try {
-            val querySnapshot = database.collection("items")
+            val querySnapshot = itemsCollection
                 .whereNotEqualTo("sellerId", currentUserId) // filtriranje po sellerId
                 .get()
                 .await()
@@ -39,7 +36,7 @@ class ItemRepository {
 
     suspend fun getSellerName(sellerId: String): String? {
         return try {
-            val document = database.collection("users").document(sellerId).get().await()
+            val document = userCollection.document(sellerId).get().await()
             document.getString("name")
         } catch (e: Exception) {
             null
@@ -48,7 +45,7 @@ class ItemRepository {
 
     suspend fun getSellerRating(sellerId: String): Float? {
         return try {
-            val document = database.collection("users").document(sellerId).get().await()
+            val document = userCollection.document(sellerId).get().await()
             document.getDouble("rating")?.toFloat()
         } catch (e: Exception) {
             null
@@ -56,23 +53,14 @@ class ItemRepository {
     }
 
 
-    /*  za sad ami ne koristi
-    suspend fun getItemsByUser(userId: String): List<Item> {
-        val querySnapshot = itemsCollection
-            .whereEqualTo("userId", userId)
-            .get()
-            .await()
-        return querySnapshot.documents.map { doc ->
-            doc.toObject(Item::class.java)?.copy(id = doc.id) ?: Item()
-        }
-    }*/
-    /* za sada ništa
-    suspend fun updateItem(item: Item) {
-        itemsCollection.document(item.id).set(item).await()
-    }*/
+    suspend fun deleteItem(item: Item): Boolean {
 
-    suspend fun deleteItem(itemId: String) {
-        itemsCollection.document(itemId).delete().await()
+        return try {
+            itemsCollection.document(item.id).delete().await()
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 
     suspend fun getFavItems():List<Item> {
@@ -80,7 +68,7 @@ class ItemRepository {
 
             val userId = auth.currentUser?.uid
 
-            val userDoc = database.collection("users").document(userId.toString())
+            val userDoc = userCollection.document(userId.toString())
                 .get()
                 .await()
 
@@ -95,6 +83,72 @@ class ItemRepository {
             items
         } catch (e: Exception) {
 
+            emptyList()
+        }
+    }
+
+    suspend fun getItemsByCurrentUser(): List<Item> {
+        val currentUserId = auth.currentUser?.uid ?: return emptyList()
+
+        return try {
+            val querySnapshot = itemsCollection
+                .whereEqualTo("sellerId", currentUserId)
+                .get()
+                .await()
+
+            querySnapshot.documents.mapNotNull { doc ->
+                doc.toObject(Item::class.java)?.copy(id = doc.id)
+            }
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    suspend fun updateItem(item: Item): Boolean {
+        return try {
+            val itemData = hashMapOf(
+                "title" to item.title,
+                "price" to item.price,
+                "brand" to item.brand,
+                "description" to item.description,
+                "condition" to item.condition,
+                "color" to item.color,
+            )
+
+            itemsCollection.document(item.id).update(itemData.toMap()).await()
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    suspend fun getRecentlyViewedItems(): List<Item> {
+
+        val userId = auth.currentUser?.uid ?: return emptyList()
+
+        return try {
+
+            val userDoc = userCollection.document(userId).get().await()
+            val recentlyViewedIds = userDoc.get("recViewedItems") as? List<*> ?: return emptyList()
+
+            if (recentlyViewedIds.isEmpty()) {
+                return emptyList()
+            }
+
+            val snapshot = itemsCollection
+                .whereIn(FieldPath.documentId(), recentlyViewedIds)
+                .get()
+                .await()
+
+            val itemsMap = snapshot.documents
+                .mapNotNull { it.toObject(Item::class.java)?.let { item -> it.id to item } }
+                .toMap()
+
+            val sortedItems = recentlyViewedIds.mapNotNull { itemsMap[it] }
+
+            sortedItems.reversed()
+
+        } catch (e: Exception) {
             emptyList()
         }
     }

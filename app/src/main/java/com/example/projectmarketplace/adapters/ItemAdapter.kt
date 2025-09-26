@@ -1,20 +1,25 @@
 package com.example.projectmarketplace.adapters
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.projectmarketplace.R
 import com.example.projectmarketplace.data.Item
 import com.example.projectmarketplace.fragments.ItemFragment
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class ItemAdapter (private val items: List<Item>,
+class ItemAdapter (private var items: List<Item>,
                    private val fragmentActivity: FragmentActivity
 ) : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 
@@ -26,7 +31,7 @@ class ItemAdapter (private val items: List<Item>,
         val title: TextView = itemView.findViewById(R.id.title)
         val price: TextView = itemView.findViewById(R.id.price)
         val date: TextView = itemView.findViewById(R.id.date)
-
+        val image: ImageView = itemView.findViewById(R.id.image)
     }
 
     //kreira se novi UI element, to jest item
@@ -46,6 +51,16 @@ class ItemAdapter (private val items: List<Item>,
         holder.date.text = SimpleDateFormat(dateFormat, Locale.getDefault()).format(item.createdAt)
 
 
+        // Učitavanje slike
+        item.imageUrl.let { imageUrl ->
+            Glide.with(holder.itemView.context)
+                .load(imageUrl)
+                .placeholder(R.drawable.ic_placeholder)
+                .error(R.drawable.ic_error)
+                .centerCrop()
+                .into(holder.image)
+        }
+
 
         holder.itemView.setOnClickListener {
 
@@ -59,6 +74,12 @@ class ItemAdapter (private val items: List<Item>,
 
     }
 
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateItems(newItems: List<Item>) {
+        this.items = newItems   // items se nekako prosljeđuje ovdje
+        notifyDataSetChanged() // obavještava adapter
+    }
 
     override fun getItemCount() = items.size
 }
